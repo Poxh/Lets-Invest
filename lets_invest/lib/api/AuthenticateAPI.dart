@@ -23,11 +23,13 @@ class AuthenticationAPI {
 
     static Future<bool> authenticate() async {
     	try {
-			if(!await hasBiometrics()) return false;
-        	final bool didAuthenticate = await _authentication.authenticate(
-				localizedReason: 'Please authenticate to show account balance',
-				options: const AuthenticationOptions(biometricOnly: true));
-        	return didAuthenticate;
+			return await _authentication.authenticate(
+				localizedReason: "Authenticate to see all content",
+				options: const AuthenticationOptions(
+				useErrorDialogs: true,
+				stickyAuth: true,
+				)
+			);
     	} on PlatformException {
 			return false;
     	}     

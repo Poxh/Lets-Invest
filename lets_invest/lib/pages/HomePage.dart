@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:lets_invest/api/AuthenticateAPI.dart';
 import 'package:lets_invest/main.dart';
+import 'package:lets_invest/pages/Success.dart';
 import 'package:local_auth/local_auth.dart';
 
 class HomePage extends StatelessWidget {
@@ -17,7 +18,9 @@ class HomePage extends StatelessWidget {
 					child: Column(
 						mainAxisAlignment: MainAxisAlignment.center,
 						children: [
-							buildAvailability(context)
+							buildAvailability(context),
+							SizedBox(height: 24),
+                			buildAuthenticate(context),
 						],
 					),
 				),
@@ -51,6 +54,21 @@ class HomePage extends StatelessWidget {
 			}
 		);
 	}
+
+	Widget buildAuthenticate(BuildContext context) => buildButton(
+        text: 'Authenticate',
+        icon: Icons.lock_open,
+        onClicked: () async {
+			final isAuthenticated = await AuthenticationAPI.authenticate();
+
+			if (isAuthenticated) {
+				Navigator.of(context).pushReplacement(
+					MaterialPageRoute(builder: (context) => Success()),
+				);
+			}
+        },
+    );
+
 
 	Widget buildBiometricInfo(String text, bool hasBiometric) {
 		return Container(
