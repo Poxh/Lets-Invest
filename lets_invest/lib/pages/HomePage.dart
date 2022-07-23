@@ -6,6 +6,7 @@ import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/main.dart';
 import 'package:lets_invest/pages/Success.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:lottie/lottie.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
 		return Scaffold(
       backgroundColor: Color.fromARGB(255, 6, 6, 6),
 			body: Container(
@@ -24,7 +26,7 @@ class HomePage extends StatelessWidget {
             Align(
               alignment: FractionalOffset.topCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 10.0, top: 35.0),
+                  padding: EdgeInsets.only(bottom: 10.0, top: height * 0.15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -36,10 +38,21 @@ class HomePage extends StatelessWidget {
               ),
             ),
 
+            Center(
+              child: Lottie.asset('assets/lottiefiles/27637-welcome.json', width: 300),
+            ),
+
+            BuilderAPI.buildText(
+              text: "Welcome to Lets Invest. Slide the icon all over the right to get started", 
+              color: Colors.white, 
+              fontSize: 21, 
+              fontWeight: FontWeight.bold
+            ),
+
             Align(
               alignment: FractionalOffset.bottomCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
+                  padding: EdgeInsets.only(top: height * 0.05),
                   child: buildSlideButton(context)
               ),
             ),

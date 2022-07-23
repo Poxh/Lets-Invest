@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
         splashIconSize: 1000,
         duration: 3000,
         splash: buildSplashScreen(),
-        // splash: Image.network("https://i.ibb.co/JcdfHkg/lets-invest-logo-removebg-preview.png"),
         nextScreen: HomePage(),
         splashTransition: SplashTransition.fadeTransition,
         backgroundColor: Color.fromARGB(255, 6, 6, 6)
@@ -48,8 +47,7 @@ class MyApp extends StatelessWidget {
               Text("Lets Invest", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 40))
             ],
           ),
-          Lottie.network(
-                'https://assets9.lottiefiles.com/packages/lf20_06a6pf9i.json', width: 300),
+          Lottie.asset('assets/lottiefiles/93344-money-investment.json', width: 300),
         ],
       ),
     );
