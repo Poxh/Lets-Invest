@@ -5,12 +5,20 @@ import 'package:local_auth/local_auth.dart';
 class AuthenticationAPI {
     static final _authentication = LocalAuthentication();
 
-    static Future<bool> hasBiometrics() async {
+	static Future<List<BiometricType>> getBiometrics() async {
 		try {
-			return await _authentication.canCheckBiometrics;
-		} on PlatformException {
-			return false;
+			return await _authentication.getAvailableBiometrics();
+		} catch (e) {
+			return <BiometricType>[];
 		}
+	}
+
+    static Future<bool> hasBiometrics() async {
+        try {
+          	return await _authentication.canCheckBiometrics;
+        } on PlatformException {
+          	return false;
+        }
     }
 
     static Future<bool> authenticate() async {
