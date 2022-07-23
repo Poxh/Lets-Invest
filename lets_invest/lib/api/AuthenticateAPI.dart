@@ -34,4 +34,12 @@ class AuthenticationAPI {
 			return false;
     	}     
     }
+
+	static Future<bool> isDeviceSuppoerted() async {
+    	try {
+			return await _authentication.isDeviceSupported();
+    	} on PlatformException {
+			return false;
+    	}     
+    }
 }
