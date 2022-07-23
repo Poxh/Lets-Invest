@@ -4,6 +4,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lets_invest/pages/HomePage.dart';
+import 'package:lottie/lottie.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        splashIconSize: 150,
+        splashIconSize: 1000,
         duration: 3000,
         splash: buildSplashScreen(),
         // splash: Image.network("https://i.ibb.co/JcdfHkg/lets-invest-logo-removebg-preview.png"),
@@ -34,8 +35,10 @@ class MyApp extends StatelessWidget {
   }
 
   Widget buildSplashScreen() {
-    return Center(
+    return Container(
+      color: Color.fromARGB(255, 6, 6, 6),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -45,10 +48,8 @@ class MyApp extends StatelessWidget {
               Text("Lets Invest", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 40))
             ],
           ),
-          SizedBox(height: 20),
-          CircularProgressIndicator(
-            color: Colors.white,
-          )
+          Lottie.network(
+                'https://assets9.lottiefiles.com/packages/lf20_06a6pf9i.json', width: 300),
         ],
       ),
     );
