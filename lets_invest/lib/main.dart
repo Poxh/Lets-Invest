@@ -22,13 +22,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-            splashIconSize: 150,
-            duration: 3000,
-            splash: buildSplashScreen(),
-            // splash: Image.network("https://i.ibb.co/JcdfHkg/lets-invest-logo-removebg-preview.png"),
-            nextScreen: HomePage(),
-            splashTransition: SplashTransition.fadeTransition,
-            backgroundColor: Color.fromARGB(255, 18, 18, 18),));
+        splashIconSize: 150,
+        duration: 3000,
+        splash: buildSplashScreen(),
+        // splash: Image.network("https://i.ibb.co/JcdfHkg/lets-invest-logo-removebg-preview.png"),
+        nextScreen: HomePage(),
+        splashTransition: SplashTransition.fadeTransition,
+        backgroundColor: Color.fromARGB(255, 6, 6, 6)
+      )
+    );
   }
 
   Widget buildSplashScreen() {
