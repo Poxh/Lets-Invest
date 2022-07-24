@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854409006854",
+    "project_id": "letsinvest-9a901",
+    "storage_bucket": "letsinvest-9a901.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854409006854:android:667c9e0aafdd9896781887",
+        "android_client_info": {
+          "package_name": "com.example.lets_invest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854409006854-1lv3rms854v7qesbs1olbu3ookmb38po.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQBukivsJt1iyd557OXDTcWtjQHw_uLEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854409006854-1lv3rms854v7qesbs1olbu3ookmb38po.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

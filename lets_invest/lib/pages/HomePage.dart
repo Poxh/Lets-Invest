@@ -1,16 +1,30 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:lets_invest/api/AuthenticateAPI.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
-import 'package:lets_invest/main.dart';
-import 'package:lets_invest/pages/Success.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
-class HomePage extends StatelessWidget {
+import '../api/WebsocketAPI.dart';
+
+class HomePage extends StatefulWidget {
 	const HomePage({ Key? key }) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    WebsocketAPI websocketAPI = new WebsocketAPI();
+    websocketAPI.initializeConnection();
+  }
 
 	@override
 	Widget build(BuildContext context) {
@@ -80,7 +94,7 @@ class HomePage extends StatelessWidget {
       ),
       onSubmit: () {
         Navigator.of(context).pushReplacement(
-					MaterialPageRoute(builder: (context) => Success()),
+					MaterialPageRoute(builder: (context) => RegisterPage()),
 				);
       },
     );
