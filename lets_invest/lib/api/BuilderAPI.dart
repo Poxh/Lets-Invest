@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BuilderAPI {
@@ -16,11 +15,14 @@ class BuilderAPI {
     );
   }   
 
-  static Widget buildTextField({required text}) {
+  static Widget buildTextFormField({required text, required TextEditingController controller}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextField(
+      padding: EdgeInsets.symmetric(horizontal: 25.0),
+      child: TextFormField(
+        controller: controller,
         style: TextStyle(color: Colors.white),
+        keyboardType: TextInputType.text,
+        autofocus: false,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),
@@ -35,6 +37,23 @@ class BuilderAPI {
           fillColor: Color.fromARGB(255, 15, 15, 15),
           filled: true
         ),
+      ),
+    );
+  }
+
+  static Widget buildTitle(double height) {
+    return Align(
+      alignment: FractionalOffset.topCenter,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 10.0, top: height * 0.15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.insert_chart_outlined_outlined, color: Colors.white, size: 40),
+              SizedBox(width: 10),
+              BuilderAPI.buildText(text: "Lets Invest", color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)
+            ],
+          )
       ),
     );
   } 

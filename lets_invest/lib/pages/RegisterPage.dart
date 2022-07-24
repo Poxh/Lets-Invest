@@ -1,11 +1,22 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_invest/api/AuthenticationAPI.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
-import 'package:lottie/lottie.dart';
+import 'package:lets_invest/api/FirebaseAuthenticationAPI.dart';
+import 'package:lets_invest/pages/Success.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({ Key? key }) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final FirebaseAuthenticationAPI firebaseAuthenticationAPI = FirebaseAuthenticationAPI();
 
   @override
   Widget build(BuildContext context) {
@@ -14,49 +25,21 @@ class RegisterPage extends StatelessWidget {
       backgroundColor: Color.fromARGB(255, 6, 6, 6),
       body: Column(
         children: [
-
-          Align(
-            alignment: FractionalOffset.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 10.0, top: height * 0.15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.insert_chart_outlined_outlined, color: Colors.white, size: 40),
-                    SizedBox(width: 10),
-                    BuilderAPI.buildText(text: "Lets Invest", color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)
-                  ],
-                )
-            ),
-          ),
-
-          Align(
-            alignment: FractionalOffset.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 10.0, top: height * 0.06),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    BuilderAPI.buildText(text: "Hello 👋", color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
-                    BuilderAPI.buildText(text: "and welcome to Lets Invest", color: Color.fromARGB(255, 160, 160, 160), fontSize: 20, fontWeight: FontWeight.bold),
-                    SizedBox(height: height * 0.01),
-                    BuilderAPI.buildText(text: "register and learn today how to invest", color: Color.fromARGB(255, 160, 160, 160), fontSize: 15, fontWeight: FontWeight.bold),
-                  ],
-                )
-            ),
-          ),
-
-          SizedBox(height: height * 0.06),
-
-          BuilderAPI.buildTextField(text: "Email"),
-          SizedBox(height: 10),
-          BuilderAPI.buildTextField(text: "Password"),
-          SizedBox(height: 10),
-          BuilderAPI.buildTextField(text: "Confirm Password"),
-          SizedBox(height: 10),
-          buildLogoutButton(context),
+          BuilderAPI.buildTitle(height),
+          SizedBox(height: 20),
+          BuilderAPI.buildText(text: "Hello 👋", color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
+          BuilderAPI.buildText(text: "and welcome to lets invest", color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),
+          BuilderAPI.buildText(text: "register today and learn how to invest", color: Colors.grey, fontSize: 15, fontWeight: FontWeight.bold),
+          SizedBox(height: 45),
+          BuilderAPI.buildTextFormField(text: "Email", controller: emailController),
+          SizedBox(height: 20),
+          BuilderAPI.buildTextFormField(text: "Password", controller: passwordController),
+          SizedBox(height: 20),
+          BuilderAPI.buildTextFormField(text: "Confirm Password", controller: confirmPasswordController),
+          SizedBox(height: 20),
+          buildLogoutButton(context)
         ],
-      ),
+      )
     );
   }
 
@@ -74,12 +57,23 @@ class RegisterPage extends StatelessWidget {
             )
           )
         ),
-        onPressed: () {  },
+        onPressed: () async { 
+          User? user = await firebaseAuthenticationAPI.signIn(email: emailController.text, password: passwordController.text);
+          if (user != null) {
+            AuthenticationAPI authenticationAPI = AuthenticationAPI();
+            bool isAuthenticated = await authenticationAPI.authenticate();
+            if(isAuthenticated) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Success()),
+              );
+            }
+          }
+        },
         child: Text(
           'Sign up',
           style: TextStyle(fontSize: 20),
         ),
-      ),
+      )
     );
   }
 }

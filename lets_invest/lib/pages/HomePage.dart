@@ -37,20 +37,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Align(
-              alignment: FractionalOffset.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 10.0, top: height * 0.15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.insert_chart_outlined_outlined, color: Colors.white, size: 40),
-                      SizedBox(width: 10),
-                      BuilderAPI.buildText(text: "Lets Invest", color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)
-                    ],
-                  )
-              ),
-            ),
+            BuilderAPI.buildTitle(height),
 
             Center(
               child: Lottie.asset('assets/lottiefiles/27637-welcome.json', width: 300),

@@ -1,17 +1,21 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthenticationAPI {
-    final FirebaseAuth _firebaseAuth;
-    FirebaseAuthenticationAPI(this._firebaseAuth);
-    Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
-    
-    Future<String?> signIn({required String email, required String password}) async {
+    FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+    Future<User?> signIn({required String email, required String password}) async {
+      User? user;
       try {
-        await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-        return "Signed in";
+        UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+        print("Email: " + email);
+        print("Password: " + password);
+        user = userCredential.user;
       } on FirebaseAuthException catch (e) {
-        return e.message;
+        print(e);
       }
+      return user;
     }
 
     Future<String?> signUp({required String email, required String password}) async {
