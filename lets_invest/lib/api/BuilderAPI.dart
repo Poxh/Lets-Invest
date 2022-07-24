@@ -15,13 +15,13 @@ class BuilderAPI {
     );
   }   
 
-  static Widget buildTextFormField({required text, required TextEditingController controller}) {
+  static Widget buildTextFormField({required text, required TextEditingController controller, required bool obscureText}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.0),
       child: TextFormField(
         controller: controller,
         style: TextStyle(color: Colors.white),
-        keyboardType: TextInputType.text,
+        obscureText: obscureText,
         autofocus: false,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(

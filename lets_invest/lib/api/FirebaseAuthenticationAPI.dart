@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthenticationAPI {
@@ -9,8 +11,6 @@ class FirebaseAuthenticationAPI {
       User? user;
       try {
         UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-        print("Email: " + email);
-        print("Password: " + password);
         user = userCredential.user;
       } on FirebaseAuthException catch (e) {
         print(e);
@@ -18,12 +18,15 @@ class FirebaseAuthenticationAPI {
       return user;
     }
 
-    Future<String?> signUp({required String email, required String password}) async {
+    Future<Map<Object, dynamic>?> signUp({required String email, required String password}) async {
+      User? user;
       try {
-        await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-        return "Signed in";
+        UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+        user = userCredential.user;
+        Map<Object, dynamic> res = jsonDecode('{"message": "Register successfull", "user": ${user}}');
       } on FirebaseAuthException catch (e) {
-        return e.message;
+        Map<Object, dynamic> res = jsonDecode('{"message": "${e.message}", "user": ${null}}');
+        return res;
       }
     }
 }
