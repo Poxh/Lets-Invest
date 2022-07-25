@@ -1,4 +1,4 @@
-package com.poxhyt.letsinvest
+package com.example.lets_invest
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.plugins.GeneratedPluginRegistrant
