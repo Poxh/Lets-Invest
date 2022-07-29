@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer__ructors, prefer__literals_to_create_immutables
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget buildLogoutButton(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        padding:  EdgeInsets.symmetric(horizontal: 25.0),
         child: ElevatedButton(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(

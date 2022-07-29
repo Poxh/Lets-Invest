@@ -10,7 +10,7 @@ class BuilderAPI {
       style: TextStyle(
         color: color,
         fontSize: fontSize,
-        fontWeight: fontWeight
+        fontWeight: fontWeight,
       ),
     );
   }   

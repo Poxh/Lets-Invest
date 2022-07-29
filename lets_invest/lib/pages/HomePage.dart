@@ -1,89 +1,111 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:io';
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields
 
 import 'package:flutter/material.dart';
-import 'package:lets_invest/api/BuilderAPI.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:lets_invest/pages/GetStartedPage.dart';
 import 'package:lets_invest/pages/RegisterPage.dart';
-import 'package:lottie/lottie.dart';
-import 'package:slide_to_act/slide_to_act.dart';
-
-import '../api/WebsocketAPI.dart';
+import 'package:lets_invest/pages/StockPage.dart';
 
 class HomePage extends StatefulWidget {
-	const HomePage({ Key? key }) : super(key: key);
+  const HomePage({ Key? key }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  static TextStyle optionStyle =
+      TextStyle(fontSize: 30.sp, fontWeight: FontWeight.w600, color: Colors.white);
+  static List<Widget> _widgetOptions = <Widget>[
+    StockPage(),
+    Text(
+      'Search',
+      style: optionStyle,
+    ),
+    RegisterPage(),
+    Text(
+      'Profile',
+      style: optionStyle,
+    ),
+  ];
 
   @override
-  void initState() {
-    super.initState();
-    WebsocketAPI websocketAPI = new WebsocketAPI();
-    websocketAPI.initializeConnection();
-  }
-
-	@override
-	Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-		return Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
       backgroundColor: Color.fromARGB(255, 6, 6, 6),
-			body: Container(
-				padding: EdgeInsets.all(32),
-				child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            BuilderAPI.buildTitle(height),
-
-            Center(
-              child: Lottie.asset('assets/lottiefiles/27637-welcome.json', width: 300),
-            ),
-
-            BuilderAPI.buildText(
-              text: "Welcome to Lets Invest. Slide the icon all over the right to get started", 
-              color: Colors.white, 
-              fontSize: 21, 
-              fontWeight: FontWeight.bold
-            ),
-
-            Align(
-              alignment: FractionalOffset.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(top: height * 0.05),
-                  child: buildSlideButton(context)
-              ),
-            ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 6, 6, 6),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20.sp,
+              color: Colors.black.withOpacity(.1),
+            )
           ],
         ),
-			),
-		);
-	}
-
-  Widget buildSlideButton(BuildContext context) {
-    return SlideAction(
-      borderRadius: 12,
-      elevation: 0,
-      outerColor: Colors.white,
-      innerColor: Color.fromARGB(255, 6, 6, 6),
-      sliderButtonIcon: Icon(
-        Icons.lock_open_rounded,
-        color: Colors.white,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            child: GNav(
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: Colors.white,
+              iconSize: 24.sp,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: Duration(milliseconds: 400),
+              tabBackgroundColor: Color.fromARGB(255, 12, 12, 12),
+              tabBorderRadius: 10.sp,
+              color: Colors.white,
+              tabs: [
+                GButton(
+                  icon: Icons.dashboard,
+                  text: 'Portfolio',
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
+                ),
+                GButton(
+                  icon: Icons.search,
+                  text: 'Search',
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
+                ),
+                 GButton(
+                  icon: Icons.info,
+                  text: 'Infos',
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
+                ),
+                GButton(
+                  icon: Icons.people_sharp,
+                  text: 'Profile',
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
+                ),
+              ],
+              selectedIndex: _selectedIndex,
+              onTabChange: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+            ),
+          ),
+        ),
       ),
-      text: "Get started",
-      textStyle: TextStyle(
-        color: Color.fromARGB(255, 6, 6, 6),
-        fontWeight: FontWeight.bold,
-        fontSize: 23
-      ),
-      onSubmit: () {
-        Navigator.of(context).pushReplacement(
-					MaterialPageRoute(builder: (context) => RegisterPage()),
-				);
-      },
     );
   }
 }

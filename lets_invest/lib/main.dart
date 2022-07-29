@@ -4,10 +4,9 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/pages/HomePage.dart';
 import 'package:lottie/lottie.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,16 +23,20 @@ class MyApp extends StatelessWidget {
   static const String title = 'Biometric Authentication';
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AnimatedSplashScreen(
-        splashIconSize: 1000,
-        duration: 3000,
-        splash: buildSplashScreen(),
-        nextScreen: HomePage(),
-        splashTransition: SplashTransition.fadeTransition,
-        backgroundColor: Color.fromARGB(255, 6, 6, 6)
-      )
+    return ScreenUtilInit(
+      builder: (BuildContext context, Widget? child) { 
+        return  MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: AnimatedSplashScreen(
+            splashIconSize: 1000,
+            duration: 3000,
+            splash: buildSplashScreen(),
+            nextScreen: HomePage(),
+            splashTransition: SplashTransition.fadeTransition,
+            backgroundColor: Color.fromARGB(255, 6, 6, 6)
+          )
+        );
+      }
     );
   }
 
@@ -46,9 +49,9 @@ class MyApp extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.insert_chart_outlined_outlined, color: Colors.white, size: 40),
-              SizedBox(width: 10),
-              Text("Lets Invest", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 40))
+              Icon(Icons.insert_chart_outlined_outlined, color: Colors.white, size: 40.sp),
+              SizedBox(width: 10.w),
+              Text("Lets Invest", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 40.sp))
             ],
           ),
           Lottie.asset('assets/lottiefiles/93344-money-investment.json', width: 300),
