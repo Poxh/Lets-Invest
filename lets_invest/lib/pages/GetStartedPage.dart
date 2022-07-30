@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lottie/lottie.dart';
@@ -32,7 +33,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
 		return Scaffold(
       backgroundColor: Color.fromARGB(255, 6, 6, 6),
 			body: Container(
-				padding: EdgeInsets.all(32),
+				padding: EdgeInsets.all(32.sp),
 				child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -40,20 +41,20 @@ class _GetStartedPageState extends State<GetStartedPage> {
             BuilderAPI.buildTitle(height),
 
             Center(
-              child: Lottie.asset('assets/lottiefiles/27637-welcome.json', width: 300),
+              child: Lottie.asset('assets/lottiefiles/27637-welcome.json', width: 300.w),
             ),
 
             BuilderAPI.buildText(
               text: "Welcome to Lets Invest. Slide the icon all over the right to get started", 
               color: Colors.white, 
-              fontSize: 21, 
+              fontSize: 21.sp, 
               fontWeight: FontWeight.bold
             ),
 
             Align(
               alignment: FractionalOffset.bottomCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(top: height * 0.05),
+                  padding: EdgeInsets.only(top: 10.h),
                   child: buildSlideButton(context)
               ),
             ),

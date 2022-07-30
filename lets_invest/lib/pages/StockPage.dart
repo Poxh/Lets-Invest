@@ -1,9 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
+import 'package:lets_invest/components/ChartFilter.dart';
+import 'package:lets_invest/components/ChartPage.dart';
 
 class StockPage extends StatefulWidget {
   
@@ -29,13 +34,41 @@ class _StockPageState extends State<StockPage> {
       backgroundColor: Color.fromARGB(255, 6, 6, 6),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(top: 470.h),
+          padding: EdgeInsets.only(top: 50.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 20.h, bottom: 10.h, left: 25.w),
+                padding: EdgeInsets.only(left: 25.w),
+                child: BuilderAPI.buildText(text: "Portfolio", color: Colors.white, fontSize: 28.sp, fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 25.w),
+                child: BuilderAPI.buildText(text: "193,47€", color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 25.w),
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_upward, color: Colors.green, size: 12.sp),
+                    SizedBox(width: 5.w),
+                    BuilderAPI.buildText(text: "0,32€", color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold), 
+                    SizedBox(width: 5.w),
+                    BuilderAPI.buildText(text: "(0,15%)", color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold), 
+                    SizedBox(width: 10.w),
+                    BuilderAPI.buildText(text: "Heute", color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.bold), 
+                  ],
+                )
+              ),
+              
+              Padding(
+                padding: EdgeInsets.only(top: 20.h, bottom: 20.h),
+                child: ChartPage(lineColor: Colors.green, data: ChartPage.generateSampleData()),
+              ),
+              
+              Padding(
+                padding: EdgeInsets.only(bottom: 10.h, left: 25.w),
                 child: BuilderAPI.buildText(text: "Investments", color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
               Container(
@@ -155,3 +188,5 @@ Widget buildStock(BuildContext context, isin, stockName, quantity, price, change
     ),
   );
 }
+
+

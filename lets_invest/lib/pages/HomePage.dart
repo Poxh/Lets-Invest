@@ -7,6 +7,8 @@ import 'package:lets_invest/pages/GetStartedPage.dart';
 import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lets_invest/pages/StockPage.dart';
 
+import 'SearchPage.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({ Key? key }) : super(key: key);
 
@@ -20,10 +22,7 @@ class _HomePageState extends State<HomePage> {
       TextStyle(fontSize: 30.sp, fontWeight: FontWeight.w600, color: Colors.white);
   static List<Widget> _widgetOptions = <Widget>[
     StockPage(),
-    Text(
-      'Search',
-      style: optionStyle,
-    ),
+    SearchPage(),
     RegisterPage(),
     Text(
       'Profile',
