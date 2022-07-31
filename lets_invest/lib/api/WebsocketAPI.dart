@@ -1,14 +1,16 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:lets_invest/data/Search.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebsocketAPI {
   final bool _shouldReconnect = true;
   late WebSocketChannel webSocketChannel;
-  static List<Stock> stocks = [];
+  static List<Search> searchResults = [];
 
-  void _sendMessageToWebSocket(String message) {
-    print("Send websocket message: " + message);
+  void sendMessageToWebSocket(String message) {
+    print(message);
     webSocketChannel.sink.add(message);
   }
 
@@ -30,30 +32,48 @@ class WebsocketAPI {
           return; 
         }
 
-        var dataJson = json.decode(data.toString().replaceAll("1 A ", ""));
-        Stock stock = Stock.fromJSON(dataJson);
-        stocks.add(stock);
+        var replaceEndIndex = data.toString().indexOf(" {");
+        if(replaceEndIndex != -1) {
+          var dataJson = json.decode(data.toString().replaceRange(0, replaceEndIndex, ""));
+          validateSearch(dataJson);
+        }
       },
       onDone: () => reconnect(),
       onError: (_) => reconnect(),
     );
 
-    _sendMessageToWebSocket('connect 22 {"locale":"en","platformId":"webtrading","platformVersion":"chrome - 96.0.4664","clientId":"app.traderepublic.com","clientVersion":"6513"}');
-    
-    Future.delayed(const Duration(seconds: 2), (){
-  
-      _sendMessageToWebSocket('sub 1 {"type":"stockDetails","id":"US0378331005","jurisdiction":"DE"}');  
-    });
+    sendMessageToWebSocket('connect 22 {"locale":"en","platformId":"webtrading","platformVersion":"chrome - 96.0.4664","clientId":"app.traderepublic.com","clientVersion":"6513"}');
   }
-}
 
-class Stock {
-  String isin;
-  String name;
-
-  static fromJSON(dynamic json) {
-    return Stock(isin: json["isin"], name: json["company"]["name"]);
+  validateSearch(dataJson) {
+    if (isResponseSearch(dataJson)) {
+      clearSearchList();
+      for (var i = 0; i < dataJson["results"].length; i++) {
+        Search search = Search.fromJSON(dataJson, i);  
+        if(!doesSearchResultExists(search)) {
+          searchResults.add(search);
+        }
+      }
+      return;
+    }
   }
-  
-  Stock({required this.isin, required this.name});
+
+  isResponseSearch(dataJson) {
+    return dataJson["results"] != null;
+  }
+
+  bool doesSearchResultExists(Search search) {
+    bool found = false;
+    for (var i = 0; i < searchResults.length; i++) {
+      Search searchFromList = searchResults[i];
+      if(searchFromList.name == search.name) {
+        found = true;
+      }
+    }
+    return found;
+  }
+
+  static clearSearchList() {
+    searchResults.clear();
+  }
 }

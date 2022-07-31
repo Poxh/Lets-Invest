@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuilderAPI {
 
   static Widget buildText({required String text, required Color color, required double fontSize, required FontWeight fontWeight}) {
     return Text(
       text,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: color,
         fontSize: fontSize,
@@ -57,4 +59,16 @@ class BuilderAPI {
       ),
     );
   } 
+
+  static Widget buildStockPicture(isin) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 21, 21, 21),
+        shape: BoxShape.circle
+      ),
+      height: 45.h,
+      width: 45.w,
+      child: Image.network('https://assets.traderepublic.com/img/logos/' + isin + '/dark.png'),
+    );
+  }
 }

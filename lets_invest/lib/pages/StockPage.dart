@@ -13,7 +13,7 @@ class StockPage extends StatefulWidget {
 
 class _StockPageState extends State<StockPage> {
 
-  WebsocketAPI websocketAPI = new WebsocketAPI();
+  static WebsocketAPI websocketAPI = new WebsocketAPI();
 
   @override
   void initState() {
@@ -121,15 +121,7 @@ Widget buildStock(BuildContext context, isin, stockName, quantity, price, change
         children: [
           Padding(
             padding: EdgeInsets.all(15.0.sp),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 21, 21, 21),
-                shape: BoxShape.circle
-              ),
-              height: 45.h,
-              width: 45.w,
-              child: Image.network('https://assets.traderepublic.com/img/logos/' + isin + '/dark.png'),
-            ),
+            child: BuilderAPI.buildStockPicture(isin)
           ),
           Expanded(
             child: Container(
