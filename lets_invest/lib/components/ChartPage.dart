@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lets_invest/api/BuilderAPI.dart';
 
 class ChartPage extends StatefulWidget {
   final Color lineColor;
