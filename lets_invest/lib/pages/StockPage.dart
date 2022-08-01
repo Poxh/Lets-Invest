@@ -72,7 +72,7 @@ class _StockPageState extends State<StockPage> {
                   children: [
                     buildStock(context, "IE00B4L5Y983", "Core MSCI World USD (Acc)", "80,07", "75,14", "0,08", false),
                     buildStock(context, "XF000BTC0017", "Bitcoin", "0,0023", "53,42", "0,70", false),
-                    buildStock(context, "XF000ETH0019", "Ethereum", "0.0281", "46,27", "1,40", false),
+                    buildStock(context, "XF000ETH0019", "Ethereum", "0,0281", "46,27", "1,40", false),
                     buildStock(context, "US0378331005", "Apple", "0,0663", "10,57", "0,58", false),
                   ],
                 ),
@@ -120,7 +120,7 @@ Widget buildStock(BuildContext context, isin, stockName, quantity, price, change
       child: Row(
         children: [
           Padding(
-            padding: EdgeInsets.all(15.0.sp),
+            padding: EdgeInsets.only(top: 7.h, bottom: 7.h, left: 7.w, right: 12.w),
             child: BuilderAPI.buildStockPicture(isin)
           ),
           Expanded(
@@ -130,45 +130,35 @@ Widget buildStock(BuildContext context, isin, stockName, quantity, price, change
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: 8.h),
+                    padding: EdgeInsets.only(bottom: 2.h),
                     child: BuilderAPI.buildText(text: stockName, color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 5.h),
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3.sp),
-                            color: Color.fromARGB(255, 21, 21, 21),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(2.sp),
-                            child: BuilderAPI.buildText(text: "x" + quantity, color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
-                          )
-                        ),
-                        SizedBox(width: 7.w),
-                        BuilderAPI.buildText(text: price + "€", color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
-                      ],
-                    ),
-                  )
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(2.sp),
+                        child: BuilderAPI.buildText(text: "x " + quantity, color: Colors.grey, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 12.h, right: 15.w),
-            child: Row(
+            padding: EdgeInsets.only(bottom: 12.h, right: 15.w, top: 10.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Icon(
-                  lostMoney ? Icons.arrow_downward : Icons.arrow_upward,
-                  size: 15.sp,
-                  color: lostMoney ? Colors.red : Colors.green
-                ),
-                SizedBox(width: 5.w),
-                BuilderAPI.buildText(text: changePrice + "€", color: lostMoney ? Colors.red : Colors.green, fontSize: 15.sp, fontWeight: FontWeight.bold)
+                BuilderAPI.buildText(text: price + "€", color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                SizedBox(height: 3.h),  
+                Row(
+                  children: [
+                    BuilderAPI.buildText(text: "+ " + price + "€ • 4.76%", color: Colors.green, fontSize: 11.sp, fontWeight: FontWeight.bold), 
+                  ],
+                )
               ],
-            ),
+            )
           ),
         ],
       ),

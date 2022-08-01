@@ -64,7 +64,7 @@ class BuilderAPI {
     return Container(
       decoration: BoxDecoration(
         color: Color.fromARGB(255, 21, 21, 21),
-        shape: BoxShape.circle
+        borderRadius: BorderRadius.circular(10.sp)
       ),
       height: 45.h,
       width: 45.w,

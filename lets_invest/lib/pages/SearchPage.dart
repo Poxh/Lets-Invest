@@ -31,7 +31,6 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: Colors.black,
       body: Column(
         children: [
-
           Padding(
             padding: EdgeInsets.only(top: 70.h),
             child: TextField(
@@ -69,21 +68,30 @@ class _SearchPageState extends State<SearchPage> {
 
 Widget buildSearchResult(Search searchResult) {
   return Padding(
-    padding: EdgeInsets.only(left: 25, top: 25),
-    child: Row(
-      children: [
-        BuilderAPI.buildStockPicture(searchResult.isin),
-        Padding(
-          padding: EdgeInsets.only(left: 15.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BuilderAPI.buildText(text:searchResult.name, color: Colors.white, fontSize: 17.h, fontWeight: FontWeight.bold),
-              BuilderAPI.buildText(text: searchResult.searchDescription, color: Colors.grey, fontSize: 13.h, fontWeight: FontWeight.bold)
-            ],
-          ),
-        )
-      ],
+    padding: EdgeInsets.only(left: 25.w, top: 25.h, right: 25.w),
+    child: Container(
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 36, 35, 42),
+        borderRadius: BorderRadius.circular(10.sp)
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(8.0.sp),
+        child: Row(
+          children: [
+            BuilderAPI.buildStockPicture(searchResult.isin),
+            Padding(
+              padding: EdgeInsets.only(left: 15.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BuilderAPI.buildText(text:searchResult.name, color: Colors.white, fontSize: 17.h, fontWeight: FontWeight.bold),
+                  BuilderAPI.buildText(text: searchResult.searchDescription, color: Colors.grey, fontSize: 13.h, fontWeight: FontWeight.bold)
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     ),
   );
 }
