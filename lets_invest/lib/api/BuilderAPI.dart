@@ -1,7 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'CalculationAPI.dart';
 
 class BuilderAPI {
 
@@ -70,5 +74,94 @@ class BuilderAPI {
       width: 45.w,
       child: Image.network('https://assets.traderepublic.com/img/logos/' + isin + '/dark.png'),
     );
+  }
+
+  static Widget buildStock(BuildContext context, isin, stockName, quantity, currentPrice, boughtPrice) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+      child: InkWell(
+        splashFactory: NoSplash.splashFactory,
+        onTap: (() {}),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 6, 6, 6),
+            borderRadius: BorderRadius.circular(20.sp),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 7.h, bottom: 7.h, left: 7.w, right: 12.w),
+                child: BuilderAPI.buildStockPicture(isin)
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 2.h),
+                        child: BuilderAPI.buildText(text: stockName, color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(2.sp),
+                            child: BuilderAPI.buildText(text: quantity, color: Colors.grey, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 12.h, right: 15.w, top: 10.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    BuilderAPI.buildText(
+                      text: currentPrice.toStringAsFixed(2) + "€", 
+                      color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold
+                    ),
+                    SizedBox(height: 3.h),  
+                    Row(
+                      children: [
+                        Icon(
+                          hasMadeLost(currentPrice, boughtPrice) 
+                          ? Icons.arrow_downward
+                          : Icons.arrow_upward,
+                          color: hasMadeLost(currentPrice, boughtPrice)
+                          ? Colors.red
+                          : Colors.green,
+                          size: 11.sp,
+                        ),
+                        SizedBox(width: 3.w),
+                        BuilderAPI.buildText(
+                          text: CalculationAPI.calculateProfitLostInEUR(currentPrice, boughtPrice).toStringAsFixed(2)
+                          .replaceAll("-", "") + "€ • " + CalculationAPI.calculateProfitLostInPercentage
+                          (currentPrice, boughtPrice).toStringAsFixed(2).replaceAll("-", "") + " %", 
+                          color: hasMadeLost(currentPrice, boughtPrice) ? Colors.red : Colors.green, 
+                          fontSize: 11.sp, fontWeight: FontWeight.bold), 
+                      ],
+                    )
+                  ],
+                )
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static bool hasMadeLost(currentPrice, boughtPrice) {
+    return CalculationAPI.calculateProfitLostInEUR(currentPrice, boughtPrice).toString().contains("-");  
+  }
+
+  static double randomValue() {
+    var random = Random();
+    int randomInt = random.nextInt(100);
+    return random.nextDouble() * randomInt;
   }
 }

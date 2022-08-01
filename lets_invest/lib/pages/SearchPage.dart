@@ -28,7 +28,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 6, 6, 6),
       body: Column(
         children: [
           Padding(
@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
                 color: Colors.white
               ),
               onChanged: (value) {
-                websocketAPI.sendMessageToWebSocket('sub 868 {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":50,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
+                websocketAPI.sendMessageToWebSocket('sub 868 {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
                 setState(() {});
               },
             ),
@@ -51,10 +51,12 @@ class _SearchPageState extends State<SearchPage> {
           Container(
             height: 305.h,
             child: ListView.builder(
+              padding: EdgeInsets.zero,
               itemCount: WebsocketAPI.searchResults.length,
               itemBuilder: (context, index) {
                 final searchResult = WebsocketAPI.searchResults[index];
-                return buildSearchResult(searchResult);
+                return BuilderAPI.buildStock(context, searchResult.isin, searchResult.name, 
+                searchResult.searchDescription, BuilderAPI.randomValue(), BuilderAPI.randomValue());
               }
             ),
           ),
@@ -64,34 +66,4 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-}
-
-Widget buildSearchResult(Search searchResult) {
-  return Padding(
-    padding: EdgeInsets.only(left: 25.w, top: 25.h, right: 25.w),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 36, 35, 42),
-        borderRadius: BorderRadius.circular(10.sp)
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(8.0.sp),
-        child: Row(
-          children: [
-            BuilderAPI.buildStockPicture(searchResult.isin),
-            Padding(
-              padding: EdgeInsets.only(left: 15.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BuilderAPI.buildText(text:searchResult.name, color: Colors.white, fontSize: 17.h, fontWeight: FontWeight.bold),
-                  BuilderAPI.buildText(text: searchResult.searchDescription, color: Colors.grey, fontSize: 13.h, fontWeight: FontWeight.bold)
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    ),
-  );
 }
