@@ -1,20 +1,51 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'dart:math';
+
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/CalculationAPI.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
 import 'package:lets_invest/components/ChartPage.dart';
+import 'package:translator/translator.dart';
 
 class StockPage extends StatefulWidget {
-  
   @override
   State<StockPage> createState() => _StockPageState();
+
+   static List<FlSpot> generateSampleData() {
+    final List<FlSpot> result = [];
+    final numPoints = 35;
+    final maxY = 6;
+
+    double prev = 0;
+
+    for (int i = 0; i < numPoints; i++) {
+      final next = prev +
+          Random().nextInt(3).toDouble() % -1000 * i +
+          Random().nextDouble() * maxY / 10;
+
+      prev = next;
+
+      result.add(
+        FlSpot(i.toDouble(), next),
+      );
+    }
+
+    return result;
+  }
 }
 
 class _StockPageState extends State<StockPage> {
 
-  static WebsocketAPI websocketAPI = new WebsocketAPI();
+  static WebsocketAPI websocketAPI = new WebsocketAPI();  
+  final translator = GoogleTranslator();
+  String portfolioValue = "";
+  
+  String getLocale(context) {
+    return Localizations.localeOf(context).languageCode;
+  }
 
   @override
   void initState() {
@@ -41,7 +72,7 @@ class _StockPageState extends State<StockPage> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 25.w),
-                child: BuilderAPI.buildText(text: "193,47€", color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.bold),
+                child: BuilderAPI.buildText(text: portfolioValue, color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.bold),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 25.w),
@@ -53,14 +84,14 @@ class _StockPageState extends State<StockPage> {
                     SizedBox(width: 5.w),
                     BuilderAPI.buildText(text: "(0,15%)", color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold), 
                     SizedBox(width: 10.w),
-                    BuilderAPI.buildText(text: "Heute", color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.bold), 
+                    BuilderAPI.buildTranslatedText("Heute", getLocale(context), Colors.grey, 12.sp, FontWeight.bold)
                   ],
                 )
               ),
               
               Padding(
                 padding: EdgeInsets.only(top: 20.h, bottom: 20.h),
-                child: ChartPage(lineColor: Colors.green, data: ChartPage.generateSampleData()),
+                child: buildChart(context),
               ),
               
               Padding(
@@ -84,5 +115,74 @@ class _StockPageState extends State<StockPage> {
       )
     );
   }
+
+  String ammount = "";
+
+  Widget buildChart(BuildContext context) {
+    return SizedBox(
+      height: 300.h,
+      child: LineChart(
+        lineChartData,
+        swapAnimationDuration: const Duration(milliseconds: 250),
+      ),
+    );
+  }
+
+  LineChartData get lineChartData => LineChartData(
+        lineTouchData: lineTouchData, // Customize touch points
+        gridData: gridData,
+        
+        titlesData: titlesData, // Customize grid
+        borderData: borderData, // Customize border
+        lineBarsData: [
+          lineChartBarData,
+        ],
+      );
+
+  LineTouchData get lineTouchData => LineTouchData(
+        handleBuiltInTouches: true,
+        touchCallback: (FlTouchEvent touchResponse, LineTouchResponse? lineTouchResponse) {
+          final value = lineTouchResponse?.lineBarSpots![0].y;
+          setState(() {
+            if(value != null) {
+              portfolioValue = value.toStringAsFixed(2);
+            }
+          });
+        },
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Color.fromARGB(255, 26, 26, 26).withOpacity(0.8),
+          getTooltipItems: (value) {
+            return value
+                .map((e) => LineTooltipItem(
+                    "${e.y.toStringAsFixed(2)} € \n 2 Jan, 12:42",
+                    TextStyle(color: Colors.white, fontSize: 10.sp)))
+                .toList();
+          },
+        ),
+      );
+
+  FlTitlesData get titlesData => FlTitlesData(show: false);
+
+  FlGridData get gridData => FlGridData(show: false);
+
+  FlBorderData get borderData => FlBorderData(show: false);
+
+  LineChartBarData get lineChartBarData => LineChartBarData(
+    isCurved: true,
+    color: Colors.green,
+    barWidth: 2,
+    dotData: FlDotData(show: false),
+    spots: ChartPage.generateSampleData(),
+    belowBarData: BarAreaData(
+      show: true,
+      color: Colors.green.withOpacity(0.1),
+      spotsLine: BarAreaSpotsLine(
+        flLineStyle: FlLine(
+          color: Colors.grey,
+          strokeWidth: 2.0
+        )
+      )
+    ),
+  );
 }
 

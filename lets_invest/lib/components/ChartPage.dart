@@ -7,6 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChartPage extends StatefulWidget {
+
+  static String portfolioValue = "";
+
+  static getPortfolioValue() {
+    return portfolioValue;
+  }
+
   final Color lineColor;
   // List of cartesian coordinates
   final List<FlSpot>? data;
@@ -68,7 +75,9 @@ class _ChartPageState extends State<ChartPage> {
         handleBuiltInTouches: true,
         touchCallback: (FlTouchEvent touchResponse, LineTouchResponse? lineTouchResponse) {
           final value = lineTouchResponse?.lineBarSpots![0].y;
-          print(value);
+          setState(() {
+            ChartPage.portfolioValue = "LOL";
+          });
         },
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Color.fromARGB(255, 26, 26, 26).withOpacity(0.8),

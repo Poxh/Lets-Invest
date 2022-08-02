@@ -4,10 +4,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:translator/translator.dart';
 
 import 'CalculationAPI.dart';
 
 class BuilderAPI {
+  static final translator = GoogleTranslator();
 
   static Widget buildText({required String text, required Color color, required double fontSize, required FontWeight fontWeight}) {
     return Text(
@@ -211,5 +213,18 @@ class BuilderAPI {
     var random = Random();
     int randomInt = random.nextInt(100);
     return random.nextDouble() * randomInt;
+  }
+
+  static Widget buildTranslatedText(text, language, color, fontSize, fontWeight) {
+    return FutureBuilder<Translation>(
+      future: translator.translate(text, to: language),
+      builder: (BuildContext context, AsyncSnapshot<Translation> snapshot) {
+        if (snapshot.hasData) {
+          return BuilderAPI.buildText(text: snapshot.data?.text as String, color: color, fontSize: fontSize, fontWeight: fontWeight);
+        } else {
+          return BuilderAPI.buildText(text: "Loading", color: color, fontSize: fontSize, fontWeight: fontWeight);
+        }
+      },
+    );
   }
 }
