@@ -72,7 +72,9 @@ class BuilderAPI {
       ),
       height: 45.h,
       width: 45.w,
-      child: Image.network('https://assets.traderepublic.com/img/logos/' + isin + '/dark.png'),
+      child: Image.network('https://assets.traderepublic.com/img/logos/' + isin + '/dark.png', errorBuilder: (context, error, stackTrace) {
+        return Icon(Icons.question_mark, color: Colors.white, size: 15.sp); 
+      })
     );
   }
 
@@ -147,6 +149,52 @@ class BuilderAPI {
                     )
                   ],
                 )
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget buildSearch(BuildContext context, isin, stockName, description) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+      child: InkWell(
+        splashFactory: NoSplash.splashFactory,
+        onTap: (() {}),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 6, 6, 6),
+            borderRadius: BorderRadius.circular(20.sp),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 7.h, bottom: 7.h, left: 7.w, right: 12.w),
+                child: BuilderAPI.buildStockPicture(isin)
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 2.h),
+                        child: BuilderAPI.buildText(text: stockName, color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(2.sp),
+                            child: BuilderAPI.buildText(text: description, color: Colors.grey, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

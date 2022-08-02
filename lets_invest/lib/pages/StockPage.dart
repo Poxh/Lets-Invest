@@ -78,30 +78,6 @@ class _StockPageState extends State<StockPage> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 12.h, bottom: 10.h, left: 30.w),
-                child: Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          child: BuilderAPI.buildText(text: "Nicht-investierter-Betrag", color: Colors.white, fontSize: 17.sp, fontWeight: FontWeight.bold)
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 25.w),
-                        child: BuilderAPI.buildText(text: "2,57€", color: Colors.white, fontSize: 17.sp, fontWeight: FontWeight.bold)
-                      ),
-                    ],
-                  ),
-                )
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 30.w, right: 25.w),
-                child: Divider(
-                  color: Colors.white,
-                ),
-              )
             ],
           ),
         ),

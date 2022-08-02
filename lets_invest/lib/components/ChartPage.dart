@@ -66,6 +66,10 @@ class _ChartPageState extends State<ChartPage> {
 
   LineTouchData get lineTouchData => LineTouchData(
         handleBuiltInTouches: true,
+        touchCallback: (FlTouchEvent touchResponse, LineTouchResponse? lineTouchResponse) {
+          final value = lineTouchResponse?.lineBarSpots![0].y;
+          print(value);
+        },
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Color.fromARGB(255, 26, 26, 26).withOpacity(0.8),
           getTooltipItems: (value) {

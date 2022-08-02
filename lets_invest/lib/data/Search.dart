@@ -12,10 +12,10 @@ class Search {
     var length = json["results"][index]["tags"].length;
 
     var country = "";
-    if(json["results"][0]["tags"].length == 0) {
+    if(json["results"][index]["tags"].length == 0) {
       country = "INTERNATIONAL";   
     } else {
-      country = json["results"][0]["tags"][0]["name"];  
+      country = json["results"][index]["tags"][0]["name"];  
     } 
 
     switch (length) {

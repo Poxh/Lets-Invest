@@ -54,7 +54,6 @@ class WebsocketAPI {
           searchResults.add(search);
         }
       }
-      searchResults.sort((a, b) => a.name.compareTo(b.name));
     }
   }
 

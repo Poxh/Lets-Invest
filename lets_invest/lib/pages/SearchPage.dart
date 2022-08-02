@@ -29,41 +29,60 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 6, 6, 6),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 70.h),
-            child: TextField(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color.fromARGB(255, 30, 30, 30)
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 70.h, bottom: 30.h),
+              child: Padding(
+                padding: EdgeInsets.only(left: 15.w, right: 15.w),
+                child: TextField(
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    hintText: "Suche Aktien, ETF's, Cryptos, Derivate Kathegorien",
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold
+                    ),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0.sp),
+                      borderSide: BorderSide.none
+                    ),
+                    fillColor: Color.fromARGB(255, 30, 30, 30),
+                  ),
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                  onChanged: (value) {
+                    websocketAPI.sendMessageToWebSocket('sub 868 {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
+                    setState(() {});
+                  },
+                ),
               ),
-              style: TextStyle(
-                color: Colors.white
-              ),
-              onChanged: (value) {
-                websocketAPI.sendMessageToWebSocket('sub 868 {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
-                setState(() {});
-              },
             ),
-          ),
 
-          Container(
-            height: 305.h,
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: WebsocketAPI.searchResults.length,
-              itemBuilder: (context, index) {
-                final searchResult = WebsocketAPI.searchResults[index];
-                return BuilderAPI.buildStock(context, searchResult.isin, searchResult.name, 
-                searchResult.searchDescription, BuilderAPI.randomValue(), BuilderAPI.randomValue());
-              }
+            Padding(
+              padding: EdgeInsets.only(left: 18.w, bottom: 10.h),
+              child: BuilderAPI.buildText(text: "Aktien", color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold)
             ),
-          ),
-          BuilderAPI.buildText(text: WebsocketAPI.searchResults.length.toString(),
-           color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.normal)
-        ],
-      ),
+            
+            Container(
+              height: 305.h,
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: WebsocketAPI.searchResults.length,
+                itemBuilder: (context, index) {
+                  final searchResult = WebsocketAPI.searchResults[index];
+                  return BuilderAPI.buildSearch(context, searchResult.isin, searchResult.name, 
+                  searchResult.searchDescription);
+                }
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 }
