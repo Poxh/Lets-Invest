@@ -57,7 +57,9 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   onChanged: (value) {
                     websocketAPI.sendMessageToWebSocket('sub 868 {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
-                    setState(() {});
+                    Future.delayed(const Duration(milliseconds: 250), (){
+                      setState(() {});
+                    });
                   },
                 ),
               ),
@@ -65,7 +67,7 @@ class _SearchPageState extends State<SearchPage> {
 
             Padding(
               padding: EdgeInsets.only(left: 18.w, bottom: 10.h),
-              child: BuilderAPI.buildText(text: "Aktien", color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold)
+              child: BuilderAPI.buildTranslatedText(context, "Aktie", Colors.white, 18.sp, FontWeight.bold)
             ),
             
             Container(

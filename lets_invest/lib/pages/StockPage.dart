@@ -38,14 +38,9 @@ class StockPage extends StatefulWidget {
 }
 
 class _StockPageState extends State<StockPage> {
-
-  static WebsocketAPI websocketAPI = new WebsocketAPI();  
+  static WebsocketAPI websocketAPI = WebsocketAPI();  
   final translator = GoogleTranslator();
   String portfolioValue = "";
-  
-  String getLocale(context) {
-    return Localizations.localeOf(context).languageCode;
-  }
 
   @override
   void initState() {
@@ -54,6 +49,7 @@ class _StockPageState extends State<StockPage> {
   }
 
   List<String> stocks = ["TEST", "WWW", "dsadasda"];
+  DateTime date = DateTime.fromMillisecondsSinceEpoch(1659418200000);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +64,7 @@ class _StockPageState extends State<StockPage> {
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 25.w),
-                child: BuilderAPI.buildText(text: "Portfolio", color: Colors.white, fontSize: 28.sp, fontWeight: FontWeight.bold),
+                child: BuilderAPI.buildText(text: date.toString(), color: Colors.white, fontSize: 28.sp, fontWeight: FontWeight.bold),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 25.w),
@@ -84,14 +80,9 @@ class _StockPageState extends State<StockPage> {
                     SizedBox(width: 5.w),
                     BuilderAPI.buildText(text: "(0,15%)", color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold), 
                     SizedBox(width: 10.w),
-                    BuilderAPI.buildTranslatedText("Heute", getLocale(context), Colors.grey, 12.sp, FontWeight.bold)
+                    BuilderAPI.buildTranslatedText(context, "Heute", Colors.grey, 12.sp, FontWeight.bold)
                   ],
                 )
-              ),
-              
-              Padding(
-                padding: EdgeInsets.only(top: 20.h, bottom: 20.h),
-                child: buildChart(context),
               ),
               
               Padding(
@@ -102,10 +93,10 @@ class _StockPageState extends State<StockPage> {
                 height: 300.h,
                 child: Column(
                   children: [
-                    BuilderAPI.buildStock(context, "IE00B4L5Y983", "Core MSCI World USD (Acc)", "x 1,0638", BuilderAPI.randomValue(), BuilderAPI.randomValue()), 
-                    BuilderAPI.buildStock(context, "XF000BTC0017", "Bitcoin", "x 0,0023", BuilderAPI.randomValue(), BuilderAPI.randomValue()),
-                    BuilderAPI.buildStock(context, "XF000ETH0019", "Ethereum", "x 0,0281", BuilderAPI.randomValue(), BuilderAPI.randomValue()),
-                    BuilderAPI.buildStock(context, "US0378331005", "Apple", "x 0,0663", BuilderAPI.randomValue(), BuilderAPI.randomValue()),
+                    BuilderAPI.buildStock(context, "IE00B4L5Y983", "Core MSCI World USD (Acc)", "x 1,0638", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40), 
+                    BuilderAPI.buildStock(context, "XF000BTC0017", "Bitcoin", "x 0,0023", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40),
+                    BuilderAPI.buildStock(context, "XF000ETH0019", "Ethereum", "x 0,0281", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40),
+                    BuilderAPI.buildStock(context, "US0378331005", "Apple", "x 0,0663", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40),
                   ],
                 ),
               ),
@@ -117,72 +108,5 @@ class _StockPageState extends State<StockPage> {
   }
 
   String ammount = "";
-
-  Widget buildChart(BuildContext context) {
-    return SizedBox(
-      height: 300.h,
-      child: LineChart(
-        lineChartData,
-        swapAnimationDuration: const Duration(milliseconds: 250),
-      ),
-    );
-  }
-
-  LineChartData get lineChartData => LineChartData(
-        lineTouchData: lineTouchData, // Customize touch points
-        gridData: gridData,
-        
-        titlesData: titlesData, // Customize grid
-        borderData: borderData, // Customize border
-        lineBarsData: [
-          lineChartBarData,
-        ],
-      );
-
-  LineTouchData get lineTouchData => LineTouchData(
-        handleBuiltInTouches: true,
-        touchCallback: (FlTouchEvent touchResponse, LineTouchResponse? lineTouchResponse) {
-          final value = lineTouchResponse?.lineBarSpots![0].y;
-          setState(() {
-            if(value != null) {
-              portfolioValue = value.toStringAsFixed(2);
-            }
-          });
-        },
-        touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Color.fromARGB(255, 26, 26, 26).withOpacity(0.8),
-          getTooltipItems: (value) {
-            return value
-                .map((e) => LineTooltipItem(
-                    "${e.y.toStringAsFixed(2)} € \n 2 Jan, 12:42",
-                    TextStyle(color: Colors.white, fontSize: 10.sp)))
-                .toList();
-          },
-        ),
-      );
-
-  FlTitlesData get titlesData => FlTitlesData(show: false);
-
-  FlGridData get gridData => FlGridData(show: false);
-
-  FlBorderData get borderData => FlBorderData(show: false);
-
-  LineChartBarData get lineChartBarData => LineChartBarData(
-    isCurved: true,
-    color: Colors.green,
-    barWidth: 2,
-    dotData: FlDotData(show: false),
-    spots: ChartPage.generateSampleData(),
-    belowBarData: BarAreaData(
-      show: true,
-      color: Colors.green.withOpacity(0.1),
-      spotsLine: BarAreaSpotsLine(
-        flLineStyle: FlLine(
-          color: Colors.grey,
-          strokeWidth: 2.0
-        )
-      )
-    ),
-  );
 }
 
