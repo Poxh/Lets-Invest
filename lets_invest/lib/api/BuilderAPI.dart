@@ -1,19 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:math';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
 import 'package:lets_invest/pages/StockAboutPage.dart';
-import 'package:translator/translator.dart';
 import '../data/ChartPointData.dart';
 import 'CalculationAPI.dart';
 
 class BuilderAPI {
-  static final translator = GoogleTranslator();
   static WebsocketAPI websocketAPI = WebsocketAPI();  
   static String getLocale(context) {
     return Localizations.localeOf(context).languageCode;
@@ -179,7 +176,7 @@ class BuilderAPI {
           websocketAPI.sendMessageToWebSocket('sub 42 {"type":"aggregateHistoryLight","range":"5y","id":"$isin.LSX"}');
           websocketAPI.sendMessageToWebSocket('sub 20 {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
           websocketAPI.sendMessageToWebSocket('sub 68 {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
-          Future.delayed(const Duration(milliseconds: 250), (){
+          Future.delayed(const Duration(milliseconds: 300), (){
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => StockAboutPage()),
             );
@@ -236,16 +233,7 @@ class BuilderAPI {
   }
 
   static Widget buildTranslatedText(context, text, color, fontSize, fontWeight) {
-    return FutureBuilder<Translation>(
-      future: translator.translate(text, to: getLocale(context)),
-      builder: (BuildContext context, AsyncSnapshot<Translation> snapshot) {
-        if (snapshot.hasData) {
-          return BuilderAPI.buildText(text: snapshot.data?.text as String, color: color, fontSize: fontSize, fontWeight: fontWeight);
-        } else {
-          return BuilderAPI.buildText(text: "Loading", color: color, fontSize: fontSize, fontWeight: fontWeight);
-        }
-      },
-    );
+    return BuilderAPI.buildText(text: text, color: color, fontSize: fontSize, fontWeight: fontWeight);
   }
 
   Widget buildChart(BuildContext context) {

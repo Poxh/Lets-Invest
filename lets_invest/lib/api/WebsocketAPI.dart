@@ -39,10 +39,10 @@ class WebsocketAPI {
         if(replaceEndIndex != -1) {
           var dataJson = json.decode(data.toString().replaceRange(0, replaceEndIndex, ""));  
 
-          if(isResponseSearch(dataJson)) {print("SEARCH REQUEST"); addDataToSearchResults(dataJson);}
-          if(isChartRequest(dataJson)) {print("CHART REQUEST"); addDataToChartResults(dataJson);}
-          if(isStockDetailsRequest(dataJson)) {print("STOCK REQUEST"); setStockDetailsData(dataJson);}
-          if(isInstrumentDetailsRequest(dataJson)) {print("INSTRUMENT REQUEST"); setInstrumentDetailsData(dataJson);}
+          if(isResponseSearch(dataJson)) {addDataToSearchResults(dataJson);}
+          if(isChartRequest(dataJson)) {addDataToChartResults(dataJson);}
+          if(isStockDetailsRequest(dataJson)) {setStockDetailsData(dataJson);}
+          if(isInstrumentDetailsRequest(dataJson)) {setInstrumentDetailsData(dataJson);}
         }
       },
       onDone: () => reconnect(),

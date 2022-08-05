@@ -5,10 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
-import 'package:lets_invest/api/CalculationAPI.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
-import 'package:lets_invest/components/ChartPage.dart';
-import 'package:translator/translator.dart';
 
 class StockPage extends StatefulWidget {
   @override
@@ -39,7 +36,6 @@ class StockPage extends StatefulWidget {
 
 class _StockPageState extends State<StockPage> {
   static WebsocketAPI websocketAPI = WebsocketAPI();  
-  final translator = GoogleTranslator();
   String portfolioValue = "";
 
   @override
