@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_conditional_assignment
-
 class StockDetail {
   String isin;
   String name;
@@ -9,7 +7,6 @@ class StockDetail {
   StockDetail({required this.isin, required this.name, required this.description, required this.yearFounded});
 
   static StockDetail fromJson(json) {
-    print(json);
     var stockIsin = json["isin"];
     var stockName = json["company"]["name"];
     var stockDescription = json["company"]["description"];

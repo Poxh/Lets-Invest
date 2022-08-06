@@ -1,27 +1,35 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:lets_invest/data/ChartPointData.dart';
 import 'package:lets_invest/data/Search.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'dart:developer' as developer;
 
 class WebsocketAPI {
   final bool _shouldReconnect = true;
   late WebSocketChannel webSocketChannel;
   static List<Search> searchResults = [];
   static List<ChartPointData> chartResults = [];
+  static bool loadedSearch = false;
   static var latestStockDetail;
   static var latestInstrumentDetail;
 
+  static int randomNumber() {
+    var rng = Random();
+    return rng.nextInt(1000);
+  }
+
   void sendMessageToWebSocket(String message) {
-    initializeDateFormatting();
+    developer.log(message);
     webSocketChannel.sink.add(message);
   }
 
   void initializeConnection() {
     void reconnect() {
-      print("Lost connection to api");
+      developer.log('Lost connection to api');
       if (_shouldReconnect) {
-        print("Trying to reconnect");
+        developer.log('Trying to reconnect');
         initializeConnection();
       }
     }
@@ -32,17 +40,32 @@ class WebsocketAPI {
 
     webSocketChannel.stream.listen((data) {
         if (data == "connected") {
+          developer.log('connected');
           return; 
         }
 
         var replaceEndIndex = data.toString().indexOf(" {");
         if(replaceEndIndex != -1) {
           var dataJson = json.decode(data.toString().replaceRange(0, replaceEndIndex, ""));  
-
           if(isResponseSearch(dataJson)) {addDataToSearchResults(dataJson);}
-          if(isChartRequest(dataJson)) {addDataToChartResults(dataJson);}
-          if(isStockDetailsRequest(dataJson)) {setStockDetailsData(dataJson);}
-          if(isInstrumentDetailsRequest(dataJson)) {setInstrumentDetailsData(dataJson);}
+
+          if(isChartRequest(dataJson)) {
+            addDataToChartResults(dataJson);
+            developer.log("Chart request send");
+          }
+
+          if(isStockDetailsRequest(dataJson)) {
+            developer.log(dataJson.toString());
+            setStockDetailsData(dataJson);
+            developer.log("Stock details request send");
+          } else {
+            developer.log("asdad");
+          }
+
+          if(isInstrumentDetailsRequest(dataJson)) {
+            setInstrumentDetailsData(dataJson);
+            developer.log("Instrument request send");
+          }
         }
       },
       onDone: () => reconnect(),
@@ -96,7 +119,7 @@ class WebsocketAPI {
   }
 
   isStockDetailsRequest(dataJson) {
-    return dataJson["company"] != null;
+    return dataJson["company"] != null && dataJson["analystRating"] != null;
   }
 
   setStockDetailsData(dataJson) {

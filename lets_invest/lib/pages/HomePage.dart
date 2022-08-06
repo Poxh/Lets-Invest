@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:lets_invest/pages/GetStartedPage.dart';
 import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lets_invest/pages/StockPage.dart';
 
+import '../api/WebsocketAPI.dart';
 import 'SearchPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +17,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  WebsocketAPI websocketAPI = WebsocketAPI();
+
+  @override
+  void initState() {
+    super.initState();
+    websocketAPI.initializeConnection();
+  }
+
   int _selectedIndex = 0;
   static TextStyle optionStyle =
       TextStyle(fontSize: 30.sp, fontWeight: FontWeight.w600, color: Colors.white);
@@ -55,7 +63,7 @@ class _HomePageState extends State<HomePage> {
               hoverColor: Colors.grey[100]!,
               gap: 8,
               activeColor: Colors.white,
-              iconSize: 24.sp,
+              iconSize: 20.sp,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               duration: Duration(milliseconds: 400),
               tabBackgroundColor: Color.fromARGB(255, 12, 12, 12),
@@ -67,7 +75,8 @@ class _HomePageState extends State<HomePage> {
                   text: 'Portfolio',
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white
+                    color: Colors.white,
+                    fontSize: 10.sp
                   ),
                 ),
                 GButton(
@@ -75,7 +84,8 @@ class _HomePageState extends State<HomePage> {
                   text: 'Search',
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white
+                    color: Colors.white,
+                    fontSize: 10.sp
                   ),
                 ),
                  GButton(
@@ -83,7 +93,8 @@ class _HomePageState extends State<HomePage> {
                   text: 'Infos',
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white
+                    color: Colors.white,
+                    fontSize: 10.sp
                   ),
                 ),
                 GButton(
@@ -91,7 +102,8 @@ class _HomePageState extends State<HomePage> {
                   text: 'Profile',
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white
+                    color: Colors.white,
+                    fontSize: 10.sp
                   ),
                 ),
               ],

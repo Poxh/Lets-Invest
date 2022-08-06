@@ -212,8 +212,11 @@ class _StockAboutPageState extends State<StockAboutPage> {
             children: [
               BuilderAPI.buildStockPicture(StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin, 30, 30),
               SizedBox(width: 10.w),
-              BuilderAPI.buildText(text: StockDetail.fromJson(WebsocketAPI.latestStockDetail).name, 
-              color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+              SizedBox(
+                width: 270.w,
+                child: BuilderAPI.buildText(text: StockDetail.fromJson(WebsocketAPI.latestStockDetail).name, 
+                color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           SizedBox(height: 5.h),

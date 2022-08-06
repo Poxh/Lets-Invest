@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
 import 'package:lets_invest/pages/StockPage.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../data/Search.dart';
 
@@ -56,9 +57,12 @@ class _SearchPageState extends State<SearchPage> {
                     color: Colors.white
                   ),
                   onChanged: (value) {
-                    websocketAPI.sendMessageToWebSocket('sub 868 {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
+                    WebsocketAPI.loadedSearch = false;
+                    websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
                     Future.delayed(const Duration(milliseconds: 250), (){
-                      setState(() {});
+                      setState(() {
+                        WebsocketAPI.loadedSearch = true;
+                      });
                     });
                   },
                 ),
@@ -70,21 +74,40 @@ class _SearchPageState extends State<SearchPage> {
               child: BuilderAPI.buildTranslatedText(context, "Aktie", Colors.white, 18.sp, FontWeight.bold)
             ),
             
-            Container(
-              height: 305.h,
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: WebsocketAPI.searchResults.length,
-                itemBuilder: (context, index) {
-                  final searchResult = WebsocketAPI.searchResults[index];
-                  return BuilderAPI.buildSearch(context, searchResult.isin, searchResult.name, 
-                  searchResult.searchDescription);
-                }
-              ),
-            ),
+            WebsocketAPI.loadedSearch 
+            ? buildSearchResults()
+            : buildSearchResultsSkeletons()
           ],
         ),
       )
+    );
+  }
+
+  Widget buildSearchResults() {
+    return SizedBox(
+      height: 305.h,
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: WebsocketAPI.searchResults.length,
+        itemBuilder: (context, index) {
+          final searchResult = WebsocketAPI.searchResults[index];
+          return BuilderAPI.buildSearch(context, searchResult.isin, searchResult.name, 
+          searchResult.searchDescription, websocketAPI);
+        }
+      ),
+    );
+  }
+
+  Widget buildSearchResultsSkeletons() {
+    return SizedBox(
+      height: 250.h,
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return BuilderAPI.buildSearchSkeleton();
+        }
+      ),
     );
   }
 }

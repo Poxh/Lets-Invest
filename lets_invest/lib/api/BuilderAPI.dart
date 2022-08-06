@@ -7,11 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
 import 'package:lets_invest/pages/StockAboutPage.dart';
+import 'package:shimmer/shimmer.dart';
 import '../data/ChartPointData.dart';
 import 'CalculationAPI.dart';
 
 class BuilderAPI {
-  static WebsocketAPI websocketAPI = WebsocketAPI();  
   static String getLocale(context) {
     return Localizations.localeOf(context).languageCode;
   }
@@ -166,17 +166,16 @@ class BuilderAPI {
     );
   }
 
-  static Widget buildSearch(BuildContext context, isin, stockName, description) {
+  static Widget buildSearch(BuildContext context, isin, stockName, description, websocketAPI) {
     return Padding(
       padding: EdgeInsets.only(left: 10.w, right: 10.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         onTap: (() {
-          websocketAPI.initializeConnection();
-          websocketAPI.sendMessageToWebSocket('sub 42 {"type":"aggregateHistoryLight","range":"5y","id":"$isin.LSX"}');
-          websocketAPI.sendMessageToWebSocket('sub 20 {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
-          websocketAPI.sendMessageToWebSocket('sub 68 {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
-          Future.delayed(const Duration(milliseconds: 300), (){
+          websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"aggregateHistoryLight","range":"5y","id":"$isin.LSX"}');
+          websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
+          websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
+          Future.delayed(const Duration(milliseconds: 250), (){
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => StockAboutPage()),
             );
@@ -300,5 +299,50 @@ class BuilderAPI {
       );
     }
     return result;
+  }
+
+  static Widget buildSearchSkeleton() {
+    return Padding(
+      padding: EdgeInsets.only(left: 15.w, bottom: 10.h),
+      child: Shimmer.fromColors(
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 21, 21, 21),
+                shape: BoxShape.circle
+              ),
+              height: 40.h,
+              width: 40.w,        
+            ), 
+            SizedBox(width: 10.w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 21, 21, 21),
+                    borderRadius: BorderRadius.circular(5.sp)
+                  ),
+                  height: 15.h,
+                  width: 180.w,        
+                ),
+                SizedBox(height: 5.h),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 21, 21, 21),
+                    borderRadius: BorderRadius.circular(5.sp)
+                  ),
+                  height: 15.h,
+                  width: 65.w,        
+                ),
+              ],
+            )
+          ],
+        ),
+        baseColor: Color.fromARGB(255, 13, 13, 13), 
+        highlightColor: Color.fromARGB(255, 20, 20, 20)
+      ),
+    );
   }
 }
