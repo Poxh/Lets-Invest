@@ -139,10 +139,10 @@ class BuilderAPI {
                     Row(
                       children: [
                         Icon(
-                          hasMadeLost(currentPrice, boughtPrice) 
+                          CalculationAPI.hasMadeLost(currentPrice, boughtPrice) 
                           ? Icons.arrow_downward
                           : Icons.arrow_upward,
-                          color: hasMadeLost(currentPrice, boughtPrice)
+                          color: CalculationAPI.hasMadeLost(currentPrice, boughtPrice)
                           ? Colors.red
                           : Colors.green,
                           size: 11.sp,
@@ -152,7 +152,7 @@ class BuilderAPI {
                           text: CalculationAPI.calculateProfitLostInEUR(currentPrice, boughtPrice).toStringAsFixed(2)
                           .replaceAll("-", "") + "€ • " + CalculationAPI.calculateProfitLostInPercentage
                           (currentPrice, boughtPrice).toStringAsFixed(2).replaceAll("-", "") + " %", 
-                          color: hasMadeLost(currentPrice, boughtPrice) ? Colors.red : Colors.green, 
+                          color: CalculationAPI.hasMadeLost(currentPrice, boughtPrice) ? Colors.red : Colors.green, 
                           fontSize: 11.sp, fontWeight: FontWeight.bold), 
                       ],
                     )
@@ -175,6 +175,7 @@ class BuilderAPI {
           websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"aggregateHistoryLight","range":"5y","id":"$isin.LSX"}');
           websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
           websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
+          websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"ticker","id":"$isin.LSX"}');
           Future.delayed(const Duration(milliseconds: 250), (){
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => StockAboutPage()),
@@ -219,10 +220,6 @@ class BuilderAPI {
         ),
       ),
     );
-  }
-
-  static bool hasMadeLost(currentPrice, boughtPrice) {
-    return CalculationAPI.calculateProfitLostInEUR(currentPrice, boughtPrice).toString().contains("-");  
   }
 
   static double randomValue() {

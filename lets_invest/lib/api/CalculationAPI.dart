@@ -6,4 +6,8 @@ class CalculationAPI {
   static double calculateProfitLostInPercentage(currentPrice, boughtPrice) {
     return calculateProfitLostInEUR(currentPrice, boughtPrice) / boughtPrice * 100;
   }
+
+  static bool hasMadeLost(currentPrice, boughtPrice) {
+    return calculateProfitLostInEUR(currentPrice, boughtPrice).toString().contains("-");  
+  }
 }

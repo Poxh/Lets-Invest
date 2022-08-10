@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:lets_invest/data/ChartPointData.dart';
+import 'package:lets_invest/data/PerformanceData.dart';
 import 'package:lets_invest/data/Search.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:developer' as developer;
@@ -15,12 +17,16 @@ class WebsocketAPI {
   static var latestStockDetail;
   static var latestInstrumentDetail;
 
+  static List<String> messageList = [];
+  static List<Test> stockList = [];
+
   static int randomNumber() {
     var rng = Random();
     return rng.nextInt(1000);
   }
 
   void sendMessageToWebSocket(String message) {
+    messageList.add(message);
     developer.log(message);
     webSocketChannel.sink.add(message);
   }
@@ -40,7 +46,6 @@ class WebsocketAPI {
 
     webSocketChannel.stream.listen((data) {
         if (data == "connected") {
-          developer.log('connected');
           return; 
         }
 
@@ -51,20 +56,47 @@ class WebsocketAPI {
 
           if(isChartRequest(dataJson)) {
             addDataToChartResults(dataJson);
-            developer.log("Chart request send");
           }
 
           if(isStockDetailsRequest(dataJson)) {
-            developer.log(dataJson.toString());
             setStockDetailsData(dataJson);
-            developer.log("Stock details request send");
-          } else {
-            developer.log("asdad");
           }
 
           if(isInstrumentDetailsRequest(dataJson)) {
             setInstrumentDetailsData(dataJson);
-            developer.log("Instrument request send");
+          }
+
+          if(isPerformanceRequest(dataJson)) {
+            var responseIdentifier = data.toString().split(" ")[0];
+        
+            for (var i = 0; i < messageList.length; i++) {
+              var message = messageList[i];
+              if(message.contains(responseIdentifier)) {
+                var replaceMessageEndIndex = message.indexOf(" {");
+                var messageReplaced = message.replaceRange(0, replaceMessageEndIndex, "");
+                var isin = json.decode(messageReplaced)["id"].toString().split(".")[0];
+
+                PerformanceData performance = PerformanceData.fromJson(dataJson);
+                var bid = performance.bid;
+                Test test = Test(isin: isin, bid: bid);
+                if(stockList.isEmpty) stockList.add(test);
+
+                if(!stockList.map((item) => item.isin).contains(test.isin)) {
+                  stockList.add(test);
+                }
+
+                for (var item in stockList) {
+                  if (item.isin == test.isin) {
+                    if (item.bid["price"] != test.bid["price"]) {
+                      stockList.remove(item);
+                      stockList.add(test);
+                      developer.log(test.isin + " has a price of " + test.bid["price"].toString());
+                      developer.log(" ");
+                    }
+                  }    
+                }
+              }
+            }
           }
         }
       },
@@ -134,8 +166,29 @@ class WebsocketAPI {
     latestInstrumentDetail = dataJson;
   }
 
+  isPerformanceRequest(dataJson) {
+    return dataJson["bid"] != null && dataJson["bid"] != null && dataJson["last"] != null;
+  }
+
   static clearSearchList() {
     chartResults.clear();
     searchResults.clear();
   }
+
+  static double getCurrentStockValue(isin) {
+    double stockValue = 0.0;
+    for (var stock in stockList) {
+      if(stock.isin.contains(isin)) {
+        stockValue = stock.bid["price"];
+      }   
+    }
+    return stockValue;
+  }
+}
+
+class Test {
+  String isin;
+  dynamic bid;
+
+  Test({required this.isin, required this.bid});
 }

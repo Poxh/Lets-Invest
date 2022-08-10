@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
+import 'package:lets_invest/api/CalculationAPI.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
 
 import '../api/WebsocketAPI.dart';
@@ -22,7 +23,6 @@ class _StockAboutPageState extends State<StockAboutPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -73,7 +73,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
             buildIntervalSelection(),
             Padding(
               padding: EdgeInsets.only(top: 40.h, bottom: 40.h),
-              child: Container(
+              child: SizedBox(
                 height: 300.h,
                 child: builderAPI.buildChart(context),
               ),
@@ -220,21 +220,29 @@ class _StockAboutPageState extends State<StockAboutPage> {
             ],
           ),
           SizedBox(height: 5.h),
-          Row(
-            children: [
-              BuilderAPI.buildText(text: "276,50€", 
-              color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.normal),
-              SizedBox(width: 5.w),
-              Icon(Icons.arrow_upward, color: Colors.green, size: 12.sp),
-              BuilderAPI.buildText(text: "215,32€ (351,96%)", 
-              color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.normal),
-              SizedBox(width: 5.w),
-              BuilderAPI.buildText(text: "Seit Start", 
-              color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.normal),
-            ],
-          )
+          buildProfitLost(CalculationAPI.hasMadeLost(WebsocketAPI.getCurrentStockValue
+          (InstrumentDetail.fromJson(WebsocketAPI.latestInstrumentDetail).isin), 100.0))     
         ],
       ),
+    );
+  }
+
+  Widget buildProfitLost(bool hasMadeLost) {
+    return Row(
+      children: [
+        Icon(hasMadeLost ? Icons.arrow_upward : Icons.arrow_downward, 
+        color: hasMadeLost ? Colors.green : Colors.red, size: 12.sp),
+        BuilderAPI.buildText(text: WebsocketAPI.getCurrentStockValue
+        (InstrumentDetail.fromJson(WebsocketAPI.latestInstrumentDetail).isin).toStringAsFixed(2) + "€ (" + 
+        
+        CalculationAPI.calculateProfitLostInPercentage(WebsocketAPI.getCurrentStockValue
+        (InstrumentDetail.fromJson(WebsocketAPI.latestInstrumentDetail).isin), 10.0).toStringAsFixed(2) + "%)", 
+
+        color: hasMadeLost ? Colors.green : Colors.red, fontSize: 12.sp, fontWeight: FontWeight.normal),  
+        SizedBox(width: 5.w),
+        BuilderAPI.buildText(text: "Seit Start", 
+        color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.normal),
+      ],
     );
   }
 
