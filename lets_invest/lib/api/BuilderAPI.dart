@@ -254,8 +254,15 @@ class BuilderAPI {
 
   LineTouchData get lineTouchData => LineTouchData(
   enabled: true,
+  touchCallback:
+  (FlTouchEvent event, LineTouchResponse? touchResponse) {
+  },
   touchTooltipData: LineTouchTooltipData(
-    tooltipBgColor: Color.fromARGB(255, 26, 26, 26).withOpacity(0.8),
+    tooltipBgColor: Color.fromARGB(255, 8, 8, 20),
+    tooltipRoundedRadius: 20.0,
+    showOnTopOfTheChartBoxArea: true,
+    fitInsideHorizontally: true,
+    tooltipMargin: 0,
     getTooltipItems: (value) {
       return value
       .map((e) => LineTooltipItem(
@@ -264,7 +271,22 @@ class BuilderAPI {
       .toList();
     },
   ),
-);
+  getTouchedSpotIndicator:
+      (LineChartBarData barData, List<int> indicators) {
+    return indicators.map(
+      (int index) {
+        final line = FlLine(
+            color: Colors.grey,
+            strokeWidth: 1,
+            dashArray: [4, 2]);
+        return TouchedSpotIndicatorData(
+          line,
+          FlDotData(show: false),
+        );
+      },
+    ).toList();
+  },
+  getTouchLineEnd: (_, __) => double.infinity);
 
 
 
