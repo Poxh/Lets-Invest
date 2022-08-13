@@ -17,7 +17,6 @@ Future main() async {
     DeviceOrientation.portraitDown,
   ]);
   runApp(MyApp());
-  await Firebase.initializeApp();
 }
 
 class MyApp extends StatelessWidget {
@@ -25,21 +24,17 @@ class MyApp extends StatelessWidget {
   static const String title = 'Biometric Authentication';
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      builder: (BuildContext context, Widget? child) { 
-        return  MaterialApp(
+    return ScreenUtilInit(builder: (BuildContext context, Widget? child) {
+      return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: AnimatedSplashScreen(
-            splashIconSize: 1000,
-            duration: 3000,
-            splash: buildSplashScreen(),
-            nextScreen: HomePage(),
-            splashTransition: SplashTransition.fadeTransition,
-            backgroundColor: Color.fromARGB(255, 6, 6, 6)
-          )
-        );
-      }
-    );
+              splashIconSize: 1000,
+              duration: 3000,
+              splash: buildSplashScreen(),
+              nextScreen: HomePage(),
+              splashTransition: SplashTransition.fadeTransition,
+              backgroundColor: Color.fromARGB(255, 6, 6, 6)));
+    });
   }
 
   Widget buildSplashScreen() {
@@ -51,12 +46,18 @@ class MyApp extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.insert_chart_outlined_outlined, color: Colors.white, size: 40.sp),
+              Icon(Icons.insert_chart_outlined_outlined,
+                  color: Colors.white, size: 40.sp),
               SizedBox(width: 10.w),
-              Text("Lets Invest", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 40.sp))
+              Text("Lets Invest",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40.sp))
             ],
           ),
-          Lottie.asset('assets/lottiefiles/93344-money-investment.json', width: 300),
+          Lottie.asset('assets/lottiefiles/93344-money-investment.json',
+              width: 300),
         ],
       ),
     );
