@@ -19,7 +19,7 @@ class StockAboutPage extends StatefulWidget {
 class _StockAboutPageState extends State<StockAboutPage> {
   BuilderAPI builderAPI = BuilderAPI();
   Icon icon =
-      Icon(Icons.star_border_outlined, color: Colors.white, size: 20.sp);
+      Icon(Icons.star_border_outlined, color: Colors.white, size: 30.sp);
   bool isFavorite = false;
 
   @override
@@ -45,10 +45,10 @@ class _StockAboutPageState extends State<StockAboutPage> {
                   if (isFavorite) {
                     isFavorite = false;
                     icon = Icon(Icons.star_border_outlined,
-                        color: Colors.white, size: 20.sp);
+                        color: Colors.white, size: 30.sp);
                   } else {
                     isFavorite = true;
-                    icon = Icon(Icons.star, color: Colors.yellow, size: 20.sp);
+                    icon = Icon(Icons.star, color: Colors.yellow, size: 30.sp);
                   }
                 });
               },
@@ -56,10 +56,10 @@ class _StockAboutPageState extends State<StockAboutPage> {
           IconButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
-              iconSize: 5.sp,
+              iconSize: 10.sp,
               splashRadius: 5.sp,
               onPressed: () {},
-              icon: Icon(Icons.more_horiz, color: Colors.white, size: 20.sp)),
+              icon: Icon(Icons.more_horiz, color: Colors.white, size: 30.sp)),
           SizedBox(width: 25.w)
         ],
       ),
@@ -136,62 +136,58 @@ class _StockAboutPageState extends State<StockAboutPage> {
 
   Widget buildIntervalSelection() {
     return Padding(
-      padding: EdgeInsets.only(top: 30.h),
+      padding: EdgeInsets.only(top: 15.h),
       child: Padding(
         padding: EdgeInsets.only(left: 25.w, right: 25.w),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 11, 12, 21),
-              borderRadius: BorderRadius.circular(10.sp)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  child: TextButton(
-                      onPressed: () {},
-                      child: BuilderAPI.buildText(
-                          text: "1T",
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.bold))),
-              Container(
-                  child: TextButton(
-                      onPressed: () {},
-                      child: BuilderAPI.buildText(
-                          text: "1W",
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.bold))),
-              Container(
-                  child: TextButton(
-                      onPressed: () {},
-                      child: BuilderAPI.buildText(
-                          text: "1M",
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.bold))),
-              Container(
-                  child: TextButton(
-                      onPressed: () {},
-                      child: BuilderAPI.buildText(
-                          text: "1J",
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.bold))),
-              Container(
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 9, 9, 44),
-                      borderRadius: BorderRadius.circular(10.sp)),
-                  child: TextButton(
-                      onPressed: () {},
-                      child: BuilderAPI.buildText(
-                          text: "MAX",
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.bold))),
-              SizedBox(width: 0.w)
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+                child: TextButton(
+                    onPressed: () {},
+                    child: BuilderAPI.buildText(
+                        text: "1T",
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold))),
+            Container(
+                child: TextButton(
+                    onPressed: () {},
+                    child: BuilderAPI.buildText(
+                        text: "1W",
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold))),
+            Container(
+                child: TextButton(
+                    onPressed: () {},
+                    child: BuilderAPI.buildText(
+                        text: "1M",
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold))),
+            Container(
+                child: TextButton(
+                    onPressed: () {},
+                    child: BuilderAPI.buildText(
+                        text: "1J",
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold))),
+            Container(
+                height: 30.h,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 255, 0, 0),
+                    borderRadius: BorderRadius.circular(3.sp)),
+                child: TextButton(
+                    onPressed: () {},
+                    child: BuilderAPI.buildText(
+                        text: "MAX",
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold))),
+            SizedBox(width: 0.w)
+          ],
         ),
       ),
     );
@@ -207,8 +203,8 @@ class _StockAboutPageState extends State<StockAboutPage> {
             children: [
               BuilderAPI.buildStockPicture(
                   StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin,
-                  30,
-                  30),
+                  30.w,
+                  30.h),
               SizedBox(width: 10.w),
               SizedBox(
                 width: 270.w,
@@ -216,7 +212,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     text: StockDetail.fromJson(WebsocketAPI.latestStockDetail)
                         .name,
                     color: Colors.white,
-                    fontSize: 20.sp,
+                    fontSize: 30.sp,
                     fontWeight: FontWeight.bold),
               ),
             ],
@@ -236,7 +232,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     return Row(
       children: [
         Icon(hasMadeLost ? Icons.arrow_downward : Icons.arrow_upward,
-            color: hasMadeLost ? Colors.red : Colors.green, size: 12.sp),
+            color: hasMadeLost ? Colors.red : Colors.green, size: 15.sp),
         BuilderAPI.buildText(
             text: WebsocketAPI.getCurrentStockValue(InstrumentDetail.fromJson(
                             WebsocketAPI.latestInstrumentDetail)
@@ -252,13 +248,13 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     .toStringAsFixed(2) +
                 "%)",
             color: hasMadeLost ? Colors.red : Colors.green,
-            fontSize: 12.sp,
+            fontSize: 15.sp,
             fontWeight: FontWeight.normal),
         SizedBox(width: 5.w),
         BuilderAPI.buildText(
             text: "Seit Start",
             color: Colors.grey,
-            fontSize: 12.sp,
+            fontSize: 15.sp,
             fontWeight: FontWeight.normal),
       ],
     );
