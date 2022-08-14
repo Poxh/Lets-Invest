@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
+import 'package:lets_invest/data/Aggregate.dart';
 import 'package:lets_invest/pages/StockAboutPage.dart';
 import 'package:shimmer/shimmer.dart';
-import '../data/ChartPointData.dart';
 import 'CalculationAPI.dart';
 
 class BuilderAPI {
@@ -353,10 +353,10 @@ class BuilderAPI {
   static List<FlSpot> loadChartData() {
     final List<FlSpot> result = [];
 
-    for (var i = 0; i < WebsocketAPI.chartResults.length; i++) {
-      ChartPointData chartPoint = WebsocketAPI.chartResults[i];
+    for (var i = 0; i < WebsocketAPI.aggregates.length; i++) {
+      Aggregate aggregate = WebsocketAPI.aggregates[i];
       result.add(
-        FlSpot(chartPoint.date.toDouble(), chartPoint.close),
+        FlSpot(aggregate.time.toDouble(), aggregate.close),
       );
     }
     return result;

@@ -1,10 +1,12 @@
 class CalculationAPI {
   static double calculateProfitLostInEUR(currentPrice, boughtPrice) {
-    return currentPrice - boughtPrice;
+    return (currentPrice - boughtPrice);
   }
 
   static double calculateProfitLostInPercentage(currentPrice, boughtPrice) {
-    return currentPrice - boughtPrice / boughtPrice * 100;
+    return calculateProfitLostInEUR(currentPrice, boughtPrice) /
+        boughtPrice *
+        100;
   }
 
   static bool hasMadeLost(currentPrice, boughtPrice) {

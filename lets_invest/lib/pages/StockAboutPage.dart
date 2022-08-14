@@ -218,11 +218,16 @@ class _StockAboutPageState extends State<StockAboutPage> {
             ],
           ),
           SizedBox(height: 5.h),
+          BuilderAPI.buildText(
+              text:
+                  WebsocketAPI.getCurrentStockValue().toStringAsFixed(2) + "€",
+              color: Colors.white,
+              fontSize: 30.sp,
+              fontWeight: FontWeight.bold),
+          SizedBox(height: 5.h),
           buildProfitLost(CalculationAPI.hasMadeLost(
-              WebsocketAPI.getCurrentStockValue(
-                  InstrumentDetail.fromJson(WebsocketAPI.latestInstrumentDetail)
-                      .isin),
-              100.0))
+              WebsocketAPI.getCurrentStockValue(),
+              WebsocketAPI.getStartStockValue()))
         ],
       ),
     );
@@ -234,28 +239,27 @@ class _StockAboutPageState extends State<StockAboutPage> {
         Icon(hasMadeLost ? Icons.arrow_downward : Icons.arrow_upward,
             color: hasMadeLost ? Colors.red : Colors.green, size: 15.sp),
         BuilderAPI.buildText(
-            text: WebsocketAPI.getCurrentStockValue(InstrumentDetail.fromJson(
-                            WebsocketAPI.latestInstrumentDetail)
-                        .isin)
-                    .toStringAsFixed(2) +
+            text: CalculationAPI.calculateProfitLostInEUR(
+                        WebsocketAPI.getCurrentStockValue(),
+                        WebsocketAPI.getStartStockValue())
+                    .toStringAsFixed(2)
+                    .replaceAll("-", "") +
                 "€ (" +
                 CalculationAPI.calculateProfitLostInPercentage(
-                        WebsocketAPI.getCurrentStockValue(
-                            InstrumentDetail.fromJson(
-                                    WebsocketAPI.latestInstrumentDetail)
-                                .isin),
-                        10.0)
-                    .toStringAsFixed(2) +
+                        WebsocketAPI.getCurrentStockValue(),
+                        WebsocketAPI.getStartStockValue())
+                    .toStringAsFixed(2)
+                    .replaceAll("-", "") +
                 "%)",
             color: hasMadeLost ? Colors.red : Colors.green,
             fontSize: 15.sp,
-            fontWeight: FontWeight.normal),
+            fontWeight: FontWeight.bold),
         SizedBox(width: 5.w),
         BuilderAPI.buildText(
             text: "Seit Start",
             color: Colors.grey,
             fontSize: 15.sp,
-            fontWeight: FontWeight.normal),
+            fontWeight: FontWeight.bold),
       ],
     );
   }
@@ -286,7 +290,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
               text: title,
               color: Colors.grey,
               fontSize: 13.sp,
-              fontWeight: FontWeight.normal),
+              fontWeight: FontWeight.bold),
           SizedBox(width: 10.w),
           SizedBox(
             width: 90.w,
@@ -294,7 +298,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 text: value,
                 color: Colors.white,
                 fontSize: 13.sp,
-                fontWeight: FontWeight.normal),
+                fontWeight: FontWeight.bold),
           )
         ],
       ),

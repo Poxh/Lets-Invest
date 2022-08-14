@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:lets_invest/data/ChartPointData.dart';
+import 'package:lets_invest/data/Aggregate.dart';
 import 'package:lets_invest/data/PerformanceData.dart';
 import 'package:lets_invest/data/Search.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -12,7 +10,7 @@ class WebsocketAPI {
   final bool _shouldReconnect = true;
   late WebSocketChannel webSocketChannel;
   static List<Search> searchResults = [];
-  static List<ChartPointData> chartResults = [];
+  static List<Aggregate> aggregates = [];
   static bool loadedSearch = false;
   static var latestStockDetail;
   static var latestInstrumentDetail;
@@ -44,44 +42,51 @@ class WebsocketAPI {
       Uri.parse("wss://api.traderepublic.com/"),
     );
 
-    webSocketChannel.stream.listen((data) {
+    webSocketChannel.stream.listen(
+      (data) {
         if (data == "connected") {
-          return; 
+          return;
         }
 
         var replaceEndIndex = data.toString().indexOf(" {");
-        if(replaceEndIndex != -1) {
-          var dataJson = json.decode(data.toString().replaceRange(0, replaceEndIndex, ""));  
-          if(isResponseSearch(dataJson)) {addDataToSearchResults(dataJson);}
-
-          if(isChartRequest(dataJson)) {
-            addDataToChartResults(dataJson);
+        if (replaceEndIndex != -1) {
+          var dataJson =
+              json.decode(data.toString().replaceRange(0, replaceEndIndex, ""));
+          if (isResponseSearch(dataJson)) {
+            addDataToSearchResults(dataJson);
           }
 
-          if(isStockDetailsRequest(dataJson)) {
+          if (isChartRequest(dataJson)) {
+            addDataToaggregates(dataJson);
+          }
+
+          if (isStockDetailsRequest(dataJson)) {
             setStockDetailsData(dataJson);
           }
 
-          if(isInstrumentDetailsRequest(dataJson)) {
+          if (isInstrumentDetailsRequest(dataJson)) {
             setInstrumentDetailsData(dataJson);
           }
 
-          if(isPerformanceRequest(dataJson)) {
+          if (isPerformanceRequest(dataJson)) {
             var responseIdentifier = data.toString().split(" ")[0];
-        
+
             for (var i = 0; i < messageList.length; i++) {
               var message = messageList[i];
-              if(message.contains(responseIdentifier)) {
+              if (message.contains(responseIdentifier)) {
                 var replaceMessageEndIndex = message.indexOf(" {");
-                var messageReplaced = message.replaceRange(0, replaceMessageEndIndex, "");
-                var isin = json.decode(messageReplaced)["id"].toString().split(".")[0];
+                var messageReplaced =
+                    message.replaceRange(0, replaceMessageEndIndex, "");
+                var isin =
+                    json.decode(messageReplaced)["id"].toString().split(".")[0];
 
-                PerformanceData performance = PerformanceData.fromJson(dataJson);
+                PerformanceData performance =
+                    PerformanceData.fromJson(dataJson);
                 var bid = performance.bid;
                 Test test = Test(isin: isin, bid: bid);
-                if(stockList.isEmpty) stockList.add(test);
+                if (stockList.isEmpty) stockList.add(test);
 
-                if(!stockList.map((item) => item.isin).contains(test.isin)) {
+                if (!stockList.map((item) => item.isin).contains(test.isin)) {
                   stockList.add(test);
                 }
 
@@ -90,10 +95,12 @@ class WebsocketAPI {
                     if (item.bid["price"] != test.bid["price"]) {
                       stockList.remove(item);
                       stockList.add(test);
-                      developer.log(test.isin + " has a price of " + test.bid["price"].toString());
+                      developer.log(test.isin +
+                          " has a price of " +
+                          test.bid["price"].toString());
                       developer.log(" ");
                     }
-                  }    
+                  }
                 }
               }
             }
@@ -104,7 +111,8 @@ class WebsocketAPI {
       onError: (_) => reconnect(),
     );
 
-    sendMessageToWebSocket('connect 22 {"locale":"en","platformId":"webtrading","platformVersion":"chrome - 96.0.4664","clientId":"app.traderepublic.com","clientVersion":"6513"}');
+    sendMessageToWebSocket(
+        'connect 22 {"locale":"en","platformId":"webtrading","platformVersion":"chrome - 96.0.4664","clientId":"app.traderepublic.com","clientVersion":"6513"}');
   }
 
   isResponseSearch(dataJson) {
@@ -114,8 +122,8 @@ class WebsocketAPI {
   addDataToSearchResults(dataJson) {
     clearSearchList();
     for (var i = 0; i < dataJson["results"].length; i++) {
-      Search search = Search.fromJSON(dataJson, i);  
-      if(!doesSearchResultExists(search)) {
+      Search search = Search.fromJSON(dataJson, i);
+      if (!doesSearchResultExists(search)) {
         searchResults.add(search);
       }
     }
@@ -128,14 +136,18 @@ class WebsocketAPI {
     return dataJson["aggregates"] != null;
   }
 
-  addDataToChartResults(dataJson) {
-    if(isChartRequest(dataJson)) {
+  addDataToaggregates(dataJson) {
+    if (isChartRequest(dataJson)) {
       clearSearchList();
       for (var i = 0; i < dataJson["aggregates"].length; i++) {
-        var chartPointJson = dataJson["aggregates"][i];
-        ChartPointData chartPoint = ChartPointData.fromJson(chartPointJson);
-        chartResults.add(chartPoint);
-      } 
+        var aggregateJson = dataJson["aggregates"][i];
+        Aggregate aggregate = Aggregate.fromJson(aggregateJson);
+        var filteredAggregate =
+            aggregates.where((e) => e.time == aggregate.time).length;
+        if (filteredAggregate < 1) {
+          aggregates.add(aggregate);
+        }
+      }
     }
   }
 
@@ -143,7 +155,7 @@ class WebsocketAPI {
     bool found = false;
     for (var i = 0; i < searchResults.length; i++) {
       Search searchFromList = searchResults[i];
-      if(searchFromList.name == search.name) {
+      if (searchFromList.name == search.name) {
         found = true;
       }
     }
@@ -167,22 +179,22 @@ class WebsocketAPI {
   }
 
   isPerformanceRequest(dataJson) {
-    return dataJson["bid"] != null && dataJson["bid"] != null && dataJson["last"] != null;
+    return dataJson["bid"] != null &&
+        dataJson["bid"] != null &&
+        dataJson["last"] != null;
   }
 
   static clearSearchList() {
-    chartResults.clear();
+    aggregates.clear();
     searchResults.clear();
   }
 
-  static double getCurrentStockValue(isin) {
-    double stockValue = 0.0;
-    for (var stock in stockList) {
-      if(stock.isin.contains(isin)) {
-        stockValue = stock.bid["price"];
-      }   
-    }
-    return stockValue;
+  static double getStartStockValue() {
+    return aggregates.first.close;
+  }
+
+  static double getCurrentStockValue() {
+    return aggregates.last.close;
   }
 }
 
