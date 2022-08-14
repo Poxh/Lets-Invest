@@ -20,9 +20,11 @@ class BuilderAPI {
       {required String text,
       required Color color,
       required double fontSize,
-      required FontWeight fontWeight}) {
+      required FontWeight fontWeight,
+      int maxLines = 1}) {
     return Text(
       text,
+      maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: color,
@@ -304,8 +306,8 @@ class BuilderAPI {
       enabled: true,
       touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {},
       touchTooltipData: LineTouchTooltipData(
-        tooltipBgColor: Color.fromARGB(255, 15, 15, 20),
-        tooltipRoundedRadius: 10.sp,
+        tooltipBgColor: Color.fromARGB(255, 27, 27, 35),
+        tooltipRoundedRadius: 5.sp,
         showOnTopOfTheChartBoxArea: true,
         fitInsideHorizontally: true,
         tooltipMargin: 0,
@@ -401,5 +403,23 @@ class BuilderAPI {
           baseColor: Color.fromARGB(255, 13, 13, 13),
           highlightColor: Color.fromARGB(255, 20, 20, 20)),
     );
+  }
+
+  static String getMonthName(int month) {
+    List<String> months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    return months[month];
   }
 }

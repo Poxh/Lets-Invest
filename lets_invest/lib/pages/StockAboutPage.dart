@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/CalculationAPI.dart';
+import 'package:lets_invest/components/ChartFilter.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
 
 import '../api/WebsocketAPI.dart';
@@ -67,14 +69,17 @@ class _StockAboutPageState extends State<StockAboutPage> {
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           buildStockTitle(),
-          buildIntervalSelection(),
           Padding(
-            padding: EdgeInsets.only(top: 40.h, bottom: 40.h),
+            padding: EdgeInsets.only(top: 40.h, bottom: 50.h),
             child: SizedBox(
               height: 300.h,
               child: builderAPI.buildChart(context),
             ),
           ),
+          ChartFilter(onTap: (() {
+            print("HELLO");
+          })),
+          SizedBox(height: 50.h),
           IntrinsicHeight(
             child: Padding(
               padding: EdgeInsets.only(left: 30.w),
@@ -128,7 +133,23 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 ],
               ),
             ),
-          )
+          ),
+          SizedBox(
+            height: 50.h,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 30.w),
+            child: SizedBox(
+              height: 120.h,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: WebsocketAPI.latestStockDetail["events"].length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      buildEvent(index)),
+            ),
+          ),
+          SizedBox(height: 80.h)
         ]),
       ),
     );
@@ -229,6 +250,64 @@ class _StockAboutPageState extends State<StockAboutPage> {
               WebsocketAPI.getCurrentStockValue(),
               WebsocketAPI.getStartStockValue()))
         ],
+      ),
+    );
+  }
+
+  Widget buildEvent(index) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(
+        WebsocketAPI.latestStockDetail["events"][index]["timestamp"]);
+
+    return Padding(
+      padding: EdgeInsets.only(right: 20.w),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Color.fromARGB(255, 35, 35, 35),
+            borderRadius: BorderRadius.circular(5.sp)),
+        child: Padding(
+          padding:
+              EdgeInsets.only(left: 20.w, right: 20.w, top: 12.h, bottom: 12.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  BuilderAPI.buildText(
+                      text: date.day.toString(),
+                      color: Colors.white,
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: EdgeInsets.only(left: 40.w, top: 20.h),
+                    child: BuilderAPI.buildText(
+                        text: WebsocketAPI.latestStockDetail["events"][index]
+                            ["title"],
+                        color: Colors.white,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.normal),
+                  )
+                ],
+              ),
+              BuilderAPI.buildText(
+                  text: BuilderAPI.getMonthName(date.month - 1),
+                  color: Colors.white,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.normal,
+                  maxLines: 1),
+              SizedBox(height: 10.h),
+              SizedBox(
+                width: 250.w,
+                child: BuilderAPI.buildText(
+                    text: WebsocketAPI.latestStockDetail["events"][index]
+                        ["description"],
+                    color: Colors.grey,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.normal,
+                    maxLines: 5),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
