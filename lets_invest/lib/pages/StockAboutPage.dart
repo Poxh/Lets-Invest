@@ -35,7 +35,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 8, 8, 15),
-        elevation: 0,
+        elevation: 1,
         actions: [
           IconButton(
               splashColor: Colors.transparent,
@@ -55,102 +55,60 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 });
               },
               icon: icon),
-          IconButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              iconSize: 10.sp,
-              splashRadius: 5.sp,
-              onPressed: () {},
-              icon: Icon(Icons.more_horiz, color: Colors.white, size: 30.sp)),
           SizedBox(width: 25.w)
         ],
       ),
       backgroundColor: Color.fromARGB(255, 8, 8, 15),
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          buildStockTitle(),
-          Padding(
-            padding: EdgeInsets.only(top: 40.h, bottom: 50.h),
-            child: SizedBox(
-              height: 300.h,
-              child: builderAPI.buildChart(context),
-            ),
+          Divider(
+            color: Color.fromARGB(255, 8, 8, 15),
+            thickness: 2.h,
           ),
-          ChartFilter(onTap: (() {
-            print("HELLO");
-          })),
-          SizedBox(height: 50.h),
-          IntrinsicHeight(
-            child: Padding(
-              padding: EdgeInsets.only(left: 30.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildChartFooterInformation(
-                          "Name",
-                          InstrumentDetail.fromJson(
-                                  WebsocketAPI.latestInstrumentDetail)
-                              .name),
-                      buildChartFooterInformation(
-                          "Isin",
-                          InstrumentDetail.fromJson(
-                                  WebsocketAPI.latestInstrumentDetail)
-                              .isin),
-                      buildChartFooterInformation(
-                          "Wkn",
-                          InstrumentDetail.fromJson(
-                                  WebsocketAPI.latestInstrumentDetail)
-                              .wkn)
-                    ],
+          Container(
+            color: Color.fromARGB(255, 8, 8, 15),
+            child: Column(
+              children: [
+                buildStockTitle(),
+                Padding(
+                  padding: EdgeInsets.only(top: 40.h, bottom: 50.h),
+                  child: SizedBox(
+                    height: 300.h,
+                    child: builderAPI.buildChart(context),
                   ),
-                  VerticalDivider(
-                    color: Colors.grey,
-                  ),
-                  SizedBox(width: 15.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildChartFooterInformation(
-                          "Short",
-                          InstrumentDetail.fromJson(
-                                  WebsocketAPI.latestInstrumentDetail)
-                              .shortName),
-                      buildChartFooterInformation(
-                          "Symbol",
-                          InstrumentDetail.fromJson(
-                                  WebsocketAPI.latestInstrumentDetail)
-                              .homeSymbol),
-                      buildChartFooterInformation(
-                          "Intl",
-                          InstrumentDetail.fromJson(
-                                  WebsocketAPI.latestInstrumentDetail)
-                              .intlSymbol)
-                    ],
-                  ),
-                ],
-              ),
+                ),
+                ChartFilter(onTap: (() {
+                  print("HELLO");
+                })),
+              ],
             ),
-          ),
-          SizedBox(
-            height: 50.h,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 30.w),
-            child: SizedBox(
-              height: 120.h,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: WebsocketAPI.latestStockDetail["events"].length,
-                  itemBuilder: (BuildContext context, int index) =>
-                      buildEvent(index)),
-            ),
-          ),
-          SizedBox(height: 80.h)
+          )
         ]),
+      ),
+    );
+  }
+
+  Widget buildTag(index) {
+    var tag = WebsocketAPI.latestInstrumentDetail["tags"][index];
+    return Container(
+      width: double.maxFinite,
+      height: 5.h,
+      decoration: BoxDecoration(
+          color: Color.fromARGB(255, 12, 12, 15),
+          borderRadius: BorderRadius.circular(12.sp)),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 25.w,
+            height: 25.h,
+            child: Image.network(tag["icon"]),
+          ),
+          BuilderAPI.buildText(
+              text: tag["name"],
+              color: Colors.white,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.bold)
+        ],
       ),
     );
   }
@@ -215,6 +173,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
   }
 
   Widget buildStockTitle() {
+    var tag = WebsocketAPI.latestInstrumentDetail;
     return Padding(
       padding: EdgeInsets.only(left: 25.w),
       child: Column(
@@ -230,8 +189,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
               SizedBox(
                 width: 270.w,
                 child: BuilderAPI.buildText(
-                    text: StockDetail.fromJson(WebsocketAPI.latestStockDetail)
-                        .name,
+                    text: tag["intlSymbol"],
                     color: Colors.white,
                     fontSize: 30.sp,
                     fontWeight: FontWeight.bold),
@@ -241,7 +199,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
           SizedBox(height: 5.h),
           BuilderAPI.buildText(
               text:
-                  WebsocketAPI.getCurrentStockValue().toStringAsFixed(2) + "€",
+                 tag["exchanges"][0]["nameAtExchange"],
               color: Colors.white,
               fontSize: 30.sp,
               fontWeight: FontWeight.bold),
