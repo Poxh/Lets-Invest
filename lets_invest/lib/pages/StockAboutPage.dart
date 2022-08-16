@@ -9,6 +9,7 @@ import 'package:lets_invest/components/ChartFilter.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
 
 import '../api/WebsocketAPI.dart';
+import '../components/Summary.dart';
 import '../data/StockDetail.dart';
 
 class StockAboutPage extends StatefulWidget {
@@ -94,6 +95,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
               child: Container(
                 color: Color.fromARGB(255, 8, 8, 15),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     buildHeader(
                         CalculationAPI.hasMadeLost(
@@ -102,15 +104,60 @@ class _StockAboutPageState extends State<StockAboutPage> {
                         tag,
                         isIntlSymbolNull),
                     Padding(
-                      padding: EdgeInsets.only(top: 40.h, bottom: 50.h),
+                      padding: EdgeInsets.only(top: 40.h, bottom: 25.h),
                       child: SizedBox(
-                        height: 300.h,
+                        height: 150.h,
                         child: builderAPI.buildChart(context),
                       ),
                     ),
                     ChartFilter(onTap: (() {
                       print("HELLO");
                     })),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15.w, top: 15.h, bottom: 5.h),
+                      child: BuilderAPI.buildText(text: "Summary", color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15.w, right: 15.w),
+                      child: Summary(),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 5, bottom: 5),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(50, 9, 64, 108),
+                                borderRadius: BorderRadius.circular(5.sp)
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h, bottom: 10.h),
+                                child: BuilderAPI.buildText(
+                                  text: "Buy shares", color: Colors.blue, fontSize: 20.sp, fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 5, bottom: 5),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(50, 9, 64, 108),
+                                borderRadius: BorderRadius.circular(5.sp)
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h, bottom: 10.h),
+                                child: BuilderAPI.buildText(
+                                  text: "Sell shares", color: Colors.blue, fontSize: 20.sp, fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -201,45 +248,6 @@ class _StockAboutPageState extends State<StockAboutPage> {
             SizedBox(width: 0.w)
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildStockTitle() {
-    var tag = WebsocketAPI.latestInstrumentDetail;
-    return Padding(
-      padding: EdgeInsets.only(left: 25.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              BuilderAPI.buildStockPicture(
-                  StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin,
-                  30.w,
-                  30.h),
-              SizedBox(width: 10.w),
-              SizedBox(
-                width: 270.w,
-                child: BuilderAPI.buildText(
-                    text: tag["intlSymbol"],
-                    color: Colors.white,
-                    fontSize: 30.sp,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          BuilderAPI.buildText(
-              text: tag["exchanges"][0]["nameAtExchange"],
-              color: Colors.white,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.bold),
-          SizedBox(height: 5.h),
-          buildProfitLost(CalculationAPI.hasMadeLost(
-              WebsocketAPI.getCurrentStockValue(),
-              WebsocketAPI.getStartStockValue()))
-        ],
       ),
     );
   }
@@ -399,7 +407,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
         onTap: (() {}),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 6, 6, 6),
+            color: Color.fromARGB(255, 8, 8, 15),
             borderRadius: BorderRadius.circular(20.sp),
           ),
           child: Row(
@@ -444,7 +452,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                                   text: tag["exchanges"][0]["nameAtExchange"],
                                   color: Colors.white,
                                   fontSize: 15.sp,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.normal),
                             ),
                           )
                         ],
@@ -514,7 +522,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   )),
             ],
@@ -523,4 +531,6 @@ class _StockAboutPageState extends State<StockAboutPage> {
       ),
     );
   }
+
+ 
 }

@@ -19,16 +19,16 @@ class ChartFilter extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-              onTap: onTap, child: buildInterval("1T", Colors.transparent)),
+              onTap: onTap, child: buildInterval("1T", Color.fromARGB(255, 16, 16, 30))),
           GestureDetector(
-              onTap: onTap, child: buildInterval("1W", Colors.transparent)),
+              onTap: onTap, child: buildInterval("1W", Color.fromARGB(255, 16, 16, 30))),
           GestureDetector(
-              onTap: onTap, child: buildInterval("1M", Colors.transparent)),
+              onTap: onTap, child: buildInterval("1M", Color.fromARGB(255, 16, 16, 30))),
           GestureDetector(
-              onTap: onTap, child: buildInterval("1J", Colors.transparent)),
+              onTap: onTap, child: buildInterval("1J", Color.fromARGB(255, 16, 16, 30))),
           GestureDetector(
               onTap: onTap,
-              child: buildInterval("MAX", Color.fromARGB(255, 27, 27, 35))),
+              child: buildInterval("MAX", Color.fromARGB(255, 42, 42, 191))),
         ],
       ),
     );
@@ -37,7 +37,7 @@ class ChartFilter extends StatelessWidget {
   Widget buildInterval(String text, Color color) {
     return Container(
       decoration: BoxDecoration(
-          color: color, borderRadius: BorderRadius.circular(3.sp)),
+          color: color, borderRadius: BorderRadius.circular(10.sp)),
       child: Padding(
         padding:
             EdgeInsets.only(top: 7.h, bottom: 7.h, left: 15.w, right: 15.w),
