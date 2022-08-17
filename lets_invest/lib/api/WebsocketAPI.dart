@@ -99,7 +99,7 @@ class WebsocketAPI {
                       developer.log(test.isin +
                           " has a price of " +
                           test.bid["price"].toString());
-                      latestPrice = test.bid["price"];    
+                      latestPrice = test.bid["price"];
                       developer.log(" ");
                     }
                   }
@@ -140,15 +140,15 @@ class WebsocketAPI {
 
   addDataToaggregates(dataJson) {
     clearSearchList();
-      for (var i = 0; i < dataJson["aggregates"].length; i++) {
-        var aggregateJson = dataJson["aggregates"][i];
-        Aggregate aggregate = Aggregate.fromJson(aggregateJson);
-        var filteredAggregate =
-            aggregates.where((e) => e.time == aggregate.time).length;
-        if (filteredAggregate < 1) {
-          aggregates.add(aggregate);
-        }
+    for (var i = 0; i < dataJson["aggregates"].length; i++) {
+      var aggregateJson = dataJson["aggregates"][i];
+      Aggregate aggregate = Aggregate.fromJson(aggregateJson);
+      var filteredAggregate =
+          aggregates.where((e) => e.time == aggregate.time).length;
+      if (filteredAggregate < 1) {
+        aggregates.add(aggregate);
       }
+    }
   }
 
   bool doesSearchResultExists(Search search) {
@@ -197,14 +197,9 @@ class WebsocketAPI {
     return aggregates.last.close;
   }
 
-  static Stream<double?> getStockValueStream() async* {
-
+  static Stream<List<Test>?> getStockValueStream() async* {
     yield* Stream.periodic(Duration(seconds: 1), (int a) {
-      for (var i = 0; i < stockList.length; i++) {
-        Test test = stockList[i];
-        print(test.isin + " has a price of " + test.bid["price"].toString());
-        return test.bid["price"];
-      }
+      return stockList;
     });
   }
 }

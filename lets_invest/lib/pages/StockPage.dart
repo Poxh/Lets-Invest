@@ -11,7 +11,7 @@ class StockPage extends StatefulWidget {
   @override
   State<StockPage> createState() => _StockPageState();
 
-   static List<FlSpot> generateSampleData() {
+  static List<FlSpot> generateSampleData() {
     final List<FlSpot> result = [];
     final numPoints = 35;
     final maxY = 6;
@@ -35,7 +35,7 @@ class StockPage extends StatefulWidget {
 }
 
 class _StockPageState extends State<StockPage> {
-  static WebsocketAPI websocketAPI = WebsocketAPI();  
+  static WebsocketAPI websocketAPI = WebsocketAPI();
   String portfolioValue = "";
 
   @override
@@ -43,8 +43,11 @@ class _StockPageState extends State<StockPage> {
     super.initState();
     websocketAPI.initializeConnection();
     websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"ticker","id":"XF000BTC0017.BHS"}');
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"ticker","id":"XF000BTC0017.BHS"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"ticker","id":"XF000ETH0019.BHS"}');
   }
 
   List<String> stocks = ["TEST", "WWW", "dsadasda"];
@@ -53,74 +56,149 @@ class _StockPageState extends State<StockPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 6, 6, 6),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(top: 50.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 25.w),
-                child: BuilderAPI.buildText(text: date.toString(), color: Colors.white, fontSize: 28.sp, fontWeight: FontWeight.bold),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 25.w),
-                child: BuilderAPI.buildText(text: portfolioValue, color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.bold),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 25.w),
-                child: Row(
-                  children: [
-                    Icon(Icons.arrow_upward, color: Colors.green, size: 12.sp),
-                    SizedBox(width: 5.w),
-                    BuilderAPI.buildText(text: "0,32€", color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold), 
-                    SizedBox(width: 5.w),
-                    BuilderAPI.buildText(text: "(0,15%)", color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold), 
-                    SizedBox(width: 10.w),
-                    BuilderAPI.buildTranslatedText(context, "Heute", Colors.grey, 12.sp, FontWeight.bold)
-                  ],
-                )
-              ),
-              
-              Padding(
-                padding: EdgeInsets.only(bottom: 10.h, left: 25.w),
-                child: BuilderAPI.buildText(text: "Investments", color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
-              ),
-              Container(
-                height: 300.h,
-                child: Column(
-                  children: [
-                    BuilderAPI.buildStock(context, "IE00B4L5Y983", "Core MSCI World USD (Acc)", "x 1,0638", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40), 
-                    BuilderAPI.buildStock(context, "XF000BTC0017", "Bitcoin", "x 0,0023", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40),
-                    BuilderAPI.buildStock(context, "XF000ETH0019", "Ethereum", "x 0,0281", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40),
-                    BuilderAPI.buildStock(context, "US0378331005", "Apple", "x 0,0663", BuilderAPI.randomValue(), BuilderAPI.randomValue(), 40, 40),
-                  ],
+        backgroundColor: Color.fromARGB(255, 6, 6, 6),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 50.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 25.w),
+                  child: BuilderAPI.buildText(
+                      text: date.toString(),
+                      color: Colors.white,
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold),
                 ),
-              ),
-              StreamBuilder(
-                stream: WebsocketAPI.getStockValueStream(),
-                builder: (context, snapshot) {
-                  if(snapshot.connectionState == ConnectionState.waiting) {
-                    return BuilderAPI.buildText(text: "Waiting", 
-                    color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal);
-                  } else if(snapshot.hasData) {
-                    return BuilderAPI.buildText(text: snapshot.data.toString(), 
-                  color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal);
-                  } else {
-                    return BuilderAPI.buildText(text: "NOOOOO", 
-                  color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal);
-                  }
-                }
-              )
-            ],
+                Padding(
+                  padding: EdgeInsets.only(left: 25.w),
+                  child: BuilderAPI.buildText(
+                      text: portfolioValue,
+                      color: Colors.white,
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(left: 25.w),
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_upward,
+                            color: Colors.green, size: 12.sp),
+                        SizedBox(width: 5.w),
+                        BuilderAPI.buildText(
+                            text: "0,32€",
+                            color: Colors.green,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold),
+                        SizedBox(width: 5.w),
+                        BuilderAPI.buildText(
+                            text: "(0,15%)",
+                            color: Colors.green,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold),
+                        SizedBox(width: 10.w),
+                        BuilderAPI.buildTranslatedText(context, "Heute",
+                            Colors.grey, 12.sp, FontWeight.bold)
+                      ],
+                    )),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10.h, left: 25.w),
+                  child: BuilderAPI.buildText(
+                      text: "Investments",
+                      color: Colors.white,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  height: 300.h,
+                  child: Column(
+                    children: [
+                      BuilderAPI.buildStock(
+                          context,
+                          "IE00B4L5Y983",
+                          "Core MSCI World USD (Acc)",
+                          "x 1,0638",
+                          BuilderAPI.randomValue(),
+                          BuilderAPI.randomValue(),
+                          40,
+                          40),
+                      BuilderAPI.buildStock(
+                          context,
+                          "XF000BTC0017",
+                          "Bitcoin",
+                          "x 0,0023",
+                          BuilderAPI.randomValue(),
+                          BuilderAPI.randomValue(),
+                          40,
+                          40),
+                      BuilderAPI.buildStock(
+                          context,
+                          "XF000ETH0019",
+                          "Ethereum",
+                          "x 0,0281",
+                          BuilderAPI.randomValue(),
+                          BuilderAPI.randomValue(),
+                          40,
+                          40),
+                      BuilderAPI.buildStock(
+                          context,
+                          "US0378331005",
+                          "Apple",
+                          "x 0,0663",
+                          BuilderAPI.randomValue(),
+                          BuilderAPI.randomValue(),
+                          40,
+                          40),
+                    ],
+                  ),
+                ),
+                StreamBuilder(
+                    stream: WebsocketAPI.getStockValueStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return BuilderAPI.buildText(
+                            text: "Waiting",
+                            color: Colors.white,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.normal);
+                      } else if (snapshot.hasData) {
+                        List<Test> stockList = (snapshot.data as List<Test>);
+                        stockList.sort(
+                            (a, b) => b.bid["price"].compareTo(a.bid["price"]));
+                        return SizedBox(
+                          height: 300.h,
+                          child: ListView.builder(
+                              itemCount: stockList.length,
+                              itemBuilder: (context, index) {
+                                Test stock = stockList[index];
+                                return Row(
+                                  children: [
+                                    BuilderAPI.buildStockPicture(
+                                        stock.isin, 40.h, 40.h),
+                                    BuilderAPI.buildText(
+                                        text: stock.bid["price"].toString(),
+                                        color: Colors.white,
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.normal)
+                                  ],
+                                );
+                              }),
+                        );
+                      } else {
+                        return BuilderAPI.buildText(
+                            text: "NOOOOO",
+                            color: Colors.white,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.normal);
+                      }
+                    })
+              ],
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
   String ammount = "";
 }
-
