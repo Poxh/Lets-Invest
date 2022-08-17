@@ -42,6 +42,9 @@ class _StockPageState extends State<StockPage> {
   void initState() {
     super.initState();
     websocketAPI.initializeConnection();
+    websocketAPI.sendMessageToWebSocket('sub ' +
+              WebsocketAPI.randomNumber().toString() +
+              ' {"type":"ticker","id":"XF000BTC0017.BHS"}');
   }
 
   List<String> stocks = ["TEST", "WWW", "dsadasda"];
@@ -96,6 +99,21 @@ class _StockPageState extends State<StockPage> {
                   ],
                 ),
               ),
+              StreamBuilder(
+                stream: WebsocketAPI.getStockValueStream(),
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting) {
+                    return BuilderAPI.buildText(text: "Waiting", 
+                    color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal);
+                  } else if(snapshot.hasData) {
+                    return BuilderAPI.buildText(text: snapshot.data.toString(), 
+                  color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal);
+                  } else {
+                    return BuilderAPI.buildText(text: "NOOOOO", 
+                  color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal);
+                  }
+                }
+              )
             ],
           ),
         ),

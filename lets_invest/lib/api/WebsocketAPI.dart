@@ -14,6 +14,7 @@ class WebsocketAPI {
   static bool loadedSearch = false;
   static var latestStockDetail;
   static var latestInstrumentDetail;
+  static double latestPrice = 0.0;
 
   static List<String> messageList = [];
   static List<Test> stockList = [];
@@ -98,6 +99,7 @@ class WebsocketAPI {
                       developer.log(test.isin +
                           " has a price of " +
                           test.bid["price"].toString());
+                      latestPrice = test.bid["price"];    
                       developer.log(" ");
                     }
                   }
@@ -137,8 +139,7 @@ class WebsocketAPI {
   }
 
   addDataToaggregates(dataJson) {
-    if (isChartRequest(dataJson)) {
-      clearSearchList();
+    clearSearchList();
       for (var i = 0; i < dataJson["aggregates"].length; i++) {
         var aggregateJson = dataJson["aggregates"][i];
         Aggregate aggregate = Aggregate.fromJson(aggregateJson);
@@ -148,7 +149,6 @@ class WebsocketAPI {
           aggregates.add(aggregate);
         }
       }
-    }
   }
 
   bool doesSearchResultExists(Search search) {
@@ -195,6 +195,17 @@ class WebsocketAPI {
 
   static double getCurrentStockValue() {
     return aggregates.last.close;
+  }
+
+  static Stream<double?> getStockValueStream() async* {
+
+    yield* Stream.periodic(Duration(seconds: 1), (int a) {
+      for (var i = 0; i < stockList.length; i++) {
+        Test test = stockList[i];
+        print(test.isin + " has a price of " + test.bid["price"].toString());
+        return test.bid["price"];
+      }
+    });
   }
 }
 
