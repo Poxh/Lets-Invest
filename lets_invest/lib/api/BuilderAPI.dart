@@ -84,7 +84,8 @@ class BuilderAPI {
   static Widget buildStockPicture(isin, double height, double width) {
     return Container(
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 21, 21, 21), shape: BoxShape.circle),
+            color: Color.fromARGB(255, 27, 27, 27),
+            borderRadius: BorderRadius.circular(7.sp)),
         height: height.h,
         width: width.w,
         child: Image.network(
@@ -94,14 +95,16 @@ class BuilderAPI {
         }));
   }
 
-  static Widget buildStock(BuildContext context, isin, stockName, quantity,
-      currentPrice, boughtPrice, double height, double width) {
+  static Widget buildStock(BuildContext context, isin, stockName,
+      String quantity, currentPrice, boughtPrice, double height, double width) {
     return Padding(
       padding: EdgeInsets.only(left: 10.w, right: 10.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         onTap: (() {}),
         child: Container(
+          width: 350,
+          height: 60.h,
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 6, 6, 6),
             borderRadius: BorderRadius.circular(20.sp),
@@ -144,7 +147,7 @@ class BuilderAPI {
               ),
               Padding(
                   padding:
-                      EdgeInsets.only(bottom: 12.h, right: 15.w, top: 10.h),
+                      EdgeInsets.only(bottom: 12.h, right: 15.w, top: 15.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -372,7 +375,7 @@ class BuilderAPI {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 21, 21, 21),
+                    color: Color.fromARGB(255, 33, 33, 33),
                     shape: BoxShape.circle),
                 height: 40.h,
                 width: 40.w,

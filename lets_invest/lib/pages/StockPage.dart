@@ -7,6 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
 
+import '../data/Crypto.dart';
+import '../data/Stock.dart';
+
 class StockPage extends StatefulWidget {
   @override
   State<StockPage> createState() => _StockPageState();
@@ -48,6 +51,12 @@ class _StockPageState extends State<StockPage> {
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
         ' {"type":"ticker","id":"XF000ETH0019.BHS"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"ticker","id":"US0378331005.LSX"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"ticker","id":"IE00B4L5Y983.LSX"}');
   }
 
   List<String> stocks = ["TEST", "WWW", "dsadasda"];
@@ -111,77 +120,71 @@ class _StockPageState extends State<StockPage> {
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold),
                 ),
-                Container(
-                  height: 300.h,
-                  child: Column(
-                    children: [
-                      BuilderAPI.buildStock(
-                          context,
-                          "IE00B4L5Y983",
-                          "Core MSCI World USD (Acc)",
-                          "x 1,0638",
-                          BuilderAPI.randomValue(),
-                          BuilderAPI.randomValue(),
-                          40,
-                          40),
-                      BuilderAPI.buildStock(
-                          context,
-                          "XF000BTC0017",
-                          "Bitcoin",
-                          "x 0,0023",
-                          BuilderAPI.randomValue(),
-                          BuilderAPI.randomValue(),
-                          40,
-                          40),
-                      BuilderAPI.buildStock(
-                          context,
-                          "XF000ETH0019",
-                          "Ethereum",
-                          "x 0,0281",
-                          BuilderAPI.randomValue(),
-                          BuilderAPI.randomValue(),
-                          40,
-                          40),
-                      BuilderAPI.buildStock(
-                          context,
-                          "US0378331005",
-                          "Apple",
-                          "x 0,0663",
-                          BuilderAPI.randomValue(),
-                          BuilderAPI.randomValue(),
-                          40,
-                          40),
-                    ],
-                  ),
-                ),
+                StreamBuilder(
+                    stream: WebsocketAPI.getCryptoValueStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return BuilderAPI.buildSearchSkeleton();
+                      } else if (snapshot.hasData) {
+                        List<Crypto> cryptoList =
+                            (snapshot.data as List<Crypto>);
+                        return SizedBox(
+                          height: 300.h,
+                          child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              itemCount: cryptoList.length,
+                              itemBuilder: (context, index) {
+                                Crypto crypto = cryptoList[index];
+                                return Row(
+                                  children: [
+                                    BuilderAPI.buildStock(
+                                        context,
+                                        crypto.isin,
+                                        crypto.name,
+                                        crypto.quantity.toString() + " Cryptos",
+                                        crypto.quantity * crypto.bid["price"],
+                                        crypto.quantity * crypto.boughtAT,
+                                        35,
+                                        40),
+                                  ],
+                                );
+                              }),
+                        );
+                      } else {
+                        return BuilderAPI.buildText(
+                            text: "NOOOOO",
+                            color: Colors.white,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.normal);
+                      }
+                    }),
                 StreamBuilder(
                     stream: WebsocketAPI.getStockValueStream(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return BuilderAPI.buildText(
-                            text: "Waiting",
-                            color: Colors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.normal);
+                        return BuilderAPI.buildSearchSkeleton();
                       } else if (snapshot.hasData) {
-                        List<Test> stockList = (snapshot.data as List<Test>);
-                        stockList.sort(
-                            (a, b) => b.bid["price"].compareTo(a.bid["price"]));
+                        List<Stock> stockList = (snapshot.data as List<Stock>);
                         return SizedBox(
                           height: 300.h,
                           child: ListView.builder(
+                              padding: EdgeInsets.zero,
                               itemCount: stockList.length,
                               itemBuilder: (context, index) {
-                                Test stock = stockList[index];
+                                Stock stock = stockList[index];
                                 return Row(
                                   children: [
-                                    BuilderAPI.buildStockPicture(
-                                        stock.isin, 40.h, 40.h),
-                                    BuilderAPI.buildText(
-                                        text: stock.bid["price"].toString(),
-                                        color: Colors.white,
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.normal)
+                                    BuilderAPI.buildStock(
+                                        context,
+                                        stock.isin,
+                                        stock.name,
+                                        stock.quantity.toString() +
+                                            " " +
+                                            stock.type,
+                                        stock.quantity * stock.bid["price"],
+                                        stock.quantity * stock.boughtAT,
+                                        35,
+                                        40),
                                   ],
                                 );
                               }),
