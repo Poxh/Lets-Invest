@@ -37,25 +37,6 @@ class _StockAboutPageState extends State<StockAboutPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Padding(
-          padding: EdgeInsets.only(left: 25.w),
-          child: Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 10.w),
-                child: BuilderAPI.buildStockPicture(
-                    StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin,
-                    30.w,
-                    30.h),
-              ),
-              BuilderAPI.buildText(
-                  text: isIntlSymbolNull ? "No data" : tag["intlSymbol"],
-                  color: Colors.white,
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.bold),
-            ],
-          ),
-        ),
         backgroundColor: Color.fromARGB(255, 8, 8, 15),
         elevation: 1,
         actions: [
@@ -88,7 +69,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Divider(
               color: Color.fromARGB(50, 255, 255, 255),
-              thickness: 3.h,
+              thickness: 2.h,
             ),
             Padding(
               padding: EdgeInsets.only(top: 20.h),
@@ -113,9 +94,44 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     ChartFilter(onTap: (() {
                       print("HELLO");
                     })),
+                    DefaultTabController(
+                      length: 3,
+                      child: Column(
+                        children: [
+                          TabBar(isScrollable: true, tabs: [
+                            Tab(
+                              child: BuilderAPI.buildText(
+                                  text: "Summary",
+                                  color: Colors.white,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Tab(
+                              child: BuilderAPI.buildText(
+                                  text: "News",
+                                  color: Colors.white,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Tab(
+                              child: BuilderAPI.buildText(
+                                  text: "Conversations",
+                                  color: Colors.white,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ])
+                        ],
+                      ),
+                    ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15.w, top: 15.h, bottom: 5.h),
-                      child: BuilderAPI.buildText(text: "Summary", color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                      padding:
+                          EdgeInsets.only(left: 15.w, top: 15.h, bottom: 5.h),
+                      child: BuilderAPI.buildText(
+                          text: "Summary",
+                          color: Colors.white,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 15.w, right: 15.w),
@@ -126,32 +142,46 @@ class _StockAboutPageState extends State<StockAboutPage> {
                       children: [
                         GestureDetector(
                           child: Padding(
-                            padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 5, bottom: 5),
+                            padding: EdgeInsets.only(
+                                left: 15.w, right: 15.w, top: 5, bottom: 5),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color.fromARGB(50, 9, 64, 108),
-                                borderRadius: BorderRadius.circular(5.sp)
-                              ),
+                                  color: Color.fromARGB(200, 72, 96, 238),
+                                  borderRadius: BorderRadius.circular(5.sp)),
                               child: Padding(
-                                padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h, bottom: 10.h),
+                                padding: EdgeInsets.only(
+                                    left: 25.w,
+                                    right: 25.w,
+                                    top: 10.h,
+                                    bottom: 10.h),
                                 child: BuilderAPI.buildText(
-                                  text: "Buy shares", color: Colors.blue, fontSize: 20.sp, fontWeight: FontWeight.normal),
+                                    text: "Buy shares",
+                                    color: Colors.white,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.normal),
                               ),
                             ),
                           ),
                         ),
                         GestureDetector(
                           child: Padding(
-                            padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 5, bottom: 5),
+                            padding: EdgeInsets.only(
+                                left: 15.w, right: 15.w, top: 5, bottom: 5),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color.fromARGB(50, 9, 64, 108),
-                                borderRadius: BorderRadius.circular(5.sp)
-                              ),
+                                  color: Color.fromARGB(50, 9, 64, 108),
+                                  borderRadius: BorderRadius.circular(5.sp)),
                               child: Padding(
-                                padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h, bottom: 10.h),
+                                padding: EdgeInsets.only(
+                                    left: 15.w,
+                                    right: 15.w,
+                                    top: 10.h,
+                                    bottom: 10.h),
                                 child: BuilderAPI.buildText(
-                                  text: "Sell shares", color: Colors.blue, fontSize: 20.sp, fontWeight: FontWeight.normal),
+                                    text: "Sell shares",
+                                    color: Colors.blue,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.normal),
                               ),
                             ),
                           ),
@@ -531,6 +561,4 @@ class _StockAboutPageState extends State<StockAboutPage> {
       ),
     );
   }
-
- 
 }
