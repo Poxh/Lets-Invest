@@ -10,6 +10,9 @@ class CalculationAPI {
   }
 
   static bool hasMadeLost(currentPrice, boughtPrice) {
+    print(calculateProfitLostInEUR(currentPrice, boughtPrice)
+        .toString()
+        .contains("-"));
     return calculateProfitLostInEUR(currentPrice, boughtPrice)
         .toString()
         .contains("-");

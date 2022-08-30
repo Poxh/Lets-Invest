@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
@@ -18,6 +20,7 @@ class WebsocketAPI {
   static bool loadedSearch = false;
   static var latestStockDetail;
   static var latestInstrumentDetail;
+  static var latestNeonNews = [];
   static double latestPrice = 0.0;
 
   static List<String> messageList = [];
@@ -52,6 +55,17 @@ class WebsocketAPI {
       (data) {
         if (data == "connected") {
           return;
+        }
+
+        var replaceIndex1 = data.toString().indexOf(" [");
+        if (replaceIndex1 != -1) {
+          var jsonResult = json.decode(data.toString().replaceRange(0, replaceIndex1, ""));
+          if(jsonResult.length > 0) {
+            if(isNeonNewsRequest(jsonResult)) {
+              print(jsonResult);
+              setLatestNeonNews(jsonResult);
+            }
+          }
         }
 
         var replaceEndIndex = data.toString().indexOf(" {");
@@ -137,6 +151,16 @@ class WebsocketAPI {
 
     sendMessageToWebSocket(
         'connect 22 {"locale":"en","platformId":"webtrading","platformVersion":"chrome - 96.0.4664","clientId":"app.traderepublic.com","clientVersion":"6513"}');
+  }
+
+  isNeonNewsRequest(dataJson) {
+    return dataJson[0]["createdAt"] != null && dataJson[0]["provider"] != null && dataJson[0]["headline"] != null && 
+    dataJson[0]["summary"] != null;
+  }
+
+  setLatestNeonNews(dataJson) {
+    latestNeonNews = [];
+    latestNeonNews = dataJson; 
   }
 
   isResponseSearch(dataJson) {

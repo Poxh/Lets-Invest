@@ -45,18 +45,18 @@ class _StockPageState extends State<StockPage> {
   void initState() {
     super.initState();
     websocketAPI.initializeConnection();
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"XF000BTC0017.BHS"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"XF000ETH0019.BHS"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"US0378331005.LSX"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"IE00B4L5Y983.LSX"}');
+    // websocketAPI.sendMessageToWebSocket('sub ' +
+    //     WebsocketAPI.randomNumber().toString() +
+    //     ' {"type":"ticker","id":"XF000BTC0017.BHS"}');
+    // websocketAPI.sendMessageToWebSocket('sub ' +
+    //     WebsocketAPI.randomNumber().toString() +
+    //     ' {"type":"ticker","id":"XF000ETH0019.BHS"}');
+    // websocketAPI.sendMessageToWebSocket('sub ' +
+    //     WebsocketAPI.randomNumber().toString() +
+    //     ' {"type":"ticker","id":"US0378331005.LSX"}');
+    // websocketAPI.sendMessageToWebSocket('sub ' +
+    //     WebsocketAPI.randomNumber().toString() +
+    //     ' {"type":"ticker","id":"IE00B4L5Y983.LSX"}');
   }
 
   List<String> stocks = ["TEST", "WWW", "dsadasda"];

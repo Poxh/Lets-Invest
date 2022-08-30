@@ -1,4 +1,4 @@
-// ignore_for_file: override_on_non_overriding_member, prefer_const_constructors
+// ignore_for_file: override_on_non_overriding_member, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,10 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/CalculationAPI.dart';
 import 'package:lets_invest/components/ChartFilter.dart';
+import 'package:lets_invest/components/Summary.dart';
+import 'package:lets_invest/components/TabBarPage.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
 
 import '../api/WebsocketAPI.dart';
-import '../components/Summary.dart';
 import '../data/StockDetail.dart';
 
 class StockAboutPage extends StatefulWidget {
@@ -24,6 +25,9 @@ class _StockAboutPageState extends State<StockAboutPage> {
   Icon icon =
       Icon(Icons.star_border_outlined, color: Colors.white, size: 30.sp);
   bool isFavorite = false;
+  bool hasMadeLost = CalculationAPI.hasMadeLost(
+                          WebsocketAPI.getCurrentStockValue(),
+                          WebsocketAPI.getStartStockValue());
 
   @override
   void initState() {
@@ -37,8 +41,8 @@ class _StockAboutPageState extends State<StockAboutPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 8, 8, 15),
-        elevation: 1,
+        backgroundColor: hasMadeLost ? Color.fromARGB(255, 198, 19, 19) : Color.fromARGB(255, 16, 113, 71),
+        elevation: 0,
         actions: [
           IconButton(
               splashColor: Colors.transparent,
@@ -61,137 +65,79 @@ class _StockAboutPageState extends State<StockAboutPage> {
           SizedBox(width: 25.w)
         ],
       ),
-      backgroundColor: Color.fromARGB(255, 8, 8, 15),
-      body: Padding(
-        padding: EdgeInsets.only(top: 10.h),
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: hasMadeLost ? [Color.fromARGB(255, 198, 19, 19), Color.fromARGB(255, 195, 43, 43)] : [Color.fromARGB(255, 16, 113, 71), Color.fromARGB(255, 39, 201, 131)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Divider(
-              color: Color.fromARGB(50, 255, 255, 255),
+              color: Color.fromARGB(150, 255, 255, 255),
               thickness: 2.h,
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 20.h),
-              child: Container(
-                color: Color.fromARGB(255, 8, 8, 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildHeader(
-                        CalculationAPI.hasMadeLost(
-                            WebsocketAPI.getCurrentStockValue(),
-                            WebsocketAPI.getStartStockValue()),
-                        tag,
-                        isIntlSymbolNull),
-                    Padding(
-                      padding: EdgeInsets.only(top: 40.h, bottom: 25.h),
-                      child: SizedBox(
-                        height: 150.h,
-                        child: builderAPI.buildChart(context),
-                      ),
+            Container(
+              height: 340.h,
+              child: Column(
+                children: [
+                  buildHeader(
+                      CalculationAPI.hasMadeLost(
+                          WebsocketAPI.getCurrentStockValue(),
+                          WebsocketAPI.getStartStockValue()),
+                      tag,
+                      isIntlSymbolNull),
+                  Padding(
+                    padding: EdgeInsets.only(top: 40.h, bottom: 10.h),
+                    child: SizedBox(
+                      height: 160.h,
+                      child: builderAPI.buildChart(context),
                     ),
-                    ChartFilter(onTap: (() {
-                      print("HELLO");
-                    })),
-                    DefaultTabController(
-                      length: 3,
-                      child: Column(
-                        children: [
-                          TabBar(isScrollable: true, tabs: [
-                            Tab(
-                              child: BuilderAPI.buildText(
-                                  text: "Summary",
-                                  color: Colors.white,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Tab(
-                              child: BuilderAPI.buildText(
-                                  text: "News",
-                                  color: Colors.white,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Tab(
-                              child: BuilderAPI.buildText(
-                                  text: "Conversations",
-                                  color: Colors.white,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ])
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(left: 15.w, top: 15.h, bottom: 5.h),
-                      child: BuilderAPI.buildText(
-                          text: "Summary",
-                          color: Colors.white,
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15.w, right: 15.w),
-                      child: Summary(),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: 15.w, right: 15.w, top: 5, bottom: 5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(200, 72, 96, 238),
-                                  borderRadius: BorderRadius.circular(5.sp)),
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 25.w,
-                                    right: 25.w,
-                                    top: 10.h,
-                                    bottom: 10.h),
-                                child: BuilderAPI.buildText(
-                                    text: "Buy shares",
-                                    color: Colors.white,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: 15.w, right: 15.w, top: 5, bottom: 5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(50, 9, 64, 108),
-                                  borderRadius: BorderRadius.circular(5.sp)),
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15.w,
-                                    right: 15.w,
-                                    top: 10.h,
-                                    bottom: 10.h),
-                                child: BuilderAPI.buildText(
-                                    text: "Sell shares",
-                                    color: Colors.blue,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                  ),  
+                  buildIntervalSelection()  
+                ],
               ),
-            )
+            ),
+            IntrinsicHeight(
+              child: Container(
+                height: 250.h,
+                width: double.infinity,
+                color: Color.fromARGB(255, 22, 22, 23),
+                child: TabBarPage(),
+              ),
+            ),
+            // Padding(
+            //   padding: EdgeInsets.only(top: 20.h),
+            //   child: Container(
+            //     color: Color.fromARGB(255, 22, 133, 95),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         buildHeader(
+            //             CalculationAPI.hasMadeLost(
+            //                 WebsocketAPI.getCurrentStockValue(),
+            //                 WebsocketAPI.getStartStockValue()),
+            //             tag,
+            //             isIntlSymbolNull),
+            //         Padding(
+            //           padding: EdgeInsets.only(top: 40.h, bottom: 25.h),
+            //           child: SizedBox(
+            //             height: 150.h,
+            //             child: builderAPI.buildChart(context),
+            //           ),
+            //         ),
+            //         ChartFilter(onTap: (() {
+            //           print("HELLO");
+            //         })),
+            //         Padding(
+            //           padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 15.h),
+            //           child: SizedBox(height: 200.h, child: TabBarPage())
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // )
           ]),
         ),
       ),
@@ -203,9 +149,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     return Container(
       width: double.maxFinite,
       height: 5.h,
-      decoration: BoxDecoration(
-          color: Color.fromARGB(255, 12, 12, 15),
-          borderRadius: BorderRadius.circular(12.sp)),
+      decoration: BoxDecoration(color: Color.fromARGB(255, 12, 12, 15)),
       child: Row(
         children: [
           SizedBox(
@@ -231,54 +175,52 @@ class _StockAboutPageState extends State<StockAboutPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-                child: TextButton(
-                    onPressed: () {},
-                    child: BuilderAPI.buildText(
-                        text: "1T",
-                        color: Colors.white,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold))),
-            Container(
-                child: TextButton(
-                    onPressed: () {},
-                    child: BuilderAPI.buildText(
-                        text: "1W",
-                        color: Colors.white,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold))),
-            Container(
-                child: TextButton(
-                    onPressed: () {},
-                    child: BuilderAPI.buildText(
-                        text: "1M",
-                        color: Colors.white,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold))),
-            Container(
-                child: TextButton(
-                    onPressed: () {},
-                    child: BuilderAPI.buildText(
-                        text: "1J",
-                        color: Colors.white,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold))),
+            buildIntervalItem("1T", () {
+              print("TEST1");
+            }),
+            buildIntervalItem("1W", () {
+              print("TEST2");
+            }),
+            buildIntervalItem("1M", () {
+              print("TEST3");
+            }),
+            buildIntervalItem("1J", () {
+              print("TEST4");
+            }),
             Container(
                 height: 30.h,
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 0, 0),
-                    borderRadius: BorderRadius.circular(3.sp)),
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(13.sp)),
                 child: TextButton(
                     onPressed: () {},
                     child: BuilderAPI.buildText(
                         text: "MAX",
-                        color: Colors.white,
+                        color: hasMadeLost ? Colors.red : Colors.green,
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold))),
             SizedBox(width: 0.w)
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildIntervalItem(text, onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 30.h,
+          decoration: BoxDecoration(
+              color: Color.fromARGB(100, 255, 255, 255),
+              borderRadius: BorderRadius.circular(13.sp)),
+          child: TextButton(
+              onPressed: () {},
+              child: BuilderAPI.buildText(
+                  text: text,
+                  color: Colors.white,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold))),
     );
   }
 
@@ -436,10 +378,6 @@ class _StockAboutPageState extends State<StockAboutPage> {
         splashFactory: NoSplash.splashFactory,
         onTap: (() {}),
         child: Container(
-          decoration: BoxDecoration(
-            color: Color.fromARGB(255, 8, 8, 15),
-            borderRadius: BorderRadius.circular(20.sp),
-          ),
           child: Row(
             children: [
               Expanded(
@@ -498,12 +436,9 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       BuilderAPI.buildText(
-                          text: CalculationAPI.calculateProfitLostInEUR(
-                                      WebsocketAPI.getCurrentStockValue(),
-                                      WebsocketAPI.getStartStockValue())
-                                  .toStringAsFixed(2)
-                                  .replaceAll("-", "") +
-                              "€",
+                          text: WebsocketAPI.getCurrentStockValue()
+                                  .toStringAsFixed(2) +
+                              " €",
                           color: Colors.white,
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold),
@@ -513,14 +448,14 @@ class _StockAboutPageState extends State<StockAboutPage> {
                           FittedBox(
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 35, 35, 35),
-                                  borderRadius: BorderRadius.circular(7.sp)),
+                                  color: Color.fromARGB(250, 35, 35, 35),
+                                  borderRadius: BorderRadius.circular(4.sp)),
                               child: Padding(
                                 padding: EdgeInsets.only(
                                     left: 5.w,
                                     right: 5.w,
-                                    top: 7.h,
-                                    bottom: 7.h),
+                                    top: 3.h,
+                                    bottom: 3.h),
                                 child: Row(
                                   children: [
                                     BuilderAPI.buildText(

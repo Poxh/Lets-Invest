@@ -219,6 +219,9 @@ class BuilderAPI {
           websocketAPI.sendMessageToWebSocket('sub ' +
               WebsocketAPI.randomNumber().toString() +
               ' {"type":"ticker","id":"$isin.LSX"}');
+          websocketAPI.sendMessageToWebSocket('sub ' +
+              WebsocketAPI.randomNumber().toString() +
+              ' {"type":"neonNews","isin":"$isin"}');    
           Future.delayed(const Duration(milliseconds: 250), () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => StockAboutPage()),
@@ -313,7 +316,7 @@ class BuilderAPI {
         tooltipRoundedRadius: 5.sp,
         showOnTopOfTheChartBoxArea: true,
         fitInsideHorizontally: true,
-        tooltipMargin: 0,
+        tooltipMargin: 5.h,
         getTooltipItems: (value) {
           return value
               .map((e) => LineTooltipItem(
@@ -327,7 +330,7 @@ class BuilderAPI {
         return indicators.map(
           (int index) {
             final line =
-                FlLine(color: Colors.grey, strokeWidth: 1, dashArray: [4, 2]);
+                FlLine(color: Color.fromARGB(255, 255, 255, 255), strokeWidth: 1);
             return TouchedSpotIndicatorData(
               line,
               FlDotData(show: false),
@@ -349,7 +352,7 @@ class BuilderAPI {
 
   LineChartBarData get lineChartBarData => LineChartBarData(
         isCurved: true,
-        color: Colors.green,
+        color: Color.fromARGB(255, 255, 255, 255),
         barWidth: 2.w,
         dotData: FlDotData(show: false),
         spots: loadChartData(),

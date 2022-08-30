@@ -49,6 +49,11 @@ class ChartPage extends StatefulWidget {
 class _ChartPageState extends State<ChartPage> {
   String ammount = "";
 
+  List<Color> gradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,7 +68,6 @@ class _ChartPageState extends State<ChartPage> {
   LineChartData get lineChartData => LineChartData(
         lineTouchData: lineTouchData, // Customize touch points
         gridData: gridData,
-        
         titlesData: titlesData, // Customize grid
         borderData: borderData, // Customize border
         lineBarsData: [
@@ -98,20 +102,20 @@ class _ChartPageState extends State<ChartPage> {
   FlBorderData get borderData => FlBorderData(show: false);
 
   LineChartBarData get lineChartBarData => LineChartBarData(
+    belowBarData: BarAreaData(
+    show: true,
+    gradient: LinearGradient(
+      colors: gradientColors
+          .map((color) => color.withOpacity(0.3))
+          .toList(),
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+    ),
+  ),
     isCurved: true,
     color: this.widget.lineColor,
     barWidth: 2,
     dotData: FlDotData(show: false),
     spots: widget.data ?? ChartPage.generateSampleData(),
-    belowBarData: BarAreaData(
-      show: true,
-      color: Colors.green.withOpacity(0.1),
-      spotsLine: BarAreaSpotsLine(
-        flLineStyle: FlLine(
-          color: Colors.grey,
-          strokeWidth: 2.0
-        )
-      )
-    ),
   );
 }
