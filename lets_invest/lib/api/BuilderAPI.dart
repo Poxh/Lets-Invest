@@ -131,7 +131,7 @@ class BuilderAPI {
         onTap: (() {}),
         child: Container(
           width: 350,
-          height: 60.h,
+          height: 100.h,
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 20, 23, 41),
             borderRadius: BorderRadius.circular(20.sp),
@@ -144,6 +144,7 @@ class BuilderAPI {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      BuilderAPI.buildChart(context, 60, 30),
                       Padding(
                         padding: EdgeInsets.only(bottom: 2.h),
                         child: SizedBox(
@@ -314,9 +315,10 @@ class BuilderAPI {
         text: text, color: color, fontSize: fontSize, fontWeight: fontWeight);
   }
 
-  Widget buildChart(BuildContext context) {
+  static Widget buildChart(BuildContext context, double height, double width) {
     return SizedBox(
-      height: 300.h,
+      height: height.h,
+      width: width.w,
       child: LineChart(
         lineChartData,
         swapAnimationDuration: const Duration(milliseconds: 250),
@@ -324,7 +326,7 @@ class BuilderAPI {
     );
   }
 
-  LineChartData get lineChartData => LineChartData(
+  static LineChartData get lineChartData => LineChartData(
         lineTouchData: lineTouchData, // Customize touch points
         gridData: gridData,
         titlesData: titlesData, // Customize grid
@@ -334,7 +336,7 @@ class BuilderAPI {
         ],
       );
 
-  LineTouchData get lineTouchData => LineTouchData(
+  static LineTouchData get lineTouchData => LineTouchData(
       enabled: true,
       touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {},
       touchTooltipData: LineTouchTooltipData(
@@ -366,17 +368,17 @@ class BuilderAPI {
       },
       getTouchLineEnd: (_, __) => double.infinity);
 
-  FlTitlesData get titlesData => FlTitlesData(
+  static FlTitlesData get titlesData => FlTitlesData(
         show: false,
       );
 
-  FlGridData get gridData => FlGridData(
+  static FlGridData get gridData => FlGridData(
         show: false,
       );
 
-  FlBorderData get borderData => FlBorderData(show: false);
+  static FlBorderData get borderData => FlBorderData(show: false);
 
-  LineChartBarData get lineChartBarData => LineChartBarData(
+  static LineChartBarData get lineChartBarData => LineChartBarData(
         isCurved: true,
         color: Color.fromARGB(255, 255, 255, 255),
         barWidth: 2.w,
@@ -393,6 +395,28 @@ class BuilderAPI {
         FlSpot(aggregate.time.toDouble(), aggregate.close),
       );
     }
+    return result;
+  }
+
+  static List<FlSpot> generateSampleData() {
+    final List<FlSpot> result = [];
+    final numPoints = 35;
+    final maxY = 6;
+
+    double prev = 0;
+
+    for (int i = 0; i < numPoints; i++) {
+      final next = prev +
+          Random().nextInt(3).toDouble() % -1000 * i +
+          Random().nextDouble() * maxY / 10;
+
+      prev = next;
+
+      result.add(
+        FlSpot(i.toDouble(), next),
+      );
+    }
+
     return result;
   }
 

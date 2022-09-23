@@ -92,7 +92,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     padding: EdgeInsets.only(top: 40.h, bottom: 10.h),
                     child: SizedBox(
                       height: 160.h,
-                      child: builderAPI.buildChart(context),
+                      child: BuilderAPI.buildChart(context, 300, 200),
                     ),
                   ),  
                   buildIntervalSelection()  

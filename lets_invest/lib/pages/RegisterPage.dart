@@ -79,7 +79,6 @@ class _RegisterPageState extends State<RegisterPage> {
             Map<Object, dynamic> singUpMap = await firebaseAuthenticationAPI.signUp(email: emailController.text, password: passwordController.text) as Map<Object, dynamic>;
             if (singUpMap["user"] != null) {
               User user = singUpMap["user"] as User;
-              print(user);
               AuthenticationAPI authenticationAPI = AuthenticationAPI();
               bool isAuthenticated = await authenticationAPI.authenticate();
               if (isAuthenticated) {

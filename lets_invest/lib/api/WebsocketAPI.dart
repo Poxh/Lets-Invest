@@ -62,7 +62,6 @@ class WebsocketAPI {
           var jsonResult = json.decode(data.toString().replaceRange(0, replaceIndex1, ""));
           if(jsonResult.length > 0) {
             if(isNeonNewsRequest(jsonResult)) {
-              print(jsonResult);
               setLatestNeonNews(jsonResult);
             }
           }
