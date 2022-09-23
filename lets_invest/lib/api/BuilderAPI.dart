@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +17,8 @@ class BuilderAPI {
     return Localizations.localeOf(context).languageCode;
   }
 
-  static Widget buildText(
-      {required String text,
+
+  static buildToolTipText({required String text,
       required Color color,
       required double fontSize,
       required FontWeight fontWeight,
@@ -27,11 +28,35 @@ class BuilderAPI {
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-        color: color,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-      ),
+          color: color,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
     );
+  }
+
+  static Widget buildText(
+      {required String text,
+      required Color color,
+      required double fontSize,
+      required FontWeight fontWeight,
+      int maxLines = 1}) {
+
+    TextStyle style = TextStyle(
+          color: color,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        );    
+
+    return AutoSizeText(
+        text,
+        maxLines: maxLines,
+        style: style,
+        overflowReplacement: Tooltip(
+          message: text,
+          child: buildToolTipText(text: text, color: color, fontSize: fontSize, fontWeight: fontWeight),
+        )
+    );    
   }
 
   static Widget buildTextFormField(
@@ -54,7 +79,7 @@ class BuilderAPI {
                 borderRadius: BorderRadius.circular(12)),
             hintText: text,
             hintStyle: TextStyle(color: Colors.white),
-            fillColor: Color.fromARGB(255, 15, 15, 15),
+            fillColor: Color.fromARGB(255, 255, 0, 0),
             filled: true),
       ),
     );
@@ -96,9 +121,9 @@ class BuilderAPI {
   }
 
   static Widget buildStock(BuildContext context, isin, stockName,
-      String quantity, currentPrice, boughtPrice, double height, double width) {
+      String quantity, currentPrice, boughtPrice) {
     return Padding(
-      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+      padding: EdgeInsets.only(left: 25.w, right: 25.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         onTap: (() {}),
@@ -106,15 +131,11 @@ class BuilderAPI {
           width: 350,
           height: 60.h,
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 6, 6, 6),
+            color: Color.fromARGB(255, 255, 0, 0),
             borderRadius: BorderRadius.circular(20.sp),
           ),
           child: Row(
             children: [
-              Padding(
-                  padding: EdgeInsets.only(
-                      top: 7.h, bottom: 7.h, left: 7.w, right: 12.w),
-                  child: BuilderAPI.buildStockPicture(isin, height, width)),
               Expanded(
                 child: Container(
                   child: Column(
@@ -123,11 +144,14 @@ class BuilderAPI {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(bottom: 2.h),
-                        child: BuilderAPI.buildText(
-                            text: stockName,
-                            color: Colors.white,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.bold),
+                        child: SizedBox(
+                          width: 100.w,
+                          child: BuilderAPI.buildText(
+                              text: stockName,
+                              color: Colors.white,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                       Row(
                         children: [

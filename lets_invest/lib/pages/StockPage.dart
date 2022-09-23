@@ -62,7 +62,7 @@ class _StockPageState extends State<StockPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 6, 6, 6),
+        backgroundColor: Color.fromARGB(255, 255, 0, 0),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 50.h),
@@ -132,9 +132,7 @@ class _StockPageState extends State<StockPage> {
                                         crypto.name,
                                         crypto.quantity.toString() + " Cryptos",
                                         crypto.quantity * crypto.bid["price"],
-                                        crypto.quantity * crypto.boughtAT,
-                                        35,
-                                        40),
+                                        crypto.quantity * crypto.boughtAT),
                                   ],
                                 );
                               }),
@@ -171,9 +169,7 @@ class _StockPageState extends State<StockPage> {
                                             " " +
                                             stock.type,
                                         stock.quantity * stock.bid["price"],
-                                        stock.quantity * stock.boughtAT,
-                                        35,
-                                        40),
+                                        stock.quantity * stock.boughtAT),
                                   ],
                                 );
                               }),
