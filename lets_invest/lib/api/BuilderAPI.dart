@@ -79,7 +79,7 @@ class BuilderAPI {
                 borderRadius: BorderRadius.circular(12)),
             hintText: text,
             hintStyle: TextStyle(color: Colors.white),
-            fillColor: Color.fromARGB(255, 255, 0, 0),
+            fillColor: Color.fromARGB(255, 20, 23, 41),
             filled: true),
       ),
     );
@@ -131,7 +131,7 @@ class BuilderAPI {
           width: 350,
           height: 60.h,
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 255, 0, 0),
+            color: Color.fromARGB(255, 20, 23, 41),
             borderRadius: BorderRadius.circular(20.sp),
           ),
           child: Row(

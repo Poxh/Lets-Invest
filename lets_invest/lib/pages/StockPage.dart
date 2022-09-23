@@ -62,7 +62,7 @@ class _StockPageState extends State<StockPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 0, 0),
+        backgroundColor: Color.fromARGB(255, 20, 23, 41),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 50.h),
