@@ -53,6 +53,10 @@ class BuilderAPI {
         maxLines: maxLines,
         style: style,
         overflowReplacement: Tooltip(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 42, 47, 72),
+            borderRadius: BorderRadius.circular(8),
+          ),
           message: text,
           child: buildToolTipText(text: text, color: color, fontSize: fontSize, fontWeight: fontWeight),
         )
@@ -109,8 +113,8 @@ class BuilderAPI {
   static Widget buildStockPicture(isin, double height, double width) {
     return Container(
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 27, 27, 27),
-            borderRadius: BorderRadius.circular(7.sp)),
+            color: Color.fromARGB(255, 42, 47, 72),
+            shape: BoxShape.circle),
         height: height.h,
         width: width.w,
         child: Image.network(
@@ -131,20 +135,23 @@ class BuilderAPI {
         onTap: (() {}),
         child: Container(
           width: 350,
-          height: 100.h,
+          height: 60.h,
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 20, 23, 41),
             borderRadius: BorderRadius.circular(20.sp),
           ),
           child: Row(
             children: [
+              Padding(
+                padding: EdgeInsets.only(right: 10.w),
+                child: buildStockPicture(isin, 35.h, 35.w),
+              ),
               Expanded(
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      BuilderAPI.buildChart(context, 60, 30),
                       Padding(
                         padding: EdgeInsets.only(bottom: 2.h),
                         child: SizedBox(
