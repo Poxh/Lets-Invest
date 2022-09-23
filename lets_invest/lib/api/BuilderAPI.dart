@@ -126,6 +126,8 @@ class BuilderAPI {
       padding: EdgeInsets.only(left: 25.w, right: 25.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
         onTap: (() {}),
         child: Container(
           width: 350,

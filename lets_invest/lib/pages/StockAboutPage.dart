@@ -176,16 +176,12 @@ class _StockAboutPageState extends State<StockAboutPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             buildIntervalItem("1T", () {
-              print("TEST1");
             }),
             buildIntervalItem("1W", () {
-              print("TEST2");
             }),
             buildIntervalItem("1M", () {
-              print("TEST3");
             }),
             buildIntervalItem("1J", () {
-              print("TEST4");
             }),
             Container(
                 height: 30.h,
