@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../api/CalculationAPI.dart';
 
 import '../data/Crypto.dart';
@@ -69,7 +70,7 @@ class _StockPageState extends State<StockPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 20, 23, 41),
+        backgroundColor: Color.fromARGB(255, 14, 14, 14),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 50.h),

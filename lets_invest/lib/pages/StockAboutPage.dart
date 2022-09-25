@@ -67,10 +67,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: hasMadeLost ? [Color.fromARGB(255, 198, 19, 19), Color.fromARGB(255, 195, 43, 43)] : [Color.fromARGB(255, 16, 113, 71), Color.fromARGB(255, 39, 201, 131)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter)),
+        color: Colors.black),
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -49,6 +49,7 @@ dependencies:
   shimmer: ^2.0.0
   smooth_page_indicator: ^1.0.0+2
   auto_size_text: ^3.0.0
+  percent_indicator: ^4.2.1
 
 dev_dependencies:
   change_app_package_name: ^1.1.0

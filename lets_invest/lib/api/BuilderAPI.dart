@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
 import 'package:lets_invest/data/Aggregate.dart';
 import 'package:lets_invest/pages/StockAboutPage.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 import 'CalculationAPI.dart';
 
@@ -139,7 +140,7 @@ class BuilderAPI {
           width: 350,
           height: 60.h,
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 20, 23, 41),
+            color: Color.fromARGB(255, 14, 14, 14),
             borderRadius: BorderRadius.circular(20.sp),
           ),
           child: Row(
@@ -393,10 +394,18 @@ class BuilderAPI {
 
   static LineChartBarData get lineChartBarData => LineChartBarData(
         isCurved: true,
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: Color.fromARGB(255, 16, 113, 71),
         barWidth: 2.w,
         dotData: FlDotData(show: false),
         spots: loadChartData(),
+        belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: [Color.fromARGB(255, 16, 113, 71).withOpacity(0.5), Color.fromARGB(255, 39, 201, 131).withOpacity(0.02)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          )
       );
 
   static List<FlSpot> loadChartData() {
@@ -471,6 +480,16 @@ class BuilderAPI {
           ),
           baseColor: Color.fromARGB(255, 13, 13, 13),
           highlightColor: Color.fromARGB(255, 20, 20, 20)),
+    );
+  }
+
+  static Widget buildCircularPercentIndicator(double radius, double width, double percent, Color color) {
+    return CircularPercentIndicator(
+      radius: radius.sp,
+      lineWidth: width.h,
+      percent: percent,
+      progressColor: color,
+      circularStrokeCap: CircularStrokeCap.round,
     );
   }
 
