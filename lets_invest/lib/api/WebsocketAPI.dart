@@ -101,7 +101,7 @@ class WebsocketAPI {
                 PerformanceData performance =
                     PerformanceData.fromJson(dataJson);
                 var bid = performance.bid;
-                var type = isinObject[1];
+                var type = isinObject[isinObject.length - 1];
                 Test test = Test(isin: isinObject[0], bid: bid, type: type);
 
                 if (type == "LSX") {
