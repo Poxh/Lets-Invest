@@ -329,26 +329,40 @@ class BuilderAPI {
         text: text, color: color, fontSize: fontSize, fontWeight: fontWeight);
   }
 
-  static Widget buildChart(BuildContext context, double height, double width) {
+  static Widget buildChart(BuildContext context, double height, double width, bool hasMadeLost) {
     return SizedBox(
       height: height.h,
       width: width.w,
       child: LineChart(
-        lineChartData,
+        LineChartData(
+          lineTouchData: lineTouchData, // Customize touch points
+          gridData: gridData,
+          titlesData: titlesData, // Customize grid
+          borderData: borderData, // Customize border
+          lineBarsData: [
+            LineChartBarData(
+              isCurved: true,
+              color: hasMadeLost ? Color.fromARGB(255, 231, 9, 28) : Color.fromARGB(255, 18, 200, 121),
+              barWidth: 2.w,
+              dotData: FlDotData(show: false),
+              spots: loadChartData(),
+              belowBarData: BarAreaData(
+                  show: true,
+                  gradient: LinearGradient(
+                    colors: hasMadeLost 
+                    ? [Color.fromARGB(255, 181, 12, 23).withOpacity(0.5), Color.fromARGB(255, 231, 9, 28).withOpacity(0.01)]
+                    : [Color.fromARGB(255, 16, 113, 71).withOpacity(0.5), Color.fromARGB(255, 39, 201, 131).withOpacity(0.007)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+              )
+            )
+          ],
+        ),
         swapAnimationDuration: const Duration(milliseconds: 250),
       ),
     );
   }
-
-  static LineChartData get lineChartData => LineChartData(
-        lineTouchData: lineTouchData, // Customize touch points
-        gridData: gridData,
-        titlesData: titlesData, // Customize grid
-        borderData: borderData, // Customize border
-        lineBarsData: [
-          lineChartBarData,
-        ],
-      );
 
   static LineTouchData get lineTouchData => LineTouchData(
       enabled: true,
@@ -391,22 +405,6 @@ class BuilderAPI {
       );
 
   static FlBorderData get borderData => FlBorderData(show: false);
-
-  static LineChartBarData get lineChartBarData => LineChartBarData(
-        isCurved: true,
-        color: Color.fromARGB(255, 16, 113, 71),
-        barWidth: 2.w,
-        dotData: FlDotData(show: false),
-        spots: loadChartData(),
-        belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: [Color.fromARGB(255, 16, 113, 71).withOpacity(0.5), Color.fromARGB(255, 39, 201, 131).withOpacity(0.02)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          )
-      );
 
   static List<FlSpot> loadChartData() {
     final List<FlSpot> result = [];

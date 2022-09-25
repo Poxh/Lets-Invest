@@ -26,8 +26,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
       Icon(Icons.star_border_outlined, color: Colors.white, size: 30.sp);
   bool isFavorite = false;
   bool hasMadeLost = CalculationAPI.hasMadeLost(
-                          WebsocketAPI.getCurrentStockValue(),
-                          WebsocketAPI.getStartStockValue());
+      WebsocketAPI.getCurrentStockValue(), WebsocketAPI.getStartStockValue());
 
   @override
   void initState() {
@@ -41,7 +40,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: hasMadeLost ? Color.fromARGB(255, 198, 19, 19) : Color.fromARGB(255, 16, 113, 71),
+        backgroundColor: Color.fromARGB(255, 14, 14, 14),
         elevation: 0,
         actions: [
           IconButton(
@@ -66,17 +65,12 @@ class _StockAboutPageState extends State<StockAboutPage> {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-        color: Colors.black),
+        decoration: BoxDecoration(color: Color.fromARGB(255, 14, 14, 14)),
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Divider(
-              color: Color.fromARGB(150, 255, 255, 255),
-              thickness: 2.h,
-            ),
             Container(
-              height: 340.h,
+              height: 350.h,
               child: Column(
                 children: [
                   buildHeader(
@@ -88,11 +82,17 @@ class _StockAboutPageState extends State<StockAboutPage> {
                   Padding(
                     padding: EdgeInsets.only(top: 40.h, bottom: 10.h),
                     child: SizedBox(
-                      height: 160.h,
-                      child: BuilderAPI.buildChart(context, double.infinity, 400),
+                      height: 180.h,
+                      child: BuilderAPI.buildChart(
+                          context,
+                          double.infinity,
+                          600,
+                          CalculationAPI.hasMadeLost(
+                              WebsocketAPI.getCurrentStockValue(),
+                              WebsocketAPI.getStartStockValue())),
                     ),
-                  ),  
-                  buildIntervalSelection()  
+                  ),
+                  buildIntervalSelection()
                 ],
               ),
             ),
@@ -104,37 +104,6 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 child: TabBarPage(),
               ),
             ),
-            // Padding(
-            //   padding: EdgeInsets.only(top: 20.h),
-            //   child: Container(
-            //     color: Color.fromARGB(255, 22, 133, 95),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         buildHeader(
-            //             CalculationAPI.hasMadeLost(
-            //                 WebsocketAPI.getCurrentStockValue(),
-            //                 WebsocketAPI.getStartStockValue()),
-            //             tag,
-            //             isIntlSymbolNull),
-            //         Padding(
-            //           padding: EdgeInsets.only(top: 40.h, bottom: 25.h),
-            //           child: SizedBox(
-            //             height: 150.h,
-            //             child: builderAPI.buildChart(context),
-            //           ),
-            //         ),
-            //         ChartFilter(onTap: (() {
-            //           print("HELLO");
-            //         })),
-            //         Padding(
-            //           padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 15.h),
-            //           child: SizedBox(height: 200.h, child: TabBarPage())
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // )
           ]),
         ),
       ),
@@ -172,14 +141,10 @@ class _StockAboutPageState extends State<StockAboutPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buildIntervalItem("1T", () {
-            }),
-            buildIntervalItem("1W", () {
-            }),
-            buildIntervalItem("1M", () {
-            }),
-            buildIntervalItem("1J", () {
-            }),
+            buildIntervalItem("1T", () {}),
+            buildIntervalItem("1W", () {}),
+            buildIntervalItem("1M", () {}),
+            buildIntervalItem("1J", () {}),
             Container(
                 height: 30.h,
                 decoration: BoxDecoration(
@@ -203,7 +168,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 30.h,
+          height: 30.h,
           decoration: BoxDecoration(
               color: Color.fromARGB(100, 255, 255, 255),
               borderRadius: BorderRadius.circular(13.sp)),
