@@ -150,6 +150,7 @@ class _StockPageState extends State<StockPage> {
                         return SizedBox(
                           height: 170.h,
                           child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
                               itemCount: stockList.length,
                               itemBuilder: (context, index) {
@@ -159,12 +160,13 @@ class _StockPageState extends State<StockPage> {
                                     BuilderAPI.buildStock(
                                         context,
                                         stock.isin,
+                                        "LSX",
                                         stock.name,
                                         stock.quantity.toString() +
                                             " " +
                                             stock.type,
                                         stock.quantity * stock.bid["price"],
-                                        stock.quantity * stock.boughtAT),
+                                        stock.quantity * stock.boughtAT, websocketAPI),
                                   ],
                                 );
                               }),
@@ -199,6 +201,7 @@ class _StockPageState extends State<StockPage> {
                           return SizedBox(
                             height: 170.h,
                             child: ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
                                 padding: EdgeInsets.zero,
                                 itemCount: cryptoList.length,
                                 itemBuilder: (context, index) {
@@ -208,10 +211,11 @@ class _StockPageState extends State<StockPage> {
                                       BuilderAPI.buildStock(
                                           context,
                                           crypto.isin,
+                                          "BHS",
                                           crypto.name,
                                           crypto.quantity.toString() + " Cryptos",
                                           crypto.quantity * crypto.bid["price"],
-                                          crypto.quantity * crypto.boughtAT),
+                                          crypto.quantity * crypto.boughtAT, websocketAPI),
                                     ],
                                   );
                                 }),

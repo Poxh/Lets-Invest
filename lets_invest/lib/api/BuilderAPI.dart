@@ -124,15 +124,17 @@ class BuilderAPI {
         }));
   }
 
-  static Widget buildStock(BuildContext context, isin, stockName,
-      String quantity, currentPrice, boughtPrice) {
+  static Widget buildStock(BuildContext context, isin, type, stockName,
+      String quantity, currentPrice, boughtPrice, websocketAPI) {
     return Padding(
       padding: EdgeInsets.only(left: 25.w, right: 25.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
-        onTap: (() {}),
+        onTap: (() {
+          openDetailedInformations(websocketAPI, isin, type, context); 
+        }),
         child: Container(
           width: 350,
           height: 60.h,
@@ -235,32 +237,13 @@ class BuilderAPI {
   }
 
   static Widget buildSearch(
-      BuildContext context, isin, stockName, description, websocketAPI) {
+      BuildContext context, isin, type, stockName, description, websocketAPI) {
     return Padding(
       padding: EdgeInsets.only(left: 10.w, right: 10.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         onTap: (() {
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"aggregateHistoryLight","range":"5y","id":"$isin.LSX"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"ticker","id":"$isin.LSX"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"neonNews","isin":"$isin"}');    
-          Future.delayed(const Duration(milliseconds: 250), () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => StockAboutPage()),
-            );
-          });
+          openDetailedInformations(websocketAPI, isin, type, context);  
         }),
         child: Container(
           decoration: BoxDecoration(
@@ -308,6 +291,29 @@ class BuilderAPI {
         ),
       ),
     );
+  }
+
+  static void openDetailedInformations(WebsocketAPI websocketAPI, isin, type, context) {
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"aggregateHistoryLight","range":"5y","id":"$isin.$type"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"ticker","id":"$isin.$type"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"neonNews","isin":"$isin"}');    
+    Future.delayed(const Duration(milliseconds: 250), () {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => StockAboutPage()),
+      );
+    });
   }
 
   static double randomValue() {
