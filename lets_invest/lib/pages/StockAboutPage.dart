@@ -100,8 +100,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
               child: Container(
                 height: 250.h,
                 width: double.infinity,
-                color: Color.fromARGB(255, 22, 22, 23),
-                child: TabBarPage(),
+                color: Color.fromARGB(255, 14, 14, 14),
               ),
             ),
           ]),
@@ -141,23 +140,72 @@ class _StockAboutPageState extends State<StockAboutPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buildIntervalItem("1T", () {}),
-            buildIntervalItem("1W", () {}),
-            buildIntervalItem("1M", () {}),
-            buildIntervalItem("1J", () {}),
-            Container(
-                height: 30.h,
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(13.sp)),
-                child: TextButton(
-                    onPressed: () {},
-                    child: BuilderAPI.buildText(
-                        text: "MAX",
-                        color: hasMadeLost ? Colors.red : Colors.green,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold))),
-            SizedBox(width: 0.w)
+            DefaultTabController(
+              length: 5,
+              child: TabBar(
+                overlayColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                isScrollable: true,
+                indicator: BoxDecoration(
+                    color: Color.fromARGB(255, 67, 11, 165),
+                    borderRadius: BorderRadius.circular(7.sp)),
+                unselectedLabelColor: Colors.white,
+                labelColor: Colors.white,
+                tabs: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1D",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1W",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1M",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1J",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "MAX",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+                indicatorSize: TabBarIndicatorSize.tab,
+              ),
+            ),
           ],
         ),
       ),

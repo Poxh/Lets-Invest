@@ -233,7 +233,14 @@ class _StockPageState extends State<StockPage> {
               ],
             ),
           ),
-        ));
+        ));   
+  }
+
+  @override
+  void dispose() {
+    websocketAPI.webSocketChannel.sink.close();
+    print("Disosed");
+    super.dispose();
   }
 
   String ammount = "";

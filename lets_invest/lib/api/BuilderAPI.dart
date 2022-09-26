@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -18,8 +18,8 @@ class BuilderAPI {
     return Localizations.localeOf(context).languageCode;
   }
 
-
-  static buildToolTipText({required String text,
+  static buildToolTipText(
+      {required String text,
       required Color color,
       required double fontSize,
       required FontWeight fontWeight,
@@ -29,10 +29,10 @@ class BuilderAPI {
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-          color: color,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-        ),
+        color: color,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+      ),
     );
   }
 
@@ -42,15 +42,13 @@ class BuilderAPI {
       required double fontSize,
       required FontWeight fontWeight,
       int maxLines = 1}) {
-
     TextStyle style = TextStyle(
-          color: color,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-        );    
+      color: color,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+    );
 
-    return AutoSizeText(
-        text,
+    return AutoSizeText(text,
         maxLines: maxLines,
         style: style,
         overflowReplacement: Tooltip(
@@ -59,9 +57,12 @@ class BuilderAPI {
             borderRadius: BorderRadius.circular(8),
           ),
           message: text,
-          child: buildToolTipText(text: text, color: color, fontSize: fontSize, fontWeight: fontWeight),
-        )
-    );    
+          child: buildToolTipText(
+              text: text,
+              color: color,
+              fontSize: fontSize,
+              fontWeight: fontWeight),
+        ));
   }
 
   static Widget buildTextFormField(
@@ -114,8 +115,7 @@ class BuilderAPI {
   static Widget buildStockPicture(isin, double height, double width) {
     return Container(
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 42, 47, 72),
-            shape: BoxShape.circle),
+            color: Color.fromARGB(255, 42, 47, 72), shape: BoxShape.circle),
         height: height.h,
         width: width.w,
         child: Image.network(
@@ -134,7 +134,7 @@ class BuilderAPI {
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         onTap: (() {
-          openDetailedInformations(websocketAPI, isin, type, context); 
+          openDetailedInformations(websocketAPI, isin, type, context);
         }),
         child: Container(
           width: 350,
@@ -244,7 +244,7 @@ class BuilderAPI {
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         onTap: (() {
-          openDetailedInformations(websocketAPI, isin, type, context);  
+          openDetailedInformations(websocketAPI, isin, type, context);
         }),
         child: Container(
           decoration: BoxDecoration(
@@ -294,7 +294,8 @@ class BuilderAPI {
     );
   }
 
-  static void openDetailedInformations(WebsocketAPI websocketAPI, isin, type, context) {
+  static void openDetailedInformations(
+      WebsocketAPI websocketAPI, isin, type, context) {
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
         ' {"type":"aggregateHistoryLight","range":"5y","id":"$isin.$type"}');
@@ -309,7 +310,7 @@ class BuilderAPI {
         ' {"type":"ticker","id":"$isin.$type"}');
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
-        ' {"type":"neonNews","isin":"$isin"}');    
+        ' {"type":"neonNews","isin":"$isin"}');
     Future.delayed(const Duration(milliseconds: 250), () {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => StockAboutPage()),
@@ -329,7 +330,8 @@ class BuilderAPI {
         text: text, color: color, fontSize: fontSize, fontWeight: fontWeight);
   }
 
-  static Widget buildChart(BuildContext context, double height, double width, bool hasMadeLost) {
+  static Widget buildChart(
+      BuildContext context, double height, double width, bool hasMadeLost) {
     return SizedBox(
       height: height.h,
       width: width.w,
@@ -341,22 +343,29 @@ class BuilderAPI {
           borderData: borderData, // Customize border
           lineBarsData: [
             LineChartBarData(
-              isCurved: true,
-              color: hasMadeLost ? Color.fromARGB(255, 231, 9, 28) : Color.fromARGB(255, 18, 200, 121),
-              barWidth: 2.w,
-              dotData: FlDotData(show: false),
-              spots: loadChartData(),
-              belowBarData: BarAreaData(
+                isCurved: true,
+                color: hasMadeLost
+                    ? Color.fromARGB(255, 231, 9, 28)
+                    : Color.fromARGB(255, 18, 200, 121),
+                barWidth: 2.w,
+                dotData: FlDotData(show: false),
+                spots: loadChartData(),
+                belowBarData: BarAreaData(
                   show: true,
                   gradient: LinearGradient(
-                    colors: hasMadeLost 
-                    ? [Color.fromARGB(255, 181, 12, 23).withOpacity(0.5), Color.fromARGB(255, 231, 9, 28).withOpacity(0.01)]
-                    : [Color.fromARGB(255, 16, 113, 71).withOpacity(0.5), Color.fromARGB(255, 39, 201, 131).withOpacity(0.007)],
+                    colors: hasMadeLost
+                        ? [
+                            Color.fromARGB(255, 181, 12, 23).withOpacity(0.5),
+                            Color.fromARGB(255, 231, 9, 28).withOpacity(0.01)
+                          ]
+                        : [
+                            Color.fromARGB(255, 16, 113, 71).withOpacity(0.5),
+                            Color.fromARGB(255, 39, 201, 131).withOpacity(0.007)
+                          ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
-              )
-            )
+                ))
           ],
         ),
         swapAnimationDuration: const Duration(milliseconds: 250),
@@ -385,8 +394,8 @@ class BuilderAPI {
           (LineChartBarData barData, List<int> indicators) {
         return indicators.map(
           (int index) {
-            final line =
-                FlLine(color: Color.fromARGB(255, 255, 255, 255), strokeWidth: 1);
+            final line = FlLine(
+                color: Color.fromARGB(255, 255, 255, 255), strokeWidth: 1);
             return TouchedSpotIndicatorData(
               line,
               FlDotData(show: false),
@@ -481,7 +490,8 @@ class BuilderAPI {
     );
   }
 
-  static Widget buildCircularPercentIndicator(double radius, double width, double percent, Color color) {
+  static Widget buildCircularPercentIndicator(
+      double radius, double width, double percent, Color color) {
     return CircularPercentIndicator(
       radius: radius.sp,
       lineWidth: width.h,
@@ -489,6 +499,96 @@ class BuilderAPI {
       progressColor: color,
       circularStrokeCap: CircularStrokeCap.round,
     );
+  }
+
+  static Widget buildTab() {
+    return DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+            height: 40.5.h,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TabBar(
+                  overlayColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                  isScrollable: true,
+                  indicator: BoxDecoration(
+                      color: Color.fromARGB(255, 67, 11, 165),
+                      borderRadius: BorderRadius.circular(7.sp)),
+                  unselectedLabelColor: Colors.white,
+                  labelColor: Colors.white,
+                  tabs: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1D",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1W",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1M",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1J",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "MAX",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
+                  indicatorSize: TabBarIndicatorSize.tab,
+                ),
+                // Expanded(
+                //   child: TabBarView(
+                //     children: [
+                //       Text('Person'),
+                //       Text('ddd'),
+                //       Text('sadad'),
+                //       Text('sadad'),
+                //       Text('sadad'),
+                //     ],
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        ));
   }
 
   static String getMonthName(int month) {
