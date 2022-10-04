@@ -237,6 +237,118 @@ class BuilderAPI {
     );
   }
 
+  static Widget buildPortolioDiversity(BuildContext context, isin, type, stockName,
+      quantity, currentPrice, boughtPrice, websocketAPI) {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.w, right: 25.w),
+      child: InkWell(
+        splashFactory: NoSplash.splashFactory,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: (() {
+          openDetailedInformations(websocketAPI, isin, type, context);
+        }),
+        child: Container(
+          width: 350,
+          height: 60.h,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 14, 14, 14),
+            borderRadius: BorderRadius.circular(20.sp),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 10.w),
+                child: buildStockPicture(isin, 35.h, 35.w),
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 2.h),
+                        child: SizedBox(
+                          width: 100.w,
+                          child: BuilderAPI.buildText(
+                              text: stockName,
+                              color: Colors.white,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(2.sp),
+                            child: BuilderAPI.buildText(
+                                text: quantity.toString() + " Shares",
+                                color: Colors.grey,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                  padding:
+                      EdgeInsets.only(bottom: 12.h, right: 15.w, top: 15.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      BuilderAPI.buildText(
+                          text: currentPrice.toStringAsFixed(2) + "€",
+                          color: Colors.white,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold),
+                      SizedBox(height: 3.h),
+                      Row(
+                        children: [
+                          Icon(
+                            CalculationAPI.hasMadeLost(
+                                    currentPrice, boughtPrice)
+                                ? Icons.arrow_downward
+                                : Icons.arrow_upward,
+                            color: CalculationAPI.hasMadeLost(
+                                    currentPrice, boughtPrice)
+                                ? Colors.red
+                                : Colors.green,
+                            size: 11.sp,
+                          ),
+                          SizedBox(width: 3.w),
+                          BuilderAPI.buildText(
+                              text: CalculationAPI.calculateProfitLostInEUR(
+                                          currentPrice, boughtPrice)
+                                      .toStringAsFixed(2)
+                                      .replaceAll("-", "") +
+                                  "€ • " +
+                                  CalculationAPI
+                                          .calculateProfitLostInPercentage(
+                                              currentPrice, boughtPrice)
+                                      .toStringAsFixed(2)
+                                      .replaceAll("-", "") +
+                                  " %",
+                              color: CalculationAPI.hasMadeLost(
+                                      currentPrice, boughtPrice)
+                                  ? Colors.red
+                                  : Colors.green,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold),
+                        ],
+                      )
+                    ],
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   static Widget buildSearch(
       BuildContext context, isin, type, stockName, description, websocketAPI) {
     return Padding(

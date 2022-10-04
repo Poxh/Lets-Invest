@@ -9,6 +9,7 @@ import 'package:lets_invest/components/ChartFilter.dart';
 import 'package:lets_invest/components/Summary.dart';
 import 'package:lets_invest/components/TabBarPage.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../api/WebsocketAPI.dart';
 import '../data/StockDetail.dart';
@@ -98,17 +99,33 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 ],
               ),
             ),
-            IntrinsicHeight(
-              child: Container(
-                height: 250.h,
-                width: double.infinity,
-                color: Color.fromARGB(255, 14, 14, 14),
-              ),
-            ),
+            BuilderAPI.buildPortolioDiversity(
+                context,
+                StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin,
+                "stock",
+                tag["exchanges"][0]["nameAtExchange"],
+                13.51,
+                WebsocketAPI.getCurrentStockValue(),
+                10.34,
+                websocketAPI),
+            buildPortfolioDiversity(13.51)    
           ]),
         ),
       ),
     );
+  }
+
+  Widget buildPortfolioDiversity(quantity) {
+    var allShares = quantity + 2.39 + 4.12 + 12.87 + 6.12;
+    var allSharesPercentage = 100;
+    var percentage = allSharesPercentage / allShares * quantity / 100;
+    return Padding(
+    padding: EdgeInsets.only(left: 25.w, right: 25.w, bottom: 10.h, top: 5.h),
+    child: Row(
+      children: [CircularPercentIndicator(radius: 15.sp, percent: percentage, progressColor: Colors.green, circularStrokeCap: CircularStrokeCap.round), 
+      Padding(padding: EdgeInsets.only(left: 15.w), child: BuilderAPI.buildText(text: "Portfolio diversity " + (percentage * 100).roundToDouble().toString() + " %", color: Colors.grey, 
+      fontSize: 15.sp, fontWeight: FontWeight.normal))],
+    ));
   }
 
   Widget buildTag(index) {
@@ -148,11 +165,17 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 onTap: (value) {
                   switch (value) {
                     case 0:
-                      setState(() {print("Updated to 1 day"); updateChart("1d");});
+                      setState(() {
+                        print("Updated to 1 day");
+                        updateChart("1d");
+                      });
                       break;
                     case 1:
-                      setState(() {print("Updated to 5 days"); updateChart("5y");});
-                      break;  
+                      setState(() {
+                        print("Updated to 5 days");
+                        updateChart("5y");
+                      });
+                      break;
                     default:
                   }
                 },
@@ -238,8 +261,8 @@ class _StockAboutPageState extends State<StockAboutPage> {
   void updateChart(timeStamp) {
     String isin = StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin;
     websocketAPI.sendMessageToWebSocket('sub ' +
-    WebsocketAPI.randomNumber().toString() +
-    ' {"type":"aggregateHistoryLight","range":"$timeStamp","id":"$isin.LSX"}');
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"aggregateHistoryLight","range":"$timeStamp","id":"$isin.LSX"}');
   }
 
   Widget buildIntervalItem(text, onTap) {
