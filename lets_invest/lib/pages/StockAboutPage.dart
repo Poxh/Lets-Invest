@@ -22,15 +22,16 @@ class StockAboutPage extends StatefulWidget {
 
 class _StockAboutPageState extends State<StockAboutPage> {
   BuilderAPI builderAPI = BuilderAPI();
+  WebsocketAPI websocketAPI = WebsocketAPI();
   Icon icon =
       Icon(Icons.star_border_outlined, color: Colors.white, size: 30.sp);
   bool isFavorite = false;
   bool hasMadeLost = CalculationAPI.hasMadeLost(
-                          WebsocketAPI.getCurrentStockValue(),
-                          WebsocketAPI.getStartStockValue());
+      WebsocketAPI.getCurrentStockValue(), WebsocketAPI.getStartStockValue());
 
   @override
   void initState() {
+    websocketAPI.initializeConnection();
     super.initState();
   }
 
@@ -41,7 +42,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: hasMadeLost ? Color.fromARGB(255, 198, 19, 19) : Color.fromARGB(255, 16, 113, 71),
+        backgroundColor: Color.fromARGB(255, 14, 14, 14),
         elevation: 0,
         actions: [
           IconButton(
@@ -66,20 +67,12 @@ class _StockAboutPageState extends State<StockAboutPage> {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: hasMadeLost ? [Color.fromARGB(255, 198, 19, 19), Color.fromARGB(255, 195, 43, 43)] : [Color.fromARGB(255, 16, 113, 71), Color.fromARGB(255, 39, 201, 131)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter)),
+        decoration: BoxDecoration(color: Color.fromARGB(255, 14, 14, 14)),
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Divider(
-              color: Color.fromARGB(150, 255, 255, 255),
-              thickness: 2.h,
-            ),
             Container(
-              height: 340.h,
+              height: 350.h,
               child: Column(
                 children: [
                   buildHeader(
@@ -91,11 +84,17 @@ class _StockAboutPageState extends State<StockAboutPage> {
                   Padding(
                     padding: EdgeInsets.only(top: 40.h, bottom: 10.h),
                     child: SizedBox(
-                      height: 160.h,
-                      child: builderAPI.buildChart(context),
+                      height: 180.h,
+                      child: BuilderAPI.buildChart(
+                          context,
+                          double.infinity,
+                          600,
+                          CalculationAPI.hasMadeLost(
+                              WebsocketAPI.getCurrentStockValue(),
+                              WebsocketAPI.getStartStockValue())),
                     ),
-                  ),  
-                  buildIntervalSelection()  
+                  ),
+                  buildIntervalSelection(websocketAPI)
                 ],
               ),
             ),
@@ -103,41 +102,9 @@ class _StockAboutPageState extends State<StockAboutPage> {
               child: Container(
                 height: 250.h,
                 width: double.infinity,
-                color: Color.fromARGB(255, 22, 22, 23),
-                child: TabBarPage(),
+                color: Color.fromARGB(255, 14, 14, 14),
               ),
             ),
-            // Padding(
-            //   padding: EdgeInsets.only(top: 20.h),
-            //   child: Container(
-            //     color: Color.fromARGB(255, 22, 133, 95),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         buildHeader(
-            //             CalculationAPI.hasMadeLost(
-            //                 WebsocketAPI.getCurrentStockValue(),
-            //                 WebsocketAPI.getStartStockValue()),
-            //             tag,
-            //             isIntlSymbolNull),
-            //         Padding(
-            //           padding: EdgeInsets.only(top: 40.h, bottom: 25.h),
-            //           child: SizedBox(
-            //             height: 150.h,
-            //             child: builderAPI.buildChart(context),
-            //           ),
-            //         ),
-            //         ChartFilter(onTap: (() {
-            //           print("HELLO");
-            //         })),
-            //         Padding(
-            //           padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 15.h),
-            //           child: SizedBox(height: 200.h, child: TabBarPage())
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // )
           ]),
         ),
       ),
@@ -167,7 +134,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     );
   }
 
-  Widget buildIntervalSelection() {
+  Widget buildIntervalSelection(WebsocketAPI websocketAPI) {
     return Padding(
       padding: EdgeInsets.only(top: 15.h),
       child: Padding(
@@ -175,42 +142,111 @@ class _StockAboutPageState extends State<StockAboutPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buildIntervalItem("1T", () {
-              print("TEST1");
-            }),
-            buildIntervalItem("1W", () {
-              print("TEST2");
-            }),
-            buildIntervalItem("1M", () {
-              print("TEST3");
-            }),
-            buildIntervalItem("1J", () {
-              print("TEST4");
-            }),
-            Container(
-                height: 30.h,
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(13.sp)),
-                child: TextButton(
-                    onPressed: () {},
-                    child: BuilderAPI.buildText(
-                        text: "MAX",
-                        color: hasMadeLost ? Colors.red : Colors.green,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold))),
-            SizedBox(width: 0.w)
+            DefaultTabController(
+              length: 6,
+              child: TabBar(
+                onTap: (value) {
+                  switch (value) {
+                    case 0:
+                      setState(() {print("Updated to 1 day"); updateChart("1d");});
+                      break;
+                    case 1:
+                      setState(() {print("Updated to 5 days"); updateChart("5y");});
+                      break;  
+                    default:
+                  }
+                },
+                overlayColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                isScrollable: true,
+                indicator: BoxDecoration(
+                    color: Color.fromARGB(255, 67, 11, 165),
+                    borderRadius: BorderRadius.circular(7.sp)),
+                unselectedLabelColor: Colors.white,
+                labelColor: Colors.white,
+                tabs: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1D",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1w",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1m",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "6m",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "1Y",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "5Y",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+                indicatorSize: TabBarIndicatorSize.tab,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
+  void updateChart(timeStamp) {
+    String isin = StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin;
+    websocketAPI.sendMessageToWebSocket('sub ' +
+    WebsocketAPI.randomNumber().toString() +
+    ' {"type":"aggregateHistoryLight","range":"$timeStamp","id":"$isin.LSX"}');
+  }
+
   Widget buildIntervalItem(text, onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 30.h,
+          height: 30.h,
           decoration: BoxDecoration(
               color: Color.fromARGB(100, 255, 255, 255),
               borderRadius: BorderRadius.circular(13.sp)),

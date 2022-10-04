@@ -62,7 +62,6 @@ class WebsocketAPI {
           var jsonResult = json.decode(data.toString().replaceRange(0, replaceIndex1, ""));
           if(jsonResult.length > 0) {
             if(isNeonNewsRequest(jsonResult)) {
-              print(jsonResult);
               setLatestNeonNews(jsonResult);
             }
           }
@@ -102,7 +101,7 @@ class WebsocketAPI {
                 PerformanceData performance =
                     PerformanceData.fromJson(dataJson);
                 var bid = performance.bid;
-                var type = isinObject[1];
+                var type = isinObject[isinObject.length - 1];
                 Test test = Test(isin: isinObject[0], bid: bid, type: type);
 
                 if (type == "LSX") {
@@ -259,8 +258,15 @@ class WebsocketAPI {
           bid: null,
           quantity: 0.0281,
           boughtAT: 1597);
+      Crypto crypto3 = Crypto(
+          name: "XRP",
+          isin: "XF000XRP0018",
+          bid: null,
+          quantity: 1239,
+          boughtAT: 0.21);    
       cryptoList.add(crypto1);
       cryptoList.add(crypto2);
+      cryptoList.add(crypto3);
 
       for (var i = 0; i < cryptoList.length; i++) {
         Crypto crypto = cryptoList[i];
@@ -294,8 +300,16 @@ class WebsocketAPI {
           quantity: 0.0663,
           boughtAT: 150.68,
           type: "Stocks");
+      Stock stock3 = Stock(
+          name: "Amazon",
+          isin: "US0231351067",
+          bid: null,
+          quantity: 1.36,
+          boughtAT: 117.32,
+          type: "Stocks");    
       stockList.add(stock1);
       stockList.add(stock2);
+      stockList.add(stock3);
 
       for (var i = 0; i < stockList.length; i++) {
         Stock stock = stockList[i];

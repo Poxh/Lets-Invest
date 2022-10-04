@@ -91,7 +91,7 @@ class _SearchPageState extends State<SearchPage> {
         itemCount: WebsocketAPI.searchResults.length,
         itemBuilder: (context, index) {
           final searchResult = WebsocketAPI.searchResults[index];
-          return BuilderAPI.buildSearch(context, searchResult.isin, searchResult.name, 
+          return BuilderAPI.buildSearch(context, searchResult.isin, "LSX", searchResult.name, 
           searchResult.searchDescription, websocketAPI);
         }
       ),

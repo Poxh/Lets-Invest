@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
 import 'package:lets_invest/data/Aggregate.dart';
 import 'package:lets_invest/pages/StockAboutPage.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 import 'CalculationAPI.dart';
 
@@ -16,7 +18,7 @@ class BuilderAPI {
     return Localizations.localeOf(context).languageCode;
   }
 
-  static Widget buildText(
+  static buildToolTipText(
       {required String text,
       required Color color,
       required double fontSize,
@@ -32,6 +34,35 @@ class BuilderAPI {
         fontWeight: fontWeight,
       ),
     );
+  }
+
+  static Widget buildText(
+      {required String text,
+      required Color color,
+      required double fontSize,
+      required FontWeight fontWeight,
+      int maxLines = 1}) {
+    TextStyle style = TextStyle(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+    );
+
+    return AutoSizeText(text,
+        maxLines: maxLines,
+        style: style,
+        overflowReplacement: Tooltip(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 42, 47, 72),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          message: text,
+          child: buildToolTipText(
+              text: text,
+              color: color,
+              fontSize: fontSize,
+              fontWeight: fontWeight),
+        ));
   }
 
   static Widget buildTextFormField(
@@ -54,7 +85,7 @@ class BuilderAPI {
                 borderRadius: BorderRadius.circular(12)),
             hintText: text,
             hintStyle: TextStyle(color: Colors.white),
-            fillColor: Color.fromARGB(255, 15, 15, 15),
+            fillColor: Color.fromARGB(255, 20, 23, 41),
             filled: true),
       ),
     );
@@ -84,8 +115,7 @@ class BuilderAPI {
   static Widget buildStockPicture(isin, double height, double width) {
     return Container(
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 27, 27, 27),
-            borderRadius: BorderRadius.circular(7.sp)),
+            color: Color.fromARGB(255, 42, 47, 72), shape: BoxShape.circle),
         height: height.h,
         width: width.w,
         child: Image.network(
@@ -95,26 +125,30 @@ class BuilderAPI {
         }));
   }
 
-  static Widget buildStock(BuildContext context, isin, stockName,
-      String quantity, currentPrice, boughtPrice, double height, double width) {
+  static Widget buildStock(BuildContext context, isin, type, stockName,
+      String quantity, currentPrice, boughtPrice, websocketAPI) {
     return Padding(
-      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+      padding: EdgeInsets.only(left: 25.w, right: 25.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
-        onTap: (() {}),
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: (() {
+          openDetailedInformations(websocketAPI, isin, type, context);
+        }),
         child: Container(
           width: 350,
           height: 60.h,
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 6, 6, 6),
+            color: Color.fromARGB(255, 14, 14, 14),
             borderRadius: BorderRadius.circular(20.sp),
           ),
           child: Row(
             children: [
               Padding(
-                  padding: EdgeInsets.only(
-                      top: 7.h, bottom: 7.h, left: 7.w, right: 12.w),
-                  child: BuilderAPI.buildStockPicture(isin, height, width)),
+                padding: EdgeInsets.only(right: 10.w),
+                child: buildStockPicture(isin, 35.h, 35.w),
+              ),
               Expanded(
                 child: Container(
                   child: Column(
@@ -123,11 +157,14 @@ class BuilderAPI {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(bottom: 2.h),
-                        child: BuilderAPI.buildText(
-                            text: stockName,
-                            color: Colors.white,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.bold),
+                        child: SizedBox(
+                          width: 100.w,
+                          child: BuilderAPI.buildText(
+                              text: stockName,
+                              color: Colors.white,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                       Row(
                         children: [
@@ -201,32 +238,13 @@ class BuilderAPI {
   }
 
   static Widget buildSearch(
-      BuildContext context, isin, stockName, description, websocketAPI) {
+      BuildContext context, isin, type, stockName, description, websocketAPI) {
     return Padding(
       padding: EdgeInsets.only(left: 10.w, right: 10.w),
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         onTap: (() {
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"aggregateHistoryLight","range":"5y","id":"$isin.LSX"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"ticker","id":"$isin.LSX"}');
-          websocketAPI.sendMessageToWebSocket('sub ' +
-              WebsocketAPI.randomNumber().toString() +
-              ' {"type":"neonNews","isin":"$isin"}');    
-          Future.delayed(const Duration(milliseconds: 250), () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => StockAboutPage()),
-            );
-          });
+          openDetailedInformations(websocketAPI, isin, type, context);
         }),
         child: Container(
           decoration: BoxDecoration(
@@ -276,6 +294,30 @@ class BuilderAPI {
     );
   }
 
+  static void openDetailedInformations(
+      WebsocketAPI websocketAPI, isin, type, context) {
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"aggregateHistoryLight","range":"1d","id":"$isin.$type"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"ticker","id":"$isin.$type"}');
+    websocketAPI.sendMessageToWebSocket('sub ' +
+        WebsocketAPI.randomNumber().toString() +
+        ' {"type":"neonNews","isin":"$isin"}');
+    Future.delayed(const Duration(milliseconds: 250), () {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => StockAboutPage()),
+      );
+    });
+  }
+
   static double randomValue() {
     var random = Random();
     int randomInt = random.nextInt(100);
@@ -288,27 +330,49 @@ class BuilderAPI {
         text: text, color: color, fontSize: fontSize, fontWeight: fontWeight);
   }
 
-  Widget buildChart(BuildContext context) {
+  static Widget buildChart(
+      BuildContext context, double height, double width, bool hasMadeLost) {
     return SizedBox(
-      height: 300.h,
+      height: height.h,
+      width: width.w,
       child: LineChart(
-        lineChartData,
-        swapAnimationDuration: const Duration(milliseconds: 250),
+        LineChartData(
+          lineTouchData: lineTouchData, // Customize touch points
+          gridData: gridData,
+          titlesData: titlesData, // Customize grid
+          borderData: borderData, // Customize border
+          lineBarsData: [
+            LineChartBarData(
+                isCurved: true,
+                color: hasMadeLost
+                    ? Color.fromARGB(255, 231, 9, 28)
+                    : Color.fromARGB(255, 18, 200, 121),
+                barWidth: 2.w,
+                dotData: FlDotData(show: false),
+                spots: loadChartData(),
+                belowBarData: BarAreaData(
+                  show: true,
+                  gradient: LinearGradient(
+                    colors: hasMadeLost
+                        ? [
+                            Color.fromARGB(255, 181, 12, 23).withOpacity(0.5),
+                            Color.fromARGB(255, 231, 9, 28).withOpacity(0.1)
+                          ]
+                        : [
+                            Color.fromARGB(255, 16, 113, 71).withOpacity(0.5),
+                            Color.fromARGB(255, 39, 201, 131).withOpacity(0.1)
+                          ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ))
+          ],
+        ),
       ),
     );
   }
 
-  LineChartData get lineChartData => LineChartData(
-        lineTouchData: lineTouchData, // Customize touch points
-        gridData: gridData,
-        titlesData: titlesData, // Customize grid
-        borderData: borderData, // Customize border
-        lineBarsData: [
-          lineChartBarData,
-        ],
-      );
-
-  LineTouchData get lineTouchData => LineTouchData(
+  static LineTouchData get lineTouchData => LineTouchData(
       enabled: true,
       touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {},
       touchTooltipData: LineTouchTooltipData(
@@ -329,8 +393,8 @@ class BuilderAPI {
           (LineChartBarData barData, List<int> indicators) {
         return indicators.map(
           (int index) {
-            final line =
-                FlLine(color: Color.fromARGB(255, 255, 255, 255), strokeWidth: 1);
+            final line = FlLine(
+                color: Color.fromARGB(255, 255, 255, 255), strokeWidth: 1);
             return TouchedSpotIndicatorData(
               line,
               FlDotData(show: false),
@@ -340,23 +404,15 @@ class BuilderAPI {
       },
       getTouchLineEnd: (_, __) => double.infinity);
 
-  FlTitlesData get titlesData => FlTitlesData(
+  static FlTitlesData get titlesData => FlTitlesData(
         show: false,
       );
 
-  FlGridData get gridData => FlGridData(
+  static FlGridData get gridData => FlGridData(
         show: false,
       );
 
-  FlBorderData get borderData => FlBorderData(show: false);
-
-  LineChartBarData get lineChartBarData => LineChartBarData(
-        isCurved: true,
-        color: Color.fromARGB(255, 255, 255, 255),
-        barWidth: 2.w,
-        dotData: FlDotData(show: false),
-        spots: loadChartData(),
-      );
+  static FlBorderData get borderData => FlBorderData(show: false);
 
   static List<FlSpot> loadChartData() {
     final List<FlSpot> result = [];
@@ -367,6 +423,28 @@ class BuilderAPI {
         FlSpot(aggregate.time.toDouble(), aggregate.close),
       );
     }
+    return result;
+  }
+
+  static List<FlSpot> generateSampleData() {
+    final List<FlSpot> result = [];
+    final numPoints = 35;
+    final maxY = 6;
+
+    double prev = 0;
+
+    for (int i = 0; i < numPoints; i++) {
+      final next = prev +
+          Random().nextInt(3).toDouble() % -1000 * i +
+          Random().nextDouble() * maxY / 10;
+
+      prev = next;
+
+      result.add(
+        FlSpot(i.toDouble(), next),
+      );
+    }
+
     return result;
   }
 
@@ -409,6 +487,107 @@ class BuilderAPI {
           baseColor: Color.fromARGB(255, 13, 13, 13),
           highlightColor: Color.fromARGB(255, 20, 20, 20)),
     );
+  }
+
+  static Widget buildCircularPercentIndicator(
+      double radius, double width, double percent, Color color) {
+    return CircularPercentIndicator(
+      radius: radius.sp,
+      lineWidth: width.h,
+      percent: percent,
+      progressColor: color,
+      circularStrokeCap: CircularStrokeCap.round,
+    );
+  }
+
+  static Widget buildTab() {
+    return DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+            height: 40.5.h,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TabBar(
+                  overlayColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                  isScrollable: true,
+                  indicator: BoxDecoration(
+                      color: Color.fromARGB(255, 67, 11, 165),
+                      borderRadius: BorderRadius.circular(7.sp)),
+                  unselectedLabelColor: Colors.white,
+                  labelColor: Colors.white,
+                  tabs: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1D",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1W",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1M",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "1J",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                      child: Container(
+                        child: BuilderAPI.buildText(
+                            text: "MAX",
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
+                  indicatorSize: TabBarIndicatorSize.tab,
+                ),
+                // Expanded(
+                //   child: TabBarView(
+                //     children: [
+                //       Text('Person'),
+                //       Text('ddd'),
+                //       Text('sadad'),
+                //       Text('sadad'),
+                //       Text('sadad'),
+                //     ],
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        ));
   }
 
   static String getMonthName(int month) {
