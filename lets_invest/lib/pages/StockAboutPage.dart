@@ -72,43 +72,54 @@ class _StockAboutPageState extends State<StockAboutPage> {
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              height: 350.h,
-              child: Column(
-                children: [
-                  buildHeader(
-                      CalculationAPI.hasMadeLost(
-                          WebsocketAPI.getCurrentStockValue(),
-                          WebsocketAPI.getStartStockValue()),
-                      tag,
-                      isIntlSymbolNull),
-                  Padding(
-                    padding: EdgeInsets.only(top: 40.h, bottom: 10.h),
-                    child: SizedBox(
-                      height: 180.h,
-                      child: BuilderAPI.buildChart(
-                          context,
-                          double.infinity,
-                          600,
-                          CalculationAPI.hasMadeLost(
-                              WebsocketAPI.getCurrentStockValue(),
-                              WebsocketAPI.getStartStockValue())),
+            Padding(
+              padding: EdgeInsets.only(bottom: 60.h),
+              child: Container(
+                height: 350.h,
+                child: Column(
+                  children: [
+                    buildHeader(
+                        CalculationAPI.hasMadeLost(
+                            WebsocketAPI.getCurrentStockValue(),
+                            WebsocketAPI.getStartStockValue()),
+                        tag,
+                        isIntlSymbolNull),
+                    Padding(
+                      padding: EdgeInsets.only(top: 40.h, bottom: 10.h),
+                      child: SizedBox(
+                        height: 180.h,
+                        child: BuilderAPI.buildChart(
+                            context,
+                            double.infinity,
+                            600,
+                            CalculationAPI.hasMadeLost(
+                                WebsocketAPI.getCurrentStockValue(),
+                                WebsocketAPI.getStartStockValue())),
+                      ),
                     ),
-                  ),
-                  buildIntervalSelection(websocketAPI)
-                ],
+                    buildIntervalSelection(websocketAPI)
+                  ],
+                ),
               ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25.w, right: 25.w, bottom: 5.h),
+              child: BuilderAPI.buildText(
+                  text: "Position",
+                  color: Colors.white,
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.bold),
             ),
             BuilderAPI.buildPortolioDiversity(
                 context,
                 StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin,
                 "stock",
                 tag["exchanges"][0]["nameAtExchange"],
-                13.51,
+                12.51,
                 WebsocketAPI.getCurrentStockValue(),
-                10.34,
+                146.34,
                 websocketAPI),
-            buildPortfolioDiversity(13.51)    
+            buildPortfolioDiversity(2.39),
           ]),
         ),
       ),
@@ -120,12 +131,27 @@ class _StockAboutPageState extends State<StockAboutPage> {
     var allSharesPercentage = 100;
     var percentage = allSharesPercentage / allShares * quantity / 100;
     return Padding(
-    padding: EdgeInsets.only(left: 25.w, right: 25.w, bottom: 10.h, top: 5.h),
-    child: Row(
-      children: [CircularPercentIndicator(radius: 15.sp, percent: percentage, progressColor: Colors.green, circularStrokeCap: CircularStrokeCap.round), 
-      Padding(padding: EdgeInsets.only(left: 15.w), child: BuilderAPI.buildText(text: "Portfolio diversity " + (percentage * 100).roundToDouble().toString() + " %", color: Colors.grey, 
-      fontSize: 15.sp, fontWeight: FontWeight.normal))],
-    ));
+        padding:
+            EdgeInsets.only(left: 25.w, right: 25.w, bottom: 10.h, top: 5.h),
+        child: Row(
+          children: [
+            CircularPercentIndicator(
+                radius: 15.sp,
+                percent: percentage,
+                progressColor: Color.fromARGB(255, 17, 214, 24),
+                backgroundColor: Color.fromARGB(255, 34, 32, 32),
+                circularStrokeCap: CircularStrokeCap.round),
+            Padding(
+                padding: EdgeInsets.only(left: 15.w),
+                child: BuilderAPI.buildText(
+                    text: "Portfolio diversity " +
+                        (percentage * 100).roundToDouble().toString() +
+                        " %",
+                    color: Colors.grey,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.normal))
+          ],
+        ));
   }
 
   Widget buildTag(index) {

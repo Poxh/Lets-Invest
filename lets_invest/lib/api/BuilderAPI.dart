@@ -53,7 +53,7 @@ class BuilderAPI {
         style: style,
         overflowReplacement: Tooltip(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 42, 47, 72),
+            color: Color.fromARGB(255, 22, 21, 21),
             borderRadius: BorderRadius.circular(8),
           ),
           message: text,
@@ -115,7 +115,7 @@ class BuilderAPI {
   static Widget buildStockPicture(isin, double height, double width) {
     return Container(
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 42, 47, 72), shape: BoxShape.circle),
+            color: Color.fromARGB(255, 21, 20, 20), shape: BoxShape.circle),
         height: height.h,
         width: width.w,
         child: Image.network(
@@ -241,14 +241,7 @@ class BuilderAPI {
       quantity, currentPrice, boughtPrice, websocketAPI) {
     return Padding(
       padding: EdgeInsets.only(left: 25.w, right: 25.w),
-      child: InkWell(
-        splashFactory: NoSplash.splashFactory,
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        onTap: (() {
-          openDetailedInformations(websocketAPI, isin, type, context);
-        }),
-        child: Container(
+      child: Container(
           width: 350,
           height: 60.h,
           decoration: BoxDecoration(
@@ -301,7 +294,7 @@ class BuilderAPI {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       BuilderAPI.buildText(
-                          text: currentPrice.toStringAsFixed(2) + "€",
+                          text: (quantity * currentPrice).toStringAsFixed(2) + "€",
                           color: Colors.white,
                           fontSize: 13.sp,
                           fontWeight: FontWeight.bold),
@@ -344,7 +337,6 @@ class BuilderAPI {
                   )),
             ],
           ),
-        ),
       ),
     );
   }
