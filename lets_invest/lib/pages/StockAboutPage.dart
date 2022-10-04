@@ -22,6 +22,7 @@ class StockAboutPage extends StatefulWidget {
 
 class _StockAboutPageState extends State<StockAboutPage> {
   BuilderAPI builderAPI = BuilderAPI();
+  WebsocketAPI websocketAPI = WebsocketAPI();
   Icon icon =
       Icon(Icons.star_border_outlined, color: Colors.white, size: 30.sp);
   bool isFavorite = false;
@@ -30,6 +31,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
 
   @override
   void initState() {
+    websocketAPI.initializeConnection();
     super.initState();
   }
 
@@ -92,7 +94,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                               WebsocketAPI.getStartStockValue())),
                     ),
                   ),
-                  buildIntervalSelection()
+                  buildIntervalSelection(websocketAPI)
                 ],
               ),
             ),
@@ -132,7 +134,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     );
   }
 
-  Widget buildIntervalSelection() {
+  Widget buildIntervalSelection(WebsocketAPI websocketAPI) {
     return Padding(
       padding: EdgeInsets.only(top: 15.h),
       child: Padding(
@@ -141,8 +143,19 @@ class _StockAboutPageState extends State<StockAboutPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             DefaultTabController(
-              length: 5,
+              length: 6,
               child: TabBar(
+                onTap: (value) {
+                  switch (value) {
+                    case 0:
+                      setState(() {print("Updated to 1 day"); updateChart("1d");});
+                      break;
+                    case 1:
+                      setState(() {print("Updated to 5 days"); updateChart("5y");});
+                      break;  
+                    default:
+                  }
+                },
                 overlayColor:
                     MaterialStateProperty.all<Color>(Colors.transparent),
                 isScrollable: true,
@@ -166,7 +179,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                     child: Container(
                       child: BuilderAPI.buildText(
-                          text: "1W",
+                          text: "1w",
                           color: Colors.white,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold),
@@ -176,7 +189,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                     child: Container(
                       child: BuilderAPI.buildText(
-                          text: "1M",
+                          text: "1m",
                           color: Colors.white,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold),
@@ -186,7 +199,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                     child: Container(
                       child: BuilderAPI.buildText(
-                          text: "1J",
+                          text: "6m",
                           color: Colors.white,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold),
@@ -196,12 +209,22 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
                     child: Container(
                       child: BuilderAPI.buildText(
-                          text: "MAX",
+                          text: "1Y",
                           color: Colors.white,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold),
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+                    child: Container(
+                      child: BuilderAPI.buildText(
+                          text: "5Y",
+                          color: Colors.white,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ],
                 indicatorSize: TabBarIndicatorSize.tab,
               ),
@@ -210,6 +233,13 @@ class _StockAboutPageState extends State<StockAboutPage> {
         ),
       ),
     );
+  }
+
+  void updateChart(timeStamp) {
+    String isin = StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin;
+    websocketAPI.sendMessageToWebSocket('sub ' +
+    WebsocketAPI.randomNumber().toString() +
+    ' {"type":"aggregateHistoryLight","range":"$timeStamp","id":"$isin.LSX"}');
   }
 
   Widget buildIntervalItem(text, onTap) {

@@ -298,7 +298,7 @@ class BuilderAPI {
       WebsocketAPI websocketAPI, isin, type, context) {
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
-        ' {"type":"aggregateHistoryLight","range":"5y","id":"$isin.$type"}');
+        ' {"type":"aggregateHistoryLight","range":"1d","id":"$isin.$type"}');
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
         ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
@@ -356,11 +356,11 @@ class BuilderAPI {
                     colors: hasMadeLost
                         ? [
                             Color.fromARGB(255, 181, 12, 23).withOpacity(0.5),
-                            Color.fromARGB(255, 231, 9, 28).withOpacity(0.01)
+                            Color.fromARGB(255, 231, 9, 28).withOpacity(0.1)
                           ]
                         : [
                             Color.fromARGB(255, 16, 113, 71).withOpacity(0.5),
-                            Color.fromARGB(255, 39, 201, 131).withOpacity(0.007)
+                            Color.fromARGB(255, 39, 201, 131).withOpacity(0.1)
                           ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -368,7 +368,6 @@ class BuilderAPI {
                 ))
           ],
         ),
-        swapAnimationDuration: const Duration(milliseconds: 250),
       ),
     );
   }
