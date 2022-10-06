@@ -10,6 +10,7 @@ import 'package:lets_invest/components/Summary.dart';
 import 'package:lets_invest/components/TabBarPage.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:readmore/readmore.dart';
 
 import '../api/WebsocketAPI.dart';
 import '../data/StockDetail.dart';
@@ -120,6 +121,28 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 146.34,
                 websocketAPI),
             buildPortfolioDiversity(2.39),
+            Padding(
+              padding: EdgeInsets.only(left: 25.w, right: 25.w, bottom: 10.h),
+              child: BuilderAPI.buildText(
+                  text: "About Company",
+                  color: Colors.white,
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25.w, right: 25.w, bottom: 50.h),
+              child: ReadMoreText(
+                StockDetail.fromJson(WebsocketAPI.latestStockDetail)
+                    .description,
+                trimLines: 2,
+                preDataTextStyle: TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(color: Colors.white),
+                colorClickableText: Colors.grey,
+                trimMode: TrimMode.Line,
+                trimCollapsedText: ' show more',
+                trimExpandedText: ' show less',
+              ),
+            ),
           ]),
         ),
       ),
@@ -132,7 +155,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
     var percentage = allSharesPercentage / allShares * quantity / 100;
     return Padding(
         padding:
-            EdgeInsets.only(left: 25.w, right: 25.w, bottom: 10.h, top: 5.h),
+            EdgeInsets.only(left: 25.w, right: 25.w, bottom: 30.h, top: 5.h),
         child: Row(
           children: [
             CircularPercentIndicator(
