@@ -150,6 +150,7 @@ class _StockPageState extends State<StockPage> {
                         List<Stock> stockList = (snapshot.data as List<Stock>);
                         return SizedBox(
                           height: 170.h,
+                          width: double.infinity,
                           child: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,

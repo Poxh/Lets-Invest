@@ -439,13 +439,23 @@ class BuilderAPI {
       width: width.w,
       child: LineChart(
         LineChartData(
+          extraLinesData: ExtraLinesData(
+            horizontalLines: [
+              HorizontalLine(
+                y: 143,
+                color: Colors.white,
+                strokeWidth: 2,
+                dashArray: [5, 10],
+              ),
+            ],
+          ),  
           lineTouchData: lineTouchData, // Customize touch points
           gridData: gridData,
           titlesData: titlesData, // Customize grid
           borderData: borderData, // Customize border
           lineBarsData: [
             LineChartBarData(
-                isCurved: true,
+                isCurved: false,
                 color: hasMadeLost
                     ? Color.fromARGB(255, 231, 9, 28)
                     : Color.fromARGB(255, 18, 200, 121),
@@ -470,6 +480,8 @@ class BuilderAPI {
                 ))
           ],
         ),
+        swapAnimationDuration: Duration(milliseconds: 150), // Optional
+        swapAnimationCurve: Curves.linear,
       ),
     );
   }
