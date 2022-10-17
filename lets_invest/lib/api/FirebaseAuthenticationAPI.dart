@@ -18,15 +18,12 @@ class FirebaseAuthenticationAPI {
       return user;
     }
 
-    Future<Map<Object, dynamic>?> signUp({required String email, required String password}) async {
-      User? user;
+    Future<String> signUp({required String email, required String password}) async {
       try {
-        UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-        user = userCredential.user;
-        Map<Object, dynamic> res = jsonDecode('{"message": "Register successfull", "user": ${user}}');
+        await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+        return "Register successfull";
       } on FirebaseAuthException catch (e) {
-        Map<Object, dynamic> res = jsonDecode('{"message": "${e.message}", "user": ${null}}');
-        return res;
+        return e.message.toString();
       }
     }
 }

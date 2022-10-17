@@ -78,10 +78,8 @@ class BuilderAPI {
         autofocus: false,
         decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
                 borderRadius: BorderRadius.circular(12)),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
                 borderRadius: BorderRadius.circular(12)),
             hintText: text,
             hintStyle: TextStyle(color: Colors.white),

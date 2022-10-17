@@ -1,14 +1,17 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/pages/HomePage.dart';
+import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lottie/lottie.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
               splashIconSize: 1000,
               duration: 3000,
               splash: buildSplashScreen(),
-              nextScreen: HomePage(),
+              nextScreen: RegisterPage(),
               splashTransition: SplashTransition.fadeTransition,
               backgroundColor: Color.fromARGB(255, 6, 6, 6)));
     });
