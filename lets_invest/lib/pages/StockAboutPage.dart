@@ -76,7 +76,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
             Padding(
               padding: EdgeInsets.only(bottom: 60.h),
               child: Container(
-                height: 350.h,
+                height: 400.h,
                 child: Column(
                   children: [
                     buildHeader(
@@ -86,13 +86,13 @@ class _StockAboutPageState extends State<StockAboutPage> {
                         tag,
                         isIntlSymbolNull),
                     Padding(
-                      padding: EdgeInsets.only(top: 40.h, bottom: 10.h),
+                      padding: EdgeInsets.only(top: 40.h, bottom: 30.h),
                       child: SizedBox(
-                        height: 180.h,
+                        height: 215.h,
                         child: BuilderAPI.buildChart(
                             context,
                             double.infinity,
-                            600,
+                            700.h,
                             CalculationAPI.hasMadeLost(
                                 WebsocketAPI.getCurrentStockValue(),
                                 WebsocketAPI.getStartStockValue())),

@@ -442,10 +442,10 @@ class BuilderAPI {
           extraLinesData: ExtraLinesData(
             horizontalLines: [
               HorizontalLine(
-                y: 143,
+                y: WebsocketAPI.aggregates[0].close,
                 color: Colors.white,
                 strokeWidth: 2,
-                dashArray: [5, 10],
+                dashArray: [3, 10],
               ),
             ],
           ),  
