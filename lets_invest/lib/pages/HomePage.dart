@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:lets_invest/pages/ProfilePage.dart';
 import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lets_invest/pages/StockPage.dart';
 
@@ -12,7 +13,7 @@ import '../api/WebsocketAPI.dart';
 import 'SearchPage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({ Key? key }) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -28,16 +29,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   int _selectedIndex = 0;
-  static TextStyle optionStyle =
-      TextStyle(fontSize: 30.sp, fontWeight: FontWeight.w600, color: Colors.white);
+  static TextStyle optionStyle = TextStyle(
+      fontSize: 30.sp, fontWeight: FontWeight.w600, color: Colors.white);
   static List<Widget> _widgetOptions = <Widget>[
     StockPage(),
     SearchPage(),
     RegisterPage(),
-    Text(
-      'Profile',
-      style: optionStyle,
-    ),
+    ProfilePage()
   ];
 
   @override
@@ -76,37 +74,33 @@ class _HomePageState extends State<HomePage> {
                   icon: Icons.dashboard,
                   text: 'Portfolio',
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 10.sp
-                  ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 10.sp),
                 ),
                 GButton(
                   icon: Icons.search,
                   text: 'Search',
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 10.sp
-                  ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 10.sp),
                 ),
-                 GButton(
+                GButton(
                   icon: Icons.info,
                   text: 'Infos',
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 10.sp
-                  ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 10.sp),
                 ),
                 GButton(
                   icon: Icons.people_sharp,
                   text: 'Profile',
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 10.sp
-                  ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 10.sp),
                 ),
               ],
               selectedIndex: _selectedIndex,

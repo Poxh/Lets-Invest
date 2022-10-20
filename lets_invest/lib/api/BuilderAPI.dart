@@ -702,6 +702,33 @@ class BuilderAPI {
         ));
   }
 
+  static Widget buildCircleAvatar(url, radius) {
+    return CircleAvatar(
+      backgroundImage: NetworkImage(url),
+      radius: radius,
+    );
+  }
+
+  static Widget buildProfileInfo(height, value, text) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: height * 0.01),
+          child: BuilderAPI.buildText(
+              text: value,
+              color: Colors.white,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold),
+        ),
+        BuilderAPI.buildText(
+            text: text,
+            color: Colors.grey,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.normal)
+      ],
+    );
+  }
+
   static String getMonthName(int month) {
     List<String> months = [
       'January',
