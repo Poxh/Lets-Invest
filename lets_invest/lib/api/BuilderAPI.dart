@@ -430,8 +430,8 @@ class BuilderAPI {
         text: text, color: color, fontSize: fontSize, fontWeight: fontWeight);
   }
 
-  static Widget buildChart(
-      BuildContext context, double height, double width, bool hasMadeLost) {
+  static Widget buildChart(BuildContext context, double height, double width,
+      aggregates, bool hasMadeLost) {
     return SizedBox(
       height: height.h,
       width: width.w,
@@ -459,7 +459,7 @@ class BuilderAPI {
                     : Color.fromARGB(255, 18, 200, 121),
                 barWidth: 2.w,
                 dotData: FlDotData(show: false),
-                spots: loadChartData(),
+                spots: loadChartData(aggregates),
                 belowBarData: BarAreaData(
                   show: true,
                   gradient: LinearGradient(
@@ -479,7 +479,7 @@ class BuilderAPI {
           ],
         ),
         swapAnimationDuration: Duration(milliseconds: 150), // Optional
-        swapAnimationCurve: Curves.linear,
+        swapAnimationCurve: Curves.linearToEaseOut,
       ),
     );
   }
@@ -526,11 +526,11 @@ class BuilderAPI {
 
   static FlBorderData get borderData => FlBorderData(show: false);
 
-  static List<FlSpot> loadChartData() {
+  static List<FlSpot> loadChartData(aggregates) {
     final List<FlSpot> result = [];
 
-    for (var i = 0; i < WebsocketAPI.aggregates.length; i++) {
-      Aggregate aggregate = WebsocketAPI.aggregates[i];
+    for (var i = 0; i < aggregates.length; i++) {
+      Aggregate aggregate = aggregates[i];
       result.add(
         FlSpot(aggregate.time.toDouble(), aggregate.close),
       );

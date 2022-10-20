@@ -59,9 +59,10 @@ class WebsocketAPI {
 
         var replaceIndex1 = data.toString().indexOf(" [");
         if (replaceIndex1 != -1) {
-          var jsonResult = json.decode(data.toString().replaceRange(0, replaceIndex1, ""));
-          if(jsonResult.length > 0) {
-            if(isNeonNewsRequest(jsonResult)) {
+          var jsonResult =
+              json.decode(data.toString().replaceRange(0, replaceIndex1, ""));
+          if (jsonResult.length > 0) {
+            if (isNeonNewsRequest(jsonResult)) {
               setLatestNeonNews(jsonResult);
             }
           }
@@ -76,6 +77,7 @@ class WebsocketAPI {
           }
 
           if (isChartRequest(dataJson)) {
+            print(aggregates.length);
             addDataToaggregates(dataJson);
           }
 
@@ -153,13 +155,15 @@ class WebsocketAPI {
   }
 
   isNeonNewsRequest(dataJson) {
-    return dataJson[0]["createdAt"] != null && dataJson[0]["provider"] != null && dataJson[0]["headline"] != null && 
-    dataJson[0]["summary"] != null;
+    return dataJson[0]["createdAt"] != null &&
+        dataJson[0]["provider"] != null &&
+        dataJson[0]["headline"] != null &&
+        dataJson[0]["summary"] != null;
   }
 
   setLatestNeonNews(dataJson) {
     latestNeonNews = [];
-    latestNeonNews = dataJson; 
+    latestNeonNews = dataJson;
   }
 
   isResponseSearch(dataJson) {
@@ -185,6 +189,7 @@ class WebsocketAPI {
 
   addDataToaggregates(dataJson) {
     clearSearchList();
+    aggregates.clear();
     for (var i = 0; i < dataJson["aggregates"].length; i++) {
       var aggregateJson = dataJson["aggregates"][i];
       Aggregate aggregate = Aggregate.fromJson(aggregateJson);
@@ -242,6 +247,18 @@ class WebsocketAPI {
     return aggregates.last.close;
   }
 
+  static Stream<double?> getHorizontalValueStream() async* {
+    yield* Stream.periodic(Duration(seconds: 1), (int a) {
+      return Random().nextDouble() * (146.48 - 146.0) + 146.0;
+    });
+  }
+
+  static Stream<List<Aggregate>?> getChartDataStream() async* {
+    yield* Stream.periodic(Duration(milliseconds: 100), (int a) {
+      return aggregates;
+    });
+  }
+
   static Stream<List<Crypto>?> getCryptoValueStream() async* {
     yield* Stream.periodic(Duration(seconds: 1), (int a) {
       List<Crypto> cryptoList = [];
@@ -263,7 +280,7 @@ class WebsocketAPI {
           isin: "XF000XRP0018",
           bid: null,
           quantity: 1239,
-          boughtAT: 0.21);    
+          boughtAT: 0.21);
       cryptoList.add(crypto1);
       cryptoList.add(crypto2);
       cryptoList.add(crypto3);
@@ -306,7 +323,7 @@ class WebsocketAPI {
           bid: null,
           quantity: 1.36,
           boughtAT: 117.32,
-          type: "Stocks");    
+          type: "Stocks");
       stockList.add(stock1);
       stockList.add(stock2);
       stockList.add(stock3);

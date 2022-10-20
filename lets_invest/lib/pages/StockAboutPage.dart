@@ -8,6 +8,7 @@ import 'package:lets_invest/api/CalculationAPI.dart';
 import 'package:lets_invest/components/ChartFilter.dart';
 import 'package:lets_invest/components/Summary.dart';
 import 'package:lets_invest/components/TabBarPage.dart';
+import 'package:lets_invest/data/Aggregate.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:readmore/readmore.dart';
@@ -89,13 +90,31 @@ class _StockAboutPageState extends State<StockAboutPage> {
                       padding: EdgeInsets.only(top: 40.h, bottom: 30.h),
                       child: SizedBox(
                         height: 215.h,
-                        child: BuilderAPI.buildChart(
-                            context,
-                            100.w,
-                            700.h,
-                            CalculationAPI.hasMadeLost(
-                                WebsocketAPI.getCurrentStockValue(),
-                                WebsocketAPI.getStartStockValue())),
+                        child: StreamBuilder(
+                            stream: WebsocketAPI.getChartDataStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return BuilderAPI.buildSearchSkeleton();
+                              } else if (snapshot.hasData) {
+                                List<Aggregate> aggregates =
+                                    snapshot.data as List<Aggregate>;
+                                return BuilderAPI.buildChart(
+                                    context,
+                                    100.w,
+                                    700.h,
+                                    aggregates,
+                                    CalculationAPI.hasMadeLost(
+                                        WebsocketAPI.getCurrentStockValue(),
+                                        WebsocketAPI.getStartStockValue()));
+                              } else {
+                                return BuilderAPI.buildText(
+                                    text: "NOOOOO",
+                                    color: Colors.white,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.normal);
+                              }
+                            }),
                       ),
                     ),
                     buildIntervalSelection(websocketAPI)
@@ -222,7 +241,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                     case 1:
                       setState(() {
                         print("Updated to 5 days");
-                        updateChart("5y");
+                        updateChart("5d");
                       });
                       break;
                     default:
