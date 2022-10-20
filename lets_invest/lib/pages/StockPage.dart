@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -145,30 +146,24 @@ class _StockPageState extends State<StockPage> {
                         return BuilderAPI.buildSearchSkeleton();
                       } else if (snapshot.hasData) {
                         List<Stock> stockList = (snapshot.data as List<Stock>);
+
                         return SizedBox(
                           height: 170.h,
-                          width: double.infinity,
                           child: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
                               itemCount: stockList.length,
                               itemBuilder: (context, index) {
                                 Stock stock = stockList[index];
-                                return Row(
-                                  children: [
-                                    BuilderAPI.buildStock(
-                                        context,
-                                        stock.isin,
-                                        "LSX",
-                                        stock.name,
-                                        stock.quantity.toString() +
-                                            " " +
-                                            stock.type,
-                                        stock.quantity * stock.bid["price"],
-                                        stock.quantity * stock.boughtAT,
-                                        websocketAPI),
-                                  ],
-                                );
+                                return BuilderAPI.buildStock(
+                                    context,
+                                    stock.isin,
+                                    "LSX",
+                                    stock.name,
+                                    stock.quantity.toString() + " Cryptos",
+                                    stock.quantity * stock.bid["price"],
+                                    stock.quantity * stock.boughtAT,
+                                    websocketAPI);
                               }),
                         );
                       } else {
