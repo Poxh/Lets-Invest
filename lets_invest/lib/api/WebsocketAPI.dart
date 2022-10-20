@@ -77,7 +77,6 @@ class WebsocketAPI {
           }
 
           if (isChartRequest(dataJson)) {
-            print(aggregates.length);
             addDataToaggregates(dataJson);
           }
 
@@ -193,11 +192,7 @@ class WebsocketAPI {
     for (var i = 0; i < dataJson["aggregates"].length; i++) {
       var aggregateJson = dataJson["aggregates"][i];
       Aggregate aggregate = Aggregate.fromJson(aggregateJson);
-      var filteredAggregate =
-          aggregates.where((e) => e.time == aggregate.time).length;
-      if (filteredAggregate < 1) {
-        aggregates.add(aggregate);
-      }
+      aggregates.add(aggregate);
     }
   }
 
