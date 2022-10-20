@@ -55,13 +55,13 @@ class _StockPageState extends State<StockPage> {
         ' {"type":"ticker","id":"XF000ETH0019.BHS"}');
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"XF000XRP0018.BHS"}');    
+        ' {"type":"ticker","id":"XF000XRP0018.BHS"}');
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
         ' {"type":"ticker","id":"US0378331005.LSX"}');
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"US0231351067.LSX"}');    
+        ' {"type":"ticker","id":"US0231351067.LSX"}');
     websocketAPI.sendMessageToWebSocket('sub ' +
         WebsocketAPI.randomNumber().toString() +
         ' {"type":"ticker","id":"IE00B4L5Y983.LSX"}');
@@ -69,6 +69,9 @@ class _StockPageState extends State<StockPage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 14, 14, 14),
         body: SingleChildScrollView(
@@ -94,18 +97,15 @@ class _StockPageState extends State<StockPage> {
                       fontSize: 35.sp,
                       fontWeight: FontWeight.bold),
                 ),
-
                 Padding(
                   padding: EdgeInsets.only(bottom: 50.h, left: 25.w),
                   child: Row(
                     children: [
                       Icon(
-                        CalculationAPI.hasMadeLost(
-                                982.44, 392.12)
+                        CalculationAPI.hasMadeLost(982.44, 392.12)
                             ? Icons.arrow_downward
                             : Icons.arrow_upward,
-                        color: CalculationAPI.hasMadeLost(
-                                982.44, 392.12)
+                        color: CalculationAPI.hasMadeLost(982.44, 392.12)
                             ? Colors.red
                             : Colors.green,
                         size: 15.sp,
@@ -117,14 +117,12 @@ class _StockPageState extends State<StockPage> {
                                   .toStringAsFixed(2)
                                   .replaceAll("-", "") +
                               "€ • " +
-                              CalculationAPI
-                                      .calculateProfitLostInPercentage(
-                                          982.44, 392.12)
+                              CalculationAPI.calculateProfitLostInPercentage(
+                                      982.44, 392.12)
                                   .toStringAsFixed(2)
                                   .replaceAll("-", "") +
                               " %",
-                          color: CalculationAPI.hasMadeLost(
-                                  982.44, 392.12)
+                          color: CalculationAPI.hasMadeLost(982.44, 392.12)
                               ? Colors.red
                               : Colors.green,
                           fontSize: 15.sp,
@@ -132,7 +130,6 @@ class _StockPageState extends State<StockPage> {
                     ],
                   ),
                 ),
-
                 Padding(
                   padding: EdgeInsets.only(bottom: 10.h, left: 25.w),
                   child: BuilderAPI.buildText(
@@ -140,7 +137,7 @@ class _StockPageState extends State<StockPage> {
                       color: Colors.white,
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold),
-                ),    
+                ),
                 StreamBuilder(
                     stream: WebsocketAPI.getStockValueStream(),
                     builder: (context, snapshot) {
@@ -168,7 +165,8 @@ class _StockPageState extends State<StockPage> {
                                             " " +
                                             stock.type,
                                         stock.quantity * stock.bid["price"],
-                                        stock.quantity * stock.boughtAT, websocketAPI),
+                                        stock.quantity * stock.boughtAT,
+                                        websocketAPI),
                                   ],
                                 );
                               }),
@@ -181,7 +179,6 @@ class _StockPageState extends State<StockPage> {
                             fontWeight: FontWeight.normal);
                       }
                     }),
-
                 Padding(
                   padding: EdgeInsets.only(bottom: 10.h, top: 50.h, left: 25.w),
                   child: BuilderAPI.buildText(
@@ -195,7 +192,8 @@ class _StockPageState extends State<StockPage> {
                   child: StreamBuilder(
                       stream: WebsocketAPI.getCryptoValueStream(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return BuilderAPI.buildSearchSkeleton();
                         } else if (snapshot.hasData) {
                           List<Crypto> cryptoList =
@@ -208,18 +206,15 @@ class _StockPageState extends State<StockPage> {
                                 itemCount: cryptoList.length,
                                 itemBuilder: (context, index) {
                                   Crypto crypto = cryptoList[index];
-                                  return Row(
-                                    children: [
-                                      BuilderAPI.buildStock(
-                                          context,
-                                          crypto.isin,
-                                          "BHS",
-                                          crypto.name,
-                                          crypto.quantity.toString() + " Cryptos",
-                                          crypto.quantity * crypto.bid["price"],
-                                          crypto.quantity * crypto.boughtAT, websocketAPI),
-                                    ],
-                                  );
+                                  return BuilderAPI.buildStock(
+                                      context,
+                                      crypto.isin,
+                                      "BHS",
+                                      crypto.name,
+                                      crypto.quantity.toString() + " Cryptos",
+                                      crypto.quantity * crypto.bid["price"],
+                                      crypto.quantity * crypto.boughtAT,
+                                      websocketAPI);
                                 }),
                           );
                         } else {
@@ -230,11 +225,11 @@ class _StockPageState extends State<StockPage> {
                               fontWeight: FontWeight.normal);
                         }
                       }),
-                ),    
+                ),
               ],
             ),
           ),
-        ));   
+        ));
   }
 
   @override

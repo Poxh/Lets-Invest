@@ -5,25 +5,27 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthenticationAPI {
-    FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-    Future<User?> signIn({required String email, required String password}) async {
-      User? user;
-      try {
-        UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-        user = userCredential.user;
-      } on FirebaseAuthException catch (e) {
-        print(e);
-      }
-      return user;
+  Future<String> signIn(
+      {required String email, required String password}) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+      return "Login successfull";
+    } on FirebaseAuthException catch (e) {
+      return e.message.toString();
     }
+  }
 
-    Future<String> signUp({required String email, required String password}) async {
-      try {
-        await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-        return "Register successfull";
-      } on FirebaseAuthException catch (e) {
-        return e.message.toString();
-      }
+  Future<String> signUp(
+      {required String email, required String password}) async {
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return "Register successfull";
+    } on FirebaseAuthException catch (e) {
+      return e.message.toString();
     }
+  }
 }

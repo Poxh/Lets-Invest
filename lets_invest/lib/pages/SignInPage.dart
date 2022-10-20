@@ -1,4 +1,4 @@
-// ignore_for_file: prefer__ructors, prefer__literals_to_create_immutables
+// ignore_for_file: prefer__ructors, prefer__literals_to_create_immutables, unnecessary_cast, prefer_const_constructors
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,19 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/AuthenticationAPI.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/FirebaseAuthenticationAPI.dart';
-import 'package:lets_invest/pages/HomePage.dart';
+import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lets_invest/pages/StockPage.dart';
 import 'package:lets_invest/pages/Success.dart';
 import 'package:lottie/lottie.dart';
 
-import 'SignInPage.dart';
-
-class RegisterPage extends StatefulWidget {
+class SignInPage extends StatefulWidget {
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -43,10 +41,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: passwordController,
                 obscureText: true),
             SizedBox(height: 20),
-            BuilderAPI.buildTextFormField(
-                text: "Confirm Password",
-                controller: confirmPasswordController,
-                obscureText: true),
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
@@ -83,20 +77,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   BuilderAPI.buildText(
-                      text: "Already have an account?",
+                      text: "Don't have an account?",
                       color: Colors.white,
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold),
                   GestureDetector(
-                    onTap: () {
+                    onTap: (() {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SignInPage()),
+                        MaterialPageRoute(builder: (context) => RegisterPage()),
                       );
-                    },
+                    }),
                     child: Padding(
                       padding: EdgeInsets.only(left: 5.w),
                       child: BuilderAPI.buildText(
-                          text: "Sign in",
+                          text: "Sign up",
                           color: Color.fromARGB(255, 67, 11, 165),
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold),
@@ -121,7 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)))),
           onPressed: () async {
-            String message = await firebaseAuthenticationAPI.signUp(
+            String message = await firebaseAuthenticationAPI.signIn(
                 email: emailController.text,
                 password: passwordController.text) as String;
             User? user = auth.currentUser;
@@ -159,16 +153,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           ));
                     });
               } else {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-                // AuthenticationAPI authenticationAPI = AuthenticationAPI();
-                // bool isAuthenticated = await authenticationAPI.authenticate();
-                // if (isAuthenticated) {
-                //   Navigator.of(context).pushReplacement(
-                //     MaterialPageRoute(builder: (context) => StockPage()),
-                //   );
-                // }
+                AuthenticationAPI authenticationAPI = AuthenticationAPI();
+                bool isAuthenticated = await authenticationAPI.authenticate();
+                if (isAuthenticated) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => StockPage()),
+                  );
+                }
               }
             } else {
               if (!message.contains("successfull")) {
@@ -207,7 +198,7 @@ class _RegisterPageState extends State<RegisterPage> {
             }
           },
           child: Text(
-            'Sign up',
+            'Sign in',
             style: TextStyle(fontSize: 20),
           ),
         ));

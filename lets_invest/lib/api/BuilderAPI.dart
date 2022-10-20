@@ -77,10 +77,10 @@ class BuilderAPI {
         obscureText: obscureText,
         autofocus: false,
         decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12)),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12)),
+            enabledBorder:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            focusedBorder:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             hintText: text,
             hintStyle: TextStyle(color: Colors.white),
             fillColor: Color.fromARGB(255, 20, 23, 41),
@@ -446,7 +446,7 @@ class BuilderAPI {
                 dashArray: [3, 10],
               ),
             ],
-          ),  
+          ),
           lineTouchData: lineTouchData, // Customize touch points
           gridData: gridData,
           titlesData: titlesData, // Customize grid

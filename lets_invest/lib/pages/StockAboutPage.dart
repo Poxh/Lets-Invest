@@ -91,7 +91,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
                         height: 215.h,
                         child: BuilderAPI.buildChart(
                             context,
-                            double.infinity,
+                            100.w,
                             700.h,
                             CalculationAPI.hasMadeLost(
                                 WebsocketAPI.getCurrentStockValue(),
