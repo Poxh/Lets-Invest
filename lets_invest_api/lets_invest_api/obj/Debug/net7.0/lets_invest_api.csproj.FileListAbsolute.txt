@@ -15,3 +15,4 @@ C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets
 C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\ref\lets_invest_api.dll
 C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.csproj.CopyComplete
 C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\websocket-sharp-core.dll
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\Newtonsoft.Json.dll
