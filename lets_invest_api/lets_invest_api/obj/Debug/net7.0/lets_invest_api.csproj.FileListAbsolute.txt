@@ -1,0 +1,17 @@
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\lets_invest_api.exe
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\lets_invest_api.deps.json
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\lets_invest_api.runtimeconfig.json
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\lets_invest_api.dll
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\lets_invest_api.pdb
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.csproj.AssemblyReference.cache
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.AssemblyInfoInputs.cache
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.AssemblyInfo.cs
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.csproj.CoreCompileInputs.cache
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.dll
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\refint\lets_invest_api.dll
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.pdb
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.genruntimeconfig.cache
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\ref\lets_invest_api.dll
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\obj\Debug\net7.0\lets_invest_api.csproj.CopyComplete
+C:\Users\Veron\OneDrive\Desktop\Github-Projekte\Lets-Invest\lets_invest_api\lets_invest_api\bin\Debug\net7.0\websocket-sharp-core.dll
