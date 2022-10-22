@@ -1,4 +1,4 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: unrelated_type_equality_checks, avoid_print
 
 import 'dart:collection';
 import 'dart:convert';
@@ -38,6 +38,11 @@ class WebsocketAPI {
     webSocketChannel.sink.add(message);
   }
 
+  GetDataFromMessage(String message) {
+    int startIndex = message.indexOf('{');
+    return startIndex < 0 ? null : message.substring(startIndex, message.length);  
+  }
+
   void initializeConnection() {
     void reconnect() {
       developer.log('Lost connection to api');
@@ -57,10 +62,12 @@ class WebsocketAPI {
           return;
         }
 
+        print(GetDataFromMessage(data.toString()));
+
         var replaceIndex1 = data.toString().indexOf(" [");
         if (replaceIndex1 != -1) {
           var jsonResult =
-              json.decode(data.toString().replaceRange(0, replaceIndex1, ""));
+              json.decode(GetDataFromMessage(data.toString()));
           if (jsonResult.length > 0) {
             if (isNeonNewsRequest(jsonResult)) {
               setLatestNeonNews(jsonResult);
