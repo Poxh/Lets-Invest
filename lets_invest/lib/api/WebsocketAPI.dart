@@ -43,6 +43,10 @@ class WebsocketAPI {
     return startIndex < 0 ? null : message.substring(startIndex, message.length);  
   }
 
+  GetIDFromMessage(String message) {
+    return message.substring(0, message.indexOf(' A'));
+  }
+
   void initializeConnection() {
     void reconnect() {
       developer.log('Lost connection to api');
@@ -61,8 +65,6 @@ class WebsocketAPI {
         if (data == "connected") {
           return;
         }
-
-        print(GetDataFromMessage(data.toString()));
 
         var replaceIndex1 = data.toString().indexOf(" [");
         if (replaceIndex1 != -1) {
