@@ -1,7 +1,4 @@
 ﻿using WebSocketSharp;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 
 class Programm
@@ -33,19 +30,25 @@ class Programm
 
         string isin = "XF000ETH0019.BHS";
         string messageContent = "{\"type\":\"ticker\",\"id\":\"" + isin + "\"}";
-        SendMessage(webSocket, $"sub {getLastID()} {messageContent}");
+        SendMessage(webSocket, $"sub 1 {messageContent}");
+
+        string isin2 = "XF000BTC0017.BHS";
+        string messageContent2 = "{\"type\":\"ticker\",\"id\":\"" + isin2 + "\"}";
+        SendMessage(webSocket, $"sub 2 {messageContent2}");
     }
 
     static void OnMessage(Object sender, MessageEventArgs e)
     {
+        int ID = GetIDFromMessage(e.Data);
         string jsonString = GetDataFromMessage(e.Data);
         if (jsonString == null)  return;
         JObject json = JObject.Parse(jsonString);
-        log("Price: " + json.GetValue("last")["price"].ToString());
+        log("Price: " + json.GetValue("last")["price"].ToString() + " | ID: " + ID);
     }
 
     static void SendMessage(WebSocket webSocket, string message)
     {
+        lastMessage = message;
         webSocket.Send(message);
     }
 
@@ -59,5 +62,18 @@ class Programm
     {
         int index = messageInput.IndexOf('{') - 1;
         return index < 0 ? null : messageInput[index..];
+    }
+
+    static private int GetIDFromMessage(string message)
+    {
+        try
+        {
+            return int.Parse(message[..message.IndexOf(' ')]);
+        }
+        catch (Exception e)
+        {
+            log(e.Message);
+            return -1;
+        }
     }
 }
