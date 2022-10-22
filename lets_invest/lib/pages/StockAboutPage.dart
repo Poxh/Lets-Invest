@@ -12,7 +12,6 @@ import 'package:lets_invest/data/Aggregate.dart';
 import 'package:lets_invest/data/InstrumentDetail.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:readmore/readmore.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../api/WebsocketAPI.dart';
 import '../data/StockDetail.dart';
@@ -101,62 +100,16 @@ class _StockAboutPageState extends State<StockAboutPage> {
                                 List<Aggregate> aggregates =
                                     snapshot.data as List<Aggregate>;
 
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SfCartesianChart(
-                                        tooltipBehavior:
-                                            TooltipBehavior(enable: true),
-                                        series: <ChartSeries>[
-                                          LineSeries<Aggregate, double>(
-                                              dataSource: aggregates,
-                                              animationDuration: 500,
-                                              color: CalculationAPI.hasMadeLost(
-                                                      WebsocketAPI
-                                                          .getCurrentStockValue(),
-                                                      WebsocketAPI
-                                                          .getStartStockValue())
-                                                  ? Colors.red
-                                                  : Colors.green,
-                                              xValueMapper:
-                                                  (Aggregate aggregate, _) =>
-                                                      aggregate.time.toDouble(),
-                                              yValueMapper:
-                                                  (Aggregate aggregate, _) =>
-                                                      aggregate.close,
-                                              enableTooltip: true),
-                                          FastLineSeries<Aggregate, double>(
-                                            dataSource: aggregates,
-                                            animationDuration: 500,
-                                            isVisible: aggregates.isNotEmpty,
-                                            color: Colors.grey,
-                                            dashArray: [3, 6],
-                                            xValueMapper:
-                                                (Aggregate aggregate, _) =>
-                                                    aggregate.time.toDouble(),
-                                            yValueMapper:
-                                                (Aggregate aggregate, _) =>
-                                                    WebsocketAPI
-                                                        .aggregates[0].close,
-                                          ),
-                                        ],
-                                        primaryXAxis: NumericAxis(
-                                            edgeLabelPlacement:
-                                                EdgeLabelPlacement.shift),
-                                        primaryYAxis: NumericAxis(
-                                            numberFormat:
-                                                NumberFormat.simpleCurrency())),
-                                  ],
-                                );
+                                return BuilderAPI.buildChart(
+                                    context,
+                                    100.w,
+                                    700.h,
+                                    aggregates,
+                                    CalculationAPI.hasMadeLost(
+                                        WebsocketAPI.getCurrentStockValue(),
+                                        WebsocketAPI.getStartStockValue()));
 
-                                // return BuilderAPI.buildChart(
-                                //     context,
-                                //     100.w,
-                                //     700.h,
-                                //     aggregates,
-                                //     CalculationAPI.hasMadeLost(
-                                //         WebsocketAPI.getCurrentStockValue(),
-                                //         WebsocketAPI.getStartStockValue()));
+                                
                               } else {
                                 return BuilderAPI.buildText(
                                     text: "NOOOOO",
@@ -283,13 +236,23 @@ class _StockAboutPageState extends State<StockAboutPage> {
                 onTap: (value) {
                   switch (value) {
                     case 0:
-                      print("Updated to 1 day");
                       updateChart("1d");
                       break;
                     case 1:
-                      print("Updated to 5 days");
                       updateChart("5d");
                       break;
+                    case 2:
+                      updateChart("1m");
+                      break; 
+                    case 3:
+                      updateChart("6m");
+                      break;  
+                    case 4:
+                      updateChart("1y");
+                      break;   
+                    case 5:
+                      updateChart("5y");
+                      break;    
                     default:
                   }
                 },

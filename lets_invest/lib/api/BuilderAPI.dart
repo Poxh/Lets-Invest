@@ -478,8 +478,8 @@ class BuilderAPI {
                 ))
           ],
         ),
-        swapAnimationDuration: Duration(milliseconds: 150), // Optional
-        swapAnimationCurve: Curves.linearToEaseOut,
+        swapAnimationCurve: Curves.easeInOutCubic,
+        swapAnimationDuration: Duration(milliseconds: 1000),// Optional
       ),
     );
   }
