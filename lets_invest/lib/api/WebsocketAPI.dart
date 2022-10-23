@@ -105,7 +105,7 @@ class WebsocketAPI {
               break;
             case "LSX":
               var stockListNew = stockList.where((stockElement) => stockElement.isin == isin);
-              Stock stock = Stock(name: "", isin: isin, price: latestPrice, quantity: 1, boughtAT: 100.10);
+              Stock stock = Stock(name: "", isin: isin, price: latestPrice, quantity: 1.1, boughtAT: 100.10);
               if(stockListNew.isEmpty) {
                 stockList.add(stock);
               } else {

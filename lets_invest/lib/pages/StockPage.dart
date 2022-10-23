@@ -148,7 +148,9 @@ class _StockPageState extends State<StockPage> {
                                     stock.isin,
                                     "LSX",
                                     stock.name,
-                                    stock.quantity.toString() + " Cryptos",
+                                    stock.quantity > 1.0 
+                                    ? stock.quantity.toString() + " Stocks"
+                                    : stock.quantity.toString() + " Stock",
                                     stock.quantity * stock.price,
                                     stock.quantity * stock.boughtAT,
                                     websocketAPI);
