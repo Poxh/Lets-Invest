@@ -149,7 +149,7 @@ class _StockPageState extends State<StockPage> {
                                     "LSX",
                                     stock.name,
                                     stock.quantity.toString() + " Cryptos",
-                                    stock.quantity * stock.bid["price"],
+                                    stock.quantity * stock.price,
                                     stock.quantity * stock.boughtAT,
                                     websocketAPI);
                               }),
@@ -195,7 +195,7 @@ class _StockPageState extends State<StockPage> {
                                       "BHS",
                                       crypto.name,
                                       crypto.quantity.toString() + " Cryptos",
-                                      crypto.quantity * crypto.bid["price"],
+                                      crypto.quantity * crypto.price,
                                       crypto.quantity * crypto.boughtAT,
                                       websocketAPI);
                                 }),

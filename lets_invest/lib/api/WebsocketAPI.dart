@@ -27,8 +27,8 @@ class WebsocketAPI {
   static double latestPrice = 0.0;
 
   static List<String> messageList = [];
-  static List<Test> stockList = [];
-  static List<Test> cryptoList = [];
+  static List<Stock> stockList = [];
+  static List<Crypto> cryptoList = [];
 
   int getlatestID() {
     latestID++;
@@ -37,10 +37,7 @@ class WebsocketAPI {
 
   void sendMessageToWebSocket(String messageContent) {
     String message = "sub " + getlatestID().toString() + messageContent;
-    if(message.contains("ticker")) {
-      messages[latestID.toString()] = message.toString();
-      print("Added: " + message + " with id: " + latestID.toString());
-    }
+    if(message.contains("ticker")) messages[latestID.toString()] = message.toString();
     developer.log(message);
     webSocketChannel.sink.add(message);
   }
@@ -59,6 +56,12 @@ class WebsocketAPI {
     String isinRaw = json.decode(jsonString)["id"];
     String type = isinRaw.substring(isinRaw.indexOf('.'), isinRaw.length);
     return isinRaw.replaceAll(type, "");
+  }
+
+  GetTypeFromMessage(String message) {
+    String jsonString = message.substring(message.indexOf('{'), message.length);
+    String isinRaw = json.decode(jsonString)["id"];
+    return isinRaw.substring(isinRaw.indexOf('.'), isinRaw.length).replaceAll(".", "");  
   }
 
   void initializeConnection() {
@@ -80,10 +83,40 @@ class WebsocketAPI {
           return;
         }
 
+        if (GetDataFromMessage(data.toString()) == null) return;
         dynamic jsonData = json.decode(GetDataFromMessage(data.toString()));
-        String message = messages[GetIDFromMessage(data.toString())];
-        print(jsonData["last"]["price"].toString() + " | Isin: " + GetIsinFromMessage(message));
-        print(" ");
+
+        if(isTickerRequest(jsonData)) {
+          String message = messages[GetIDFromMessage(data.toString())];
+          String isin = GetIsinFromMessage(message);
+          double latestPrice = jsonData["last"]["price"];
+
+          switch (GetTypeFromMessage(message)) {
+            case "BHS":
+              var cryptoListNew = cryptoList.where((cryptoElement) => cryptoElement.isin == isin);
+              Crypto crypto = Crypto(name: "", isin: isin, price: latestPrice, quantity: 1, boughtAT: 100.10);
+              if(cryptoListNew.isEmpty) {
+                cryptoList.add(crypto);
+              } else {
+                if(crypto.price.compareTo(cryptoListNew.first.price) < 0 || crypto.price.compareTo(cryptoListNew.first.price) > 0) {
+                  cryptoList[cryptoList.indexWhere((element) => element.isin == crypto.isin)] = crypto;     
+                }
+              }
+              break;
+            case "LSX":
+              var stockListNew = stockList.where((stockElement) => stockElement.isin == isin);
+              Stock stock = Stock(name: "", isin: isin, price: latestPrice, quantity: 1, boughtAT: 100.10);
+              if(stockListNew.isEmpty) {
+                stockList.add(stock);
+              } else {
+                if(stock.price.compareTo(stockListNew.first.price) < 0 || stock.price.compareTo(stockListNew.first.price) > 0) {
+                  stockList[stockList.indexWhere((element) => element.isin == stock.isin)] = stock; 
+                }
+              }
+              break;  
+            default:
+          }
+        }
 
         var replaceIndex1 = data.toString().indexOf(" [");
         if (replaceIndex1 != -1) {
@@ -114,62 +147,6 @@ class WebsocketAPI {
 
           if (isInstrumentDetailsRequest(dataJson)) {
             setInstrumentDetailsData(dataJson);
-          }
-
-          if (isPerformanceRequest(dataJson)) {
-            var responseIdentifier = data.toString().split(" ")[0];
-
-            for (var i = 0; i < messageList.length; i++) {
-              var message = messageList[i];
-              if (message.contains(responseIdentifier)) {
-                var replaceMessageEndIndex = message.indexOf(" {");
-                var messageReplaced =
-                    message.replaceRange(0, replaceMessageEndIndex, "");
-                var isinObject =
-                    json.decode(messageReplaced)["id"].toString().split(".");
-                PerformanceData performance =
-                    PerformanceData.fromJson(dataJson);
-                var bid = performance.bid;
-                var type = isinObject[isinObject.length - 1];
-                Test test = Test(isin: isinObject[0], bid: bid, type: type);
-
-                if (type == "LSX") {
-                  if (stockList.isEmpty) stockList.add(test);
-
-                  if (!stockList.map((item) => item.isin).contains(test.isin)) {
-                    stockList.add(test);
-                  }
-
-                  for (var item in stockList) {
-                    if (item.isin == test.isin) {
-                      if (item.bid["price"] != test.bid["price"]) {
-                        stockList.remove(item);
-                        stockList.add(test);
-                        latestPrice = test.bid["price"];
-                      }
-                    }
-                  }
-                } else if (type == "BHS") {
-                  if (cryptoList.isEmpty) cryptoList.add(test);
-
-                  if (!cryptoList
-                      .map((item) => item.isin)
-                      .contains(test.isin)) {
-                    cryptoList.add(test);
-                  }
-
-                  for (var item in cryptoList) {
-                    if (item.isin == test.isin) {
-                      if (item.bid["price"] != test.bid["price"]) {
-                        cryptoList.remove(item);
-                        cryptoList.add(test);
-                        latestPrice = test.bid["price"];
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       },
@@ -251,7 +228,7 @@ class WebsocketAPI {
     latestInstrumentDetail = dataJson;
   }
 
-  isPerformanceRequest(dataJson) {
+  isTickerRequest(dataJson) {
     return dataJson["bid"] != null &&
         dataJson["bid"] != null &&
         dataJson["last"] != null;
@@ -284,84 +261,14 @@ class WebsocketAPI {
 
   static Stream<List<Crypto>?> getCryptoValueStream() async* {
     yield* Stream.periodic(Duration(seconds: 1), (int a) {
-      List<Crypto> cryptoList = [];
-      List<Test> testList = WebsocketAPI.cryptoList;
-      Crypto crypto1 = Crypto(
-          name: "Bitcoin",
-          isin: "XF000BTC0017",
-          bid: null,
-          quantity: 0.0023,
-          boughtAT: 22940);
-      Crypto crypto2 = Crypto(
-          name: "Ethereum",
-          isin: "XF000ETH0019",
-          bid: null,
-          quantity: 0.0281,
-          boughtAT: 1597);
-      Crypto crypto3 = Crypto(
-          name: "XRP",
-          isin: "XF000XRP0018",
-          bid: null,
-          quantity: 1239,
-          boughtAT: 0.21);
-      cryptoList.add(crypto1);
-      cryptoList.add(crypto2);
-      cryptoList.add(crypto3);
-
-      for (var i = 0; i < cryptoList.length; i++) {
-        Crypto crypto = cryptoList[i];
-        for (var k = 0; k < testList.length; k++) {
-          Test test = testList[k];
-          if (crypto.isin == test.isin) {
-            crypto.bid = test.bid;
-          }
-        }
-      }
-      cryptoList.sort((a, b) => b.bid["price"].compareTo(a.bid["price"]));
+      cryptoList.sort((a, b) => b.price.compareTo(a.price));
       return cryptoList;
     });
   }
 
   static Stream<List<Stock>?> getStockValueStream() async* {
     yield* Stream.periodic(Duration(seconds: 1), (int a) {
-      List<Stock> stockList = [];
-      List<Test> testList = WebsocketAPI.stockList;
-      Stock stock1 = Stock(
-          name: "Core MSCI World USD (Acc)",
-          isin: "IE00B4L5Y983",
-          bid: null,
-          quantity: 1.0652,
-          boughtAT: 75.08,
-          type: "Stocks");
-      Stock stock2 = Stock(
-          name: "Apple",
-          isin: "US0378331005",
-          bid: null,
-          quantity: 0.0663,
-          boughtAT: 150.68,
-          type: "Stocks");
-      Stock stock3 = Stock(
-          name: "Amazon",
-          isin: "US0231351067",
-          bid: null,
-          quantity: 1.36,
-          boughtAT: 117.32,
-          type: "Stocks");
-      stockList.add(stock1);
-      stockList.add(stock2);
-      stockList.add(stock3);
-
-      for (var i = 0; i < stockList.length; i++) {
-        Stock stock = stockList[i];
-        for (var k = 0; k < testList.length; k++) {
-          Test test = testList[k];
-          if (stock.isin == test.isin) {
-            stock.bid = test.bid;
-          }
-        }
-      }
-
-      stockList.sort((a, b) => b.bid["price"].compareTo(a.bid["price"]));
+      stockList.sort((a, b) => b.price.compareTo(a.price));
       return stockList;
     });
   }
