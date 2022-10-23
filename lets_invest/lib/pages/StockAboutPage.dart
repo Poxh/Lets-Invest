@@ -337,9 +337,7 @@ class _StockAboutPageState extends State<StockAboutPage> {
 
   void updateChart(timeStamp) {
     String isin = StockDetail.fromJson(WebsocketAPI.latestStockDetail).isin;
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"aggregateHistoryLight","range":"$timeStamp","id":"$isin.LSX"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"aggregateHistoryLight","range":"$timeStamp","id":"$isin.LSX"}');
   }
 
   Widget buildIntervalItem(text, onTap) {

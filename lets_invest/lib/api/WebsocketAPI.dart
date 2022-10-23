@@ -1,4 +1,4 @@
-// ignore_for_file: unrelated_type_equality_checks, avoid_print
+// ignore_for_file: unrelated_type_equality_checks, avoid_print, prefer_collection_literals
 
 import 'dart:collection';
 import 'dart:convert';
@@ -13,6 +13,9 @@ import 'dart:developer' as developer;
 import '../data/Crypto.dart';
 
 class WebsocketAPI {
+  int latestID = 0;
+  var messages = HashMap(); 
+
   final bool _shouldReconnect = true;
   late WebSocketChannel webSocketChannel;
   static List<Search> searchResults = [];
@@ -27,13 +30,17 @@ class WebsocketAPI {
   static List<Test> stockList = [];
   static List<Test> cryptoList = [];
 
-  static int randomNumber() {
-    var rng = Random();
-    return rng.nextInt(1000);
+  int getlatestID() {
+    latestID++;
+    return latestID;
   }
 
-  void sendMessageToWebSocket(String message) {
-    messageList.add(message);
+  void sendMessageToWebSocket(String messageContent) {
+    String message = "sub " + getlatestID().toString() + messageContent;
+    if(message.contains("ticker")) {
+      messages[latestID.toString()] = message.toString();
+      print("Added: " + message + " with id: " + latestID.toString());
+    }
     developer.log(message);
     webSocketChannel.sink.add(message);
   }
@@ -45,6 +52,13 @@ class WebsocketAPI {
 
   GetIDFromMessage(String message) {
     return message.substring(0, message.indexOf(' A'));
+  }
+
+  GetIsinFromMessage(String message) {
+    String jsonString = message.substring(message.indexOf('{'), message.length);
+    String isinRaw = json.decode(jsonString)["id"];
+    String type = isinRaw.substring(isinRaw.indexOf('.'), isinRaw.length);
+    return isinRaw.replaceAll(type, "");
   }
 
   void initializeConnection() {
@@ -65,6 +79,11 @@ class WebsocketAPI {
         if (data == "connected") {
           return;
         }
+
+        dynamic jsonData = json.decode(GetDataFromMessage(data.toString()));
+        String message = messages[GetIDFromMessage(data.toString())];
+        print(jsonData["last"]["price"].toString() + " | Isin: " + GetIsinFromMessage(message));
+        print(" ");
 
         var replaceIndex1 = data.toString().indexOf(" [");
         if (replaceIndex1 != -1) {
@@ -158,7 +177,7 @@ class WebsocketAPI {
       onError: (_) => reconnect(),
     );
 
-    sendMessageToWebSocket(
+    webSocketChannel.sink.add(
         'connect 22 {"locale":"en","platformId":"webtrading","platformVersion":"chrome - 96.0.4664","clientId":"app.traderepublic.com","clientVersion":"6513"}');
   }
 
