@@ -1,9 +1,11 @@
 ﻿using WebSocketSharp;
 using Newtonsoft.Json.Linq;
+using System.Runtime.InteropServices;
 
 class Programm
 {
     static int lastID = 0;
+    static Dictionary<int, String> messages = new();
 
     static async Task Main(string[] args)
     {
@@ -30,11 +32,15 @@ class Programm
 
         string isin = "XF000ETH0019.BHS";
         string messageContent = "{\"type\":\"ticker\",\"id\":\"" + isin + "\"}";
-        SendMessage(webSocket, $"sub 1 {messageContent}");
+        string message = $"sub {getLastID()} {messageContent}";
+        SendMessage(webSocket, message);
+        messages.Add(lastID, message);
 
         string isin2 = "XF000BTC0017.BHS";
         string messageContent2 = "{\"type\":\"ticker\",\"id\":\"" + isin2 + "\"}";
-        SendMessage(webSocket, $"sub 2 {messageContent2}");
+        string message2 = $"sub {getLastID()} {messageContent2}";
+        SendMessage(webSocket, message2);
+        messages.Add(lastID, message2);
     }
 
     static void OnMessage(Object sender, MessageEventArgs e)
@@ -43,12 +49,13 @@ class Programm
         string jsonString = GetDataFromMessage(e.Data);
         if (jsonString == null)  return;
         JObject json = JObject.Parse(jsonString);
-        log("Price: " + json.GetValue("last")["price"].ToString() + " | ID: " + ID);
+        log(messages[ID]);
+        log("Price: " + json.GetValue("last")["price"].ToString());
+        log(" ");
     }
 
     static void SendMessage(WebSocket webSocket, string message)
     {
-        lastMessage = message;
         webSocket.Send(message);
     }
 

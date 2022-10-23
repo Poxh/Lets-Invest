@@ -396,21 +396,11 @@ class BuilderAPI {
 
   static void openDetailedInformations(
       WebsocketAPI websocketAPI, isin, type, context) {
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"aggregateHistoryLight","range":"1d","id":"$isin.$type"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"$isin.$type"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"neonNews","isin":"$isin"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"aggregateHistoryLight","range":"1d","id":"$isin.$type"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"stockDetails","id":"$isin","jurisdiction":"DE"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"instrument","id":"$isin","jurisdiction":"DE"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"$isin.$type"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"neonNews","isin":"$isin"}');
     Future.delayed(const Duration(milliseconds: 250), () {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => StockAboutPage()),

@@ -58,7 +58,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   onChanged: (value) {
                     WebsocketAPI.loadedSearch = false;
-                    websocketAPI.sendMessageToWebSocket('sub ' + WebsocketAPI.randomNumber().toString() +  ' {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
+                    websocketAPI.sendMessageToWebSocket(' {"type":"neonSearch","data":{"q":"$value","page":1,"pageSize":5,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
                     Future.delayed(const Duration(milliseconds: 250), (){
                       setState(() {
                         WebsocketAPI.loadedSearch = true;

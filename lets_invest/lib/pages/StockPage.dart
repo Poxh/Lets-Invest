@@ -48,24 +48,12 @@ class _StockPageState extends State<StockPage> {
   void initState() {
     super.initState();
     websocketAPI.initializeConnection();
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"XF000BTC0017.BHS"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"XF000ETH0019.BHS"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"XF000XRP0018.BHS"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"US0378331005.LSX"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"US0231351067.LSX"}');
-    websocketAPI.sendMessageToWebSocket('sub ' +
-        WebsocketAPI.randomNumber().toString() +
-        ' {"type":"ticker","id":"IE00B4L5Y983.LSX"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"XF000BTC0017.BHS"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"XF000ETH0019.BHS"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"XF000XRP0018.BHS"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"US0378331005.LSX"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"US0231351067.LSX"}');
+    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"IE00B4L5Y983.LSX"}');
   }
 
   @override
@@ -160,8 +148,10 @@ class _StockPageState extends State<StockPage> {
                                     stock.isin,
                                     "LSX",
                                     stock.name,
-                                    stock.quantity.toString() + " Cryptos",
-                                    stock.quantity * stock.bid["price"],
+                                    stock.quantity > 1.0 
+                                    ? stock.quantity.toString() + " Stocks"
+                                    : stock.quantity.toString() + " Stock",
+                                    stock.quantity * stock.price,
                                     stock.quantity * stock.boughtAT,
                                     websocketAPI);
                               }),
@@ -207,7 +197,7 @@ class _StockPageState extends State<StockPage> {
                                       "BHS",
                                       crypto.name,
                                       crypto.quantity.toString() + " Cryptos",
-                                      crypto.quantity * crypto.bid["price"],
+                                      crypto.quantity * crypto.price,
                                       crypto.quantity * crypto.boughtAT,
                                       websocketAPI);
                                 }),

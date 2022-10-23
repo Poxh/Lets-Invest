@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api\\lets_invest_api.csproj": {}
+    "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api\\lets_invest_api.csproj": {
+    "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api\\lets_invest_api.csproj",
+        "projectUniqueName": "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api.csproj",
         "projectName": "lets_invest_api",
-        "projectPath": "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api\\lets_invest_api.csproj",
+        "projectPath": "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api.csproj",
         "packagesPath": "C:\\Users\\Veron\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\lets_invest_api\\obj\\",
+        "outputPath": "C:\\Users\\Veron\\OneDrive\\Desktop\\Github-Projekte\\Lets-Invest\\lets_invest_api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Veron\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,13 +40,21 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "Newtonsoft.Json": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
-              "version": "[13.0.1, )"
+              "version": "[6.0.10, )"
             },
-            "websocketsharp.core": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[1.0.0, )"
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.10, )"
             }
           },
           "imports": [
