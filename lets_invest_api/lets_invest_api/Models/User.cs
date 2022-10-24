@@ -9,7 +9,5 @@
         public string ProfilePicture { get; set; }
 
         public Portfolio Portfolio { get; set; }
-
-
     }
 }

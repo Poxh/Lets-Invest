@@ -8,3 +8,6 @@ services:
         environment:
             SA_PASSWORD: "Your_password123"
             ACCEPT_EULA: "Y"
+        volumes:
+          - ./sql-server-db:/var/opt/mssql/data    
+            ACCEPT_EULA: "Y"
