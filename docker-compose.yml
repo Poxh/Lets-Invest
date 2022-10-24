@@ -10,3 +10,4 @@ services:
             ACCEPT_EULA: "Y"
         volumes:
           - ./sql-server-db:/var/opt/mssql/data    
+            ACCEPT_EULA: "Y"
