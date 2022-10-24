@@ -30,7 +30,6 @@ namespace lets_invest_api.Controllers
         {
             Portfolio portfolio = new() {
                 IsPublic = true,
-                Value = user.CreatePortfolioDto.Value,
                 Cash = user.CreatePortfolioDto.Cash,
             };
 
@@ -57,7 +56,6 @@ namespace lets_invest_api.Controllers
             {
                 Id = user.Portfolio.Id,
                 IsPublic = createUserDto.CreatePortfolioDto.IsPublic,
-                Value = createUserDto.CreatePortfolioDto.Value,
                 Cash = createUserDto.CreatePortfolioDto.Cash,
                 Stocks = createUserDto.CreatePortfolioDto.stocks,
                 Cryptos = createUserDto.CreatePortfolioDto.cryptos
