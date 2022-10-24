@@ -3,9 +3,12 @@
     public class Crypto
     {
         public int Id { get; set; }
+        
         public string Name { get; set; }
+        
+        public string Isin { get; set; }
 
-        public int Price { get; set; }
+        public double Quantity { get; set; }
 
         public DateTime BoughtAt { get; set; } = DateTime.UtcNow;
     }
