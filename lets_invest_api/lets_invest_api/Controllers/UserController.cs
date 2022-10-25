@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using lets_invest_api.Models;
 using lets_invest_api.Dto;
+using lets_invest_api.Dto.Update;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace lets_invest_api.Controllers
 {
@@ -18,19 +17,21 @@ namespace lets_invest_api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<User>> Get()
+        public async Task<ActionResult<User>> Get([FromQuery] string DisplayName)
         {
-            User user = await database.Users.Include(u => u.Portfolio).FirstAsync(u => u.Id == 4);
-            user.Portfolio.User = null;
-            return Ok(user);
+            if (!await UserExists(DisplayName)) return BadRequest(DisplayName + " does not exist");
+            User target = await database.Users.Include(u => u.Portfolio).FirstAsync(u => u.DisplayName == DisplayName);
+            target.Portfolio.User = null;
+            return Ok(target);
         }
 
         [HttpPost]
         public async Task<ActionResult<User>> AddUser(CreateUserDto user) 
         {
+            if (await UserExists(user.DisplayName)) return BadRequest(user.DisplayName + " does exist");
+            
             Portfolio portfolio = new() {
                 IsPublic = true,
-                Cash = user.CreatePortfolioDto.Cash,
             };
 
             User finalUser = new() {
@@ -46,28 +47,26 @@ namespace lets_invest_api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<User>> UpdateUser(CreateUserDto createUserDto)
+        public async Task<ActionResult<User>> UpdateUser(UpdateUserDto updateUserDto)
         {
             User user = await database.Users.Include(u => u.Portfolio)
-                .FirstOrDefaultAsync(u => u.Id == createUserDto.Id);
-            if (user == null) return BadRequest("User with id: " + createUserDto.Id + " not found");
+                .FirstOrDefaultAsync(u => u.Id == updateUserDto.Id);
+            if (user == null) return BadRequest("User with id: " + updateUserDto.Id + " not found");
+            if (user.DisplayName == updateUserDto.DisplayName) return BadRequest("Please make changes to update your display name");
+            if (await UserExists(updateUserDto.DisplayName)) return BadRequest("User with name: " + updateUserDto.DisplayName + " already exists");
 
-            Portfolio portfolio = new()
-            {
-                Id = user.Portfolio.Id,
-                IsPublic = createUserDto.CreatePortfolioDto.IsPublic,
-                Cash = createUserDto.CreatePortfolioDto.Cash,
-                Stocks = createUserDto.CreatePortfolioDto.stocks,
-                Cryptos = createUserDto.CreatePortfolioDto.cryptos
-            };
-
-            user.Portfolio = portfolio;
-            user.DisplayName = createUserDto.DisplayName;
-            user.ProfilePicture = createUserDto.ProfilePicture;
+            user.DisplayName = updateUserDto.DisplayName;
+            user.ProfilePicture = updateUserDto.ProfilePicture;
             database.Users.Update(user);
             await database.SaveChangesAsync();
             user.Portfolio.User = null;
             return Ok(user);
+        }
+
+        async Task<bool> UserExists(string DisplayName)
+        {
+            return await database.Users.AsQueryable()
+                .AnyAsync(u => EF.Functions.Like(u.DisplayName, $"{DisplayName}"));
         }
     }
 }
