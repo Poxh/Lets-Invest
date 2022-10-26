@@ -8,7 +8,13 @@ namespace lets_invest_api.Data
         public Database(DbContextOptions<Database> options) : base(options) {}
 
         public DbSet<User> Users {   get; set;  }
-
+        
+        public DbSet<Portfolio> Portfolios {   get; set;  }
+        
+        public DbSet<Stock> Stocks {   get; set;  }
+        
+        public DbSet<Crypto> Cryptos {   get; set;  }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()

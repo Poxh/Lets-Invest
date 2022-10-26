@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using lets_invest_api.Data;
 
@@ -11,9 +12,10 @@ using lets_invest_api.Data;
 namespace lets_invest_api.Migrations
 {
     [DbContext(typeof(Database))]
-    partial class DatabaseModelSnapshot : ModelSnapshot
+    [Migration("20221025205023_PortfolioSet")]
+    partial class PortfolioSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +53,7 @@ namespace lets_invest_api.Migrations
 
                     b.HasIndex("PortfolioId");
 
-                    b.ToTable("Cryptos");
+                    b.ToTable("Crypto");
                 });
 
             modelBuilder.Entity("lets_invest_api.Models.Portfolio", b =>
@@ -76,7 +78,7 @@ namespace lets_invest_api.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Portfolios");
+                    b.ToTable("Portfolio");
                 });
 
             modelBuilder.Entity("lets_invest_api.Models.Stock", b =>
@@ -98,7 +100,7 @@ namespace lets_invest_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PortfolioId")
+                    b.Property<int?>("PortfolioId")
                         .HasColumnType("int");
 
                     b.Property<double>("Quantity")
@@ -152,13 +154,9 @@ namespace lets_invest_api.Migrations
 
             modelBuilder.Entity("lets_invest_api.Models.Stock", b =>
                 {
-                    b.HasOne("lets_invest_api.Models.Portfolio", "Portfolio")
+                    b.HasOne("lets_invest_api.Models.Portfolio", null)
                         .WithMany("Stocks")
-                        .HasForeignKey("PortfolioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Portfolio");
+                        .HasForeignKey("PortfolioId");
                 });
 
             modelBuilder.Entity("lets_invest_api.Models.Portfolio", b =>
