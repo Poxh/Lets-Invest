@@ -8,9 +8,9 @@
 
         public double Cash { get; set; }
 
-        public List<Stock> Stocks { get; set; }
+        public ICollection<Stock> Stocks { get; set; }
         
-        public List<Crypto> Cryptos { get; set; }
+        public ICollection<Crypto> Cryptos { get; set; }
 
         public User User { get; set; }
 
