@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
         
+        public Portfolio Portfolio { get; set; }
+        
         public string Name { get; set; }
         
         public string Isin { get; set; }
