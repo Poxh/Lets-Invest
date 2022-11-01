@@ -53,6 +53,8 @@ dependencies:
   readmore: ^2.2.0
   flutter_launcher_icons: ^0.10.0
   syncfusion_flutter_charts: ^20.3.50
+  http: ^0.13.5
+  dio: ^4.0.6
 
 dev_dependencies:
   change_app_package_name: ^1.1.0

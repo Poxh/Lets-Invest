@@ -29,7 +29,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Enable cors
+app.Use((httpContext, next) =>
+{
+    httpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+    httpContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
+    httpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
+            
+    if (httpContext.Request.Method != "OPTIONS")
+        return next();
+            
+    httpContext.Response.StatusCode = 204;
+    return Task.CompletedTask;
+});
 
 app.UseAuthorization();
 

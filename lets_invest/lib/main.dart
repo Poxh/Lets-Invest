@@ -1,18 +1,26 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart';
 import 'package:lets_invest/pages/HomePage.dart';
 import 'package:lets_invest/pages/RegisterPage.dart';
 import 'package:lets_invest/pages/SignInPage.dart';
 import 'package:lottie/lottie.dart';
+import 'package:dio/dio.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  var dio = Dio();
+  await dio.get('https://5b5f-2a02-8108-1540-3d68-e83c-cae5-826d-3652.eu.ngrok.io/api/Crypto?DisplayName=Poxh').then((value) => print(value.data));
+
   await Firebase.initializeApp();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

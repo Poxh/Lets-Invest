@@ -14,7 +14,7 @@ namespace lets_invest_api.Controllers;
         public CryptoController(Database _database) {
             database = _database;    
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<ICollection<Crypto>>> GetCryptos([FromQuery] string DisplayName)
         {
