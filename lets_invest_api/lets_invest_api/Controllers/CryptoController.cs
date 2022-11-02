@@ -29,9 +29,9 @@ namespace lets_invest_api.Controllers;
                     .FirstOrDefaultAsync(p => p.Id == createCryptoDto.PortfolioId);
 
             if (portfolio == null) return BadRequest("Portfolio " + createCryptoDto.PortfolioId + " does not exist");
+            if (portfolio.Cryptos == null) portfolio.Cryptos = new List<Crypto>();
             
-            var target = await database.Cryptos.AsQueryable()
-                .AnyAsync(c => EF.Functions.Like(c.Name, $"{createCryptoDto.Name}"));
+            var target = portfolio.Cryptos.Where(crypto => string.Equals(crypto.Name, createCryptoDto.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             
             if(target != null) return BadRequest("Crypto " + createCryptoDto.Name + " does already exist");
 
@@ -43,8 +43,7 @@ namespace lets_invest_api.Controllers;
                 Quantity = createCryptoDto.Quantity,
                 BoughtAt = DateTime.Now
             };
-
-            if (portfolio.Cryptos == null) portfolio.Cryptos = new List<Crypto>();
+            
             portfolio.Cryptos.Add(crypto);
             database.Portfolios.Update(portfolio);
             await database.SaveChangesAsync();
