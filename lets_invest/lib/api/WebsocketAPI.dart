@@ -9,6 +9,7 @@ import 'package:lets_invest/data/PerformanceData.dart';
 import 'package:lets_invest/data/Search.dart';
 import 'package:lets_invest/data/Stock.dart';
 import 'package:lets_invest/services/CryptoService.dart';
+import 'package:lets_invest/services/StockService.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:developer' as developer;
 
@@ -110,7 +111,10 @@ class WebsocketAPI {
               break;
             case "LSX":
               var stockListNew = stockList.where((stockElement) => stockElement.isin == isin);
-              Stock stock = Stock(name: "", isin: isin, price: latestPrice, quantity: 1.1, boughtAT: 100.10);
+              List<Stock> stocks = await StockService.GetUserStocks(FirebaseAuth.instance.currentUser!.displayName.toString());
+              Stock stock = stocks.where((cryptoRes) => cryptoRes.isin == isin).first;
+              stock.price = latestPrice;
+              stock.boughtAT = 100.10;
               if(stockListNew.isEmpty) {
                 stockList.add(stock);
               } else {
