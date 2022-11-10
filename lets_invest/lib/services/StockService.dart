@@ -24,7 +24,7 @@ class StockService {
       "name": name,
       "isin": isin,
       "quantity": quantity,
-      "boughtAt": DateTime.now()
+      "boughtAt": "2022-11-08T21:48:49.801Z"
     });
   }
 }

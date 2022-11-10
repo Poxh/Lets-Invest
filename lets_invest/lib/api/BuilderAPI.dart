@@ -403,7 +403,7 @@ class BuilderAPI {
     websocketAPI.sendMessageToWebSocket(' {"type":"neonNews","isin":"$isin"}');
     Future.delayed(const Duration(milliseconds: 250), () {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => StockAboutPage()),
+        MaterialPageRoute(builder: (context) => StockAboutPage(isin: isin)),
       );
     });
   }

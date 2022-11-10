@@ -2,14 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/CalculationAPI.dart';
-import 'package:lets_invest/components/ChartFilter.dart';
-import 'package:lets_invest/components/Summary.dart';
-import 'package:lets_invest/components/TabBarPage.dart';
 import 'package:lets_invest/data/Aggregate.dart';
-import 'package:lets_invest/data/InstrumentDetail.dart';
+import 'package:lets_invest/services/StockService.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:readmore/readmore.dart';
 
@@ -17,7 +15,8 @@ import '../api/WebsocketAPI.dart';
 import '../data/StockDetail.dart';
 
 class StockAboutPage extends StatefulWidget {
-  const StockAboutPage({Key? key}) : super(key: key);
+  String isin = "";
+  StockAboutPage({required this.isin, Key? key}) : super(key: key);
 
   @override
   State<StockAboutPage> createState() => _StockAboutPageState();
@@ -166,6 +165,24 @@ class _StockAboutPageState extends State<StockAboutPage> {
               ),
             ),
           ]),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: Color.fromARGB(255, 14, 14, 14),
+        child: Padding(
+          padding: EdgeInsets.all(15.0.sp),
+          child: ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 67, 11, 165)),
+              minimumSize: MaterialStateProperty.all<Size>(Size.fromHeight(55)),
+            ),
+            onPressed: () async {
+              Response response = await StockService.BuyStock(1, tag["exchanges"][0]["nameAtExchange"], widget.isin, 0.12);
+              print(response.body);
+            },
+            child: BuilderAPI.buildText(text: "Buy " + tag["exchanges"][0]["nameAtExchange"], color: Colors.white, 
+            fontSize: 15.sp, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
