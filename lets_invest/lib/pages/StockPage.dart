@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lets_invest/api/BuilderAPI.dart';
 import 'package:lets_invest/api/WebsocketAPI.dart';
+import 'package:lets_invest/services/CryptoService.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../api/CalculationAPI.dart';
 
@@ -43,17 +44,20 @@ class StockPage extends StatefulWidget {
 class _StockPageState extends State<StockPage> {
   static WebsocketAPI websocketAPI = WebsocketAPI();
   String portfolioValue = "";
+  List<Crypto> cryptos = [];
 
   @override
   void initState() {
     super.initState();
     websocketAPI.initializeConnection();
-    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"XF000BTC0017.BHS"}');
-    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"XF000ETH0019.BHS"}');
-    websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"XF000XRP0018.BHS"}');
     websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"US0378331005.LSX"}');
     websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"US0231351067.LSX"}');
     websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"IE00B4L5Y983.LSX"}');
+    CryptoService.GetUserCryptos(FirebaseAuth.instance.currentUser!.displayName.toString()).then((res) => {
+      res.forEach((crypto) {
+        websocketAPI.sendMessageToWebSocket(' {"type":"ticker","id":"${crypto.isin}.BHS"}');   
+      })    
+    });
   }
 
   @override

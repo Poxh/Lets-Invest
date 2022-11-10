@@ -3,10 +3,12 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lets_invest/data/Aggregate.dart';
 import 'package:lets_invest/data/PerformanceData.dart';
 import 'package:lets_invest/data/Search.dart';
 import 'package:lets_invest/data/Stock.dart';
+import 'package:lets_invest/services/CryptoService.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:developer' as developer;
 
@@ -78,7 +80,7 @@ class WebsocketAPI {
     );
 
     webSocketChannel.stream.listen(
-      (data) {
+      (data) async {
         if (data == "connected") {
           return;
         }
@@ -94,7 +96,10 @@ class WebsocketAPI {
           switch (GetTypeFromMessage(message)) {
             case "BHS":
               var cryptoListNew = cryptoList.where((cryptoElement) => cryptoElement.isin == isin);
-              Crypto crypto = Crypto(name: "", isin: isin, price: latestPrice, quantity: 1, boughtAT: 100.10);
+              List<Crypto> cryptos = await CryptoService.GetUserCryptos(FirebaseAuth.instance.currentUser!.displayName.toString());
+              Crypto crypto = cryptos.where((cryptoRes) => cryptoRes.isin == isin).first;
+              crypto.price = latestPrice;
+              crypto.boughtAT = 100.10;
               if(cryptoListNew.isEmpty) {
                 cryptoList.add(crypto);
               } else {
